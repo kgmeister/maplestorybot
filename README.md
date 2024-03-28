@@ -4,7 +4,7 @@ This bot do not trigger in-game lie detector.
 It is open sourced and free to use. 
 
 # Features:
-- a
+- to_be_update
 
 # Bot Limitations:
 - Polo portal / Especia portal currently doesn't work on DMT day as the banner is blocking the top timer used to differentiate portal type. Users are suggested to turn portal feature off in settings tab. 
