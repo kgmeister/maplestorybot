@@ -464,3 +464,9 @@ class Action:
         r = random.randint(31, 131)
         r /= 1000
         await sleep(r)
+
+    # test purpose
+
+    async def testnpc(self):
+        await npcp()
+        await npcr()
