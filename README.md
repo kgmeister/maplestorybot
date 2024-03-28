@@ -4,28 +4,7 @@ This bot do not trigger in-game lie detector.
 It is open sourced and free to use. 
 
 # Features:
-- **Auto Rune Solver** -
-- **Auto Enter Polo / Especia Portal** - 
-- **Auto Change Channel** - 
-- **Works on Both Flashjump Class and Teleport Class** - 
-- **Works on Multiple PC** - 
-- **Works on MSEA, GMS, TMS, KMS** - 
-- **No Square Lie Detector / Floating Lie Detector / Princess Violetta** - 
-- **Stop Automatically When Sent Back to Town** - 
-- **Active GM Detector** -
-- **Clockwise / Anti-Clockwise Rotation** - 
-- **Works on All Maps** - 
-- **Custom Script Recording Method** - *Coming Soon*
-- **Custom Map Design Method** - *Coming Soon*
-- **QoL Utilities Functions** - auto pet feed, auto revival and more. 
-- **Exp Buffs Hotkeys** - 
-- **Telegram Binding** - 
-- **Telegram Control** - 
-- **Telegram Message** - 
-- **Telegram Gototown** - 
-- **Free-To-Use** - 
-- **Open Sourced** - 
-- **Constant Update** - 
+- a
 
 # Bot Limitations:
 - Polo portal / Especia portal currently doesn't work on DMT day as the banner is blocking the top timer used to differentiate portal type. Users are suggested to turn portal feature off in settings tab. 

@@ -44,6 +44,7 @@ from pynput.mouse import Listener as MouseListener  # type: ignore[import]
 # from theinterception.strokes import KeyStroke, MouseStroke, Stroke
 # from theinterception._consts import (FilterKeyState, FilterMouseState, KeyState, MouseFlag,
 #                       MouseRolling, MouseState)
+# from humancursor import SystemCursor
 
 from contextlib import contextmanager
 import functools
@@ -75,6 +76,8 @@ try:
 except Exception:
     INTERCEPTION_INSTALLED = False
 print(f'{INTERCEPTION_INSTALLED = }')
+
+# hc = SystemCursor()
 
 from typing import Literal, Optional
 
@@ -225,6 +228,7 @@ def move_relative(x: int = 0, y: int = 0) -> None:
     interception.mouse_position()
     >>> 400, 400
     """
+    # stroke = MouseStroke(0, MouseFlag.MOUSE_MOVE_NOCOALESCE, 0, x, y, 0)
     stroke = MouseStroke(0, MouseFlag.MOUSE_MOVE_RELATIVE, 0, x, y, 0)
     interception.send_mouse(stroke)
 
@@ -301,11 +305,13 @@ def hold_mouse(button: MouseButton):
 async def movetoandleftclick(x,y):
     # move_to(x,y)
     await custommoveto(x,y)
+    # hc.move_to(x,y)
     time.sleep(.3)
     left_click()
 
 async def custommoveto(targetx,targety):    
     print(f'moving mouse .. {targetx=}, {targety=} ')
+    # hc.move_to(targetx,targety)
     # while True:
     for i in range(1500):
         x,y = mouse_position()

@@ -11,7 +11,7 @@ from attack import npcp, npcr, leftp, leftr, rightp, rightr, jumpp, jumpr, leftj
     rightjumpjumpattack, jumpupjumpattack, ropeconnectpr, downjumpv2, downjump, \
     upp, upr, downp, downr
 from initinterception import movetoandleftclick
-
+from helper import Helper
 
 hwnd = None
 stoprune=False
@@ -37,10 +37,11 @@ class RuneSolver:
     
     def __init__(self):
         config = ConfigParser()
-        config.read('config.ini')
+        config.read('settings.ini')
         self.ipaddress = config.get('main', 'ipaddress')
         self.maplehwnd=None
         self.stoprune=False
+        self.helper = Helper()
         
 
     def set_maplehwnd(self, maplehwnd):
@@ -411,6 +412,12 @@ class RuneSolver:
                 elif distance == 0:
                     pass
 
+    async def mock(self):
+        position = win32gui.GetWindowRect(self.maplehwnd)
+        x, y, w, h = position
+        await self.helper.move_to_and_click(392,333)
+
+
     async def checkportaltype(self, g):
         # hwnd = win32gui.FindWindow(None, "MapleStory")
         position = win32gui.GetWindowRect(self.maplehwnd)
@@ -431,8 +438,10 @@ class RuneSolver:
                 print(f'nowhiteportalintheend')
                 return 'w'
         print(f'gotwhiteportalintheend')
-        await movetoandleftclick(x+392,y+326)
-        await sleep(.15)
+        # await movetoandleftclick(x+392,y+326)
+        print(f'debug {y=} {x=}')
+        await self.helper.move_to_and_click(x+392,y+326)
+        await sleep(.1)
         polo2checkerlocations = g.polo2_checker() # check if dialogue is polo portal or frito portal
         if polo2checkerlocations is not None: # if is polo portal
             print(f'{polo2checkerlocations=}')
@@ -440,8 +449,9 @@ class RuneSolver:
             await npcp(1,11)
             await npcr()
             await sleep(.3)
-            await movetoandleftclick(x+392,y+326)
-            await sleep(.2)
+            # await movetoandleftclick(x+392,y+326)
+            await self.helper.move_to_and_click(x+392,y+326)
+            await sleep(.02)
             print(f'yes is polo portal, click dialogue')
             polo3checkerlocations = g.polo3_checker() # check if polo is flamewolf or hunting ground
             if polo3checkerlocations is not None:
@@ -484,8 +494,9 @@ class RuneSolver:
                     await npcp(1,11)
                     await npcr()
                     await sleep(.3)
-                    await movetoandleftclick(x+392,y+326)
-                    await sleep(.3)
+                    # await movetoandleftclick(x+392,y+326)
+                    await self.helper.move_to_and_click(x+392,y+326)
+                    await sleep(.03)
                 return 'e'
             else:
                 print(f'no is not especia portal, means its frito, end chat. ')

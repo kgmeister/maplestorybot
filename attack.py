@@ -205,6 +205,26 @@ async def goleftattackk():
     await attackr()
     await leftr()
 
+async def goattackleft():
+    print(f'goattackleft')
+    await leftp()
+    await attackp()
+    await attackr()
+    await teleportp()
+    await teleportr()
+    await leftr()
+
+async def goattackkleft():
+    print(f'goattackkleft')
+    await leftp()
+    await attackp()
+    await attackr()
+    await attackp()
+    await attackr()
+    await teleportp()
+    await teleportr()
+    await leftr()
+
 async def goleftattackv2():
     print(f'goleftattackv2')
     await leftp()
@@ -215,6 +235,15 @@ async def goleftattackv2():
     await attackp()
     await attackr()
     await leftr()
+
+async def gorightattack():
+    print(f'gorightattack')
+    await rightp()
+    await teleportp()
+    await teleportr()
+    await attackp()
+    await attackr()
+    await rightr()
 
 async def gorightattackk():
     print(f'gorightattackk')
@@ -227,13 +256,24 @@ async def gorightattackk():
     await attackr()
     await rightr()
 
-async def gorightattack():
-    print(f'gorightattack')
+async def goattackright():
+    print(f'goattackright')
     await rightp()
-    await teleportp()
-    await teleportr()
     await attackp()
     await attackr()
+    await teleportp()
+    await teleportr()
+    await rightr()
+
+async def goattackkright():
+    print(f'goattackkright')
+    await rightp()
+    await attackp()
+    await attackr()
+    await attackp()
+    await attackr()
+    await teleportp()
+    await teleportr()
     await rightr()
 
 async def gorightattackv2():
@@ -341,10 +381,10 @@ async def upjumpup():
 async def bountyhuntrotation():
     print(f'bountyhuntrotation')
     for i in range(5):
-        await goleftattack()
+        await random.choice([goleftattack,goattackleft,goleftattackk,goattackkleft])()
         time.sleep(.502)
     for i in range(5):
-        await gorightattack()
+        await random.choice([gorightattack,goattackright,gorightattackk,goattackkright])()
         time.sleep(.502)
 
 async def bountyhuntrotationv2(): # adele flash jump
@@ -357,18 +397,18 @@ async def bountyhuntrotationv2(): # adele flash jump
         time.sleep(.502)
 
 async def castlewallrotation():
-    print(f'castlewallrotation')
-    await leftattack()
+    print(f'castlewallrotation') 
+    await random.choice([goleftattack,goattackleft,goleftattackk,goattackkleft])()
     time.sleep(.5)
-    await rightattack()
+    await random.choice([gorightattack,goattackright,gorightattackk,goattackkright])()
     time.sleep(.5)
     # await goleftattack()
     # time.sleep(.502)
     await upjumpup()
     time.sleep(.802)
-    await leftattack()
+    await random.choice([goleftattack,goattackleft,goleftattackk,goattackkleft])()
     time.sleep(.5)
-    await rightattack()
+    await random.choice([gorightattack,goattackright,gorightattackk,goattackkright])()
     time.sleep(.5)
     # await gorightattack()
     # time.sleep(.502)

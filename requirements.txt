@@ -1,8 +1,7 @@
 pyinstaller
-dxcam
-mss
 numpy
 opencv-python
 pyautogui
-pyserial
 pywin32
+python-telegram-bot
+requests

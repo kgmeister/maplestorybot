@@ -36,12 +36,17 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybind, goleftattack, gorightattack, goleftattackk, gorightattackk, \
     goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
-    stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2
+    stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
+    goattackleft, goattackkleft, goattackright, goattackkright
+from action import Action
 # from runesolver import runechecker, gotorune, enablerune, disablerune, gotopoloportal, set_hwnd
 from runesolver import RuneSolver
 
 from initinterception import interception, move_to, move_relative, left_click, mouse_position, mousedown, mouseup, hold_mouse, custommoveto, initiate_move, \
     auto_capture_devices2
+
+# from humancursor import SystemCursor
+from helper import Helper
 
 
 
@@ -70,6 +75,9 @@ class TkinterBot:
         self.npc = self.config.get('keybind', 'npc')
 
         self.runesolver = RuneSolver()
+        self.ac = Action()        
+        # self.hc = SystemCursor()
+        self.he = Helper()
 
         self.application = None
         self.threads = []
@@ -278,9 +286,13 @@ class TkinterBot:
         #     #         move_relative(20,0)
         #     #         move_relative(0,20)
         #     #         time.sleep(.5)
-        #     await custommoveto(targetx,targety)
-        #     left_click()
-        #     time.sleep(2.411) # when testing ..
+        #     # await custommoveto(targetx,targety)
+        #     # left_click()
+        #     # time.sleep(2.411) # when testing ..
+        #     x,y=mouse_position()
+        #     print(f'{x=} {y=}')
+        #     move_relative(50,10)
+        #     time.sleep(2)
         #     #
         #     # await rightjumpjumpattack()
         #     # time.sleep(1.011) # when testing ..                 
@@ -353,7 +365,7 @@ class TkinterBot:
                 print(f'x==None, pass ..')
                 time.sleep(.1)
                 pass
-            else:
+            else: # 111.5 27.5
                 xynotfound=0
                 if y > top and (y > btm-offsety and y <= btm+offsety):
                     if x > left+offsetx:
@@ -380,6 +392,14 @@ class TkinterBot:
                             await random.choice([goupattack])()
                     elif x >= right-offsetx and x <= right+offsetx:
                         await random.choice([godownattack])()
+                    else:
+                        if x < ((right-left)/2):
+                            if self.replaceropeconnect:
+                                await random.choice([goupattackv3])()
+                            else:
+                                await random.choice([goupattack])()
+                        elif x >= ((right-left)/2):
+                            await random.choice([godownattack])()
                 else:
                     await random.choice([godownattack])()
                 
@@ -444,7 +464,9 @@ class TkinterBot:
                 position = win32gui.GetWindowRect(self.maplehwnd)
                 x, y, w, h = position
                 print(f'moving to x, y')
-                await custommoveto(x+self.position6[0],y+self.position6[1])
+                # await custommoveto(x+self.position6[0],y+self.position6[1])
+                # self.hc.move_to((x+self.position6[0],y+self.position6[1]))
+                await self.he.move_to(x+self.position6[0],y+self.position6[1])
                 time.sleep(.1)
                 print(f'clicking x, y')
                 left_click()
@@ -742,7 +764,9 @@ class TkinterBot:
             position = win32gui.GetWindowRect(self.maplehwnd)
             x, y, w, h = position
             time.sleep(.1)
-            await custommoveto(x+self.portaldialogueX,y+self.portaldialogueY)
+            # await custommoveto(x+self.portaldialogueX,y+self.portaldialogueY)
+            # self.hc.move_to((x+self.portaldialogueX,y+self.portaldialogueY))
+            await self.he.move_to(x+self.portaldialogueX,y+self.portaldialogueY)
             time.sleep(.1)
             left_click()
             self.pausepolochecker=True
@@ -755,7 +779,9 @@ class TkinterBot:
             position = win32gui.GetWindowRect(self.maplehwnd)
             x, y, w, h = position
             time.sleep(.1)
-            await custommoveto(x+self.portaldialogueX,y+self.wolfdialogueY)
+            # await custommoveto(x+self.portaldialogueX,y+self.wolfdialogueY)
+            # self.hc.move_to((x+self.portaldialogueX,y+self.wolfdialogueY))
+            await self.he.move_to(x+self.portaldialogueX,y+self.wolfdialogueY)
             time.sleep(.1)
             left_click()
             self.pausepolochecker=True
@@ -858,7 +884,7 @@ class TkinterBot:
                         if y < btm:
                             await godownattack()
                             time.sleep(.3)
-                            await goleftattack()
+                            await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
                             time.sleep(.1)
                         elif y > top:
                             await upjumpattack()
@@ -866,7 +892,7 @@ class TkinterBot:
                         goright=False
                         goleft=True
                     else:
-                        await gorightattack()
+                        await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
                         time.sleep(.3)
                     if x < left: # only if x < left
                         if y < btm:
@@ -881,12 +907,12 @@ class TkinterBot:
                         elif y < top:
                             await godownattack()
                             time.sleep(.3)
-                            await gorightattack()
+                            await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
                             time.sleep(.3)
                         goright=True
                         goleft=False
                     else:
-                        await goleftattack()
+                        await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
                         time.sleep(.3)
                     if x > right: # only if x > right
                         if y < btm:

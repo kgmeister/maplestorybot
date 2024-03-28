@@ -1,0 +1,170 @@
+75.5 13.5
+godownattack
+75.5 12.5
+godownattack
+75.5 24.5
+gorightattack
+90.5 18.5
+godownattack
+103.5 24.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+120.5 18.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+130.5 24.5
+godownattack
+goleftattack
+godownattack
+godownattack
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+147.5 31.5
+godownattack
+goleftattack
+godownattack
+godownattack
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+152.5 46.5
+goleftattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+161.5 47.5
+goleftattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+144.5 39.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+143.5 39.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+143.5 39.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+143.5 40.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+143.5 47.5
+goleftattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+123.5 42.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+114.5 47.5
+goleftattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+97.5 38.5
+godownattack
+goleftattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+64.5 39.5
+godownattack
+goleftattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+31.5 53.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+21.5 29.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+21.5 32.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+41.5 50.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+46.5 54.5
+goleftattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+22.5 54.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+18.5 54.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+18.5 29.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+22.5 24.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+30.5 42.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+32.5 47.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+32.5 43.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+32.5 46.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+32.5 42.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+32.5 41.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+32.5 46.5
+upjumpattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+32.5 22.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+36.5 18.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+39.5 24.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+53.5 17.5
+godownattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+68.5 20.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+88.5 20.5
+gorightattack
+idx % width=0 idx // width=0 width=1 count=1
+stillinportal
+107.5 36.5
+godownattack
+goleftattack
+notinportal
