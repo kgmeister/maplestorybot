@@ -1107,6 +1107,8 @@ class TkinterBot:
         self.button4.grid(row=0, column=0, pady=(0,0), padx=(1,1))
         self.button4 = tk.Button(self.frame4, text="Rebind Mouse", command=self.rebindmouse, font=('Helvetica', 8))
         self.button4.grid(row=0, column=1, pady=(0,0), padx=(1,1))
+        self.button4 = tk.Button(self.frame4, text="Rebind Chat Window", command=self.rebindchathwnd, font=('Helvetica', 8))
+        self.button4.grid(row=0, column=2, pady=(0,0), padx=(1,1))
 
     def testmouse(self):
         self.triggermousetest=True
