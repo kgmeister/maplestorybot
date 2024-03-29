@@ -409,8 +409,8 @@ class TkinterBot:
                 if polocheckertimer > 90:
                     self.pausepolochecker=False
                 runetimer = self.now - runetimer0
-                if runetimer > 600: # change to 600 when haste
-                # if runetimer > 900: # change to 600 when haste
+                # if runetimer > 600: # change to 600 when haste
+                if runetimer > 900: # change to 600 when haste
                     # checkrune = True
                     checkrune = False
                 if checkrune:
