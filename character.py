@@ -45,6 +45,8 @@ class Character:
         self.ac=ac
         if isinstance(self.ac, Flashjump):
             print(f'fj: {self.ac=}')
+            self.offsety=15
+            self.offsetx=15
         if isinstance(self.ac, Teleport):
             print(f'tp: {type(self.ac)=}')
 
