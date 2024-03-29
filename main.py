@@ -39,6 +39,8 @@ from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybi
     stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
     goattackleft, goattackkleft, goattackright, goattackkright
 from action import Action
+from teleport import Teleport
+from flashjump import Flashjump
 # from runesolver import runechecker, gotorune, enablerune, disablerune, gotopoloportal, set_hwnd
 from runesolver import RuneSolver
 
@@ -47,6 +49,7 @@ from initinterception import interception, move_to, move_relative, left_click, m
 
 # from humancursor import SystemCursor
 from helper import Helper
+from character import Character
 
 
 
@@ -65,6 +68,7 @@ class TkinterBot:
         self.initial_line_position3 = float(self.config.get('main', 'initial_line_position3'))
         self.initial_line_position4 = float(self.config.get('main', 'initial_line_position4'))
         self.ipaddress = self.config.get('main', 'ipaddress')
+        # self.flashjump = self.config.getboolean('main', 'flashjump')
         self.g = Game((8, 63, self.minimapX, self.minimapY)) 
         self.TOKEN = self.config2.get('telegram', 'TOKEN')
         self.chat_id = self.config2.get('telegram', 'chat_id')
@@ -73,11 +77,19 @@ class TkinterBot:
         self.teleport = self.config.get('keybind', 'teleport')
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
+        self.classtype = self.config.get('keybind', 'classtype')
 
         self.runesolver = RuneSolver()
-        self.ac = Action()        
+        # self.ac = Action()        
+        # if self.flashjump:
+        # if self.classtype=='teleport':
+        #     self.ac = Flashjump()
+        # else:        
+        #     self.ac = Teleport()
+        self.ac=Teleport() if self.classtype=='teleport' else Flashjump()
         # self.hc = SystemCursor()
         self.he = Helper()
+        self.character = None
 
         self.application = None
         self.threads = []
@@ -249,9 +261,13 @@ class TkinterBot:
     def wait_for_threads(self):
         # Wait for both threads to finish
         self.thread1.join()
+        print(f'thread1 joined. ')
         self.thread2.join()
+        print(f'thread2 joined. ')
         self.thread3.join()
+        print(f'thread3 joined. ')
         self.thread6.join()
+        print(f'thread6 joined. ')
 
     async def async_function3(self, thread_name, iterations):
         print(f'bot has started ..')
@@ -319,6 +335,8 @@ class TkinterBot:
         right=self.line_position_slider2.get()/2+0
         top=self.line_position_slider3.get()/2-8
         btm=self.line_position_slider4.get()/2-8
+        self.character = Character()
+        self.character.setup(left,right,top,btm,self.ac)
         randomlist = ['z', 'x', 'c', 'space', '2', '3', '0', 'f9', 'w', 'e', 'r', 't', 's', 'd', 'f', 'v']
         offsetx=10
         offsety=10
@@ -367,41 +385,7 @@ class TkinterBot:
                 pass
             else: # 111.5 27.5
                 xynotfound=0
-                if y > top and (y > btm-offsety and y <= btm+offsety):
-                    if x > left+offsetx:
-                        await random.choice([goleftattack, goleftattackk])()
-                    elif x < left-offsetx:
-                        await random.choice([gorightattack, gorightattackk])()
-                    elif x >= left-offsetx and x <= left+offsetx:
-                        if self.replaceropeconnect:
-                            await random.choice([goupattackv3])()
-                        else:
-                            await random.choice([goupattack])()
-                elif y <= top+offsety and y > top-offsety:
-                    if x < right-offsetx:
-                        await random.choice([gorightattack, gorightattackk])()
-                    elif x > right+offsetx:
-                        await random.choice([goleftattack, goleftattackk])()
-                    elif x >= right-offsetx and x <= right+offsetx:
-                        await random.choice([godownattack])()
-                elif y > top and not (y > btm-offsety and y <= btm+offsety):
-                    if x >= left-offsetx and x <= left+offsetx:
-                        if self.replaceropeconnect:
-                            await random.choice([goupattackv3])()
-                        else:
-                            await random.choice([goupattack])()
-                    elif x >= right-offsetx and x <= right+offsetx:
-                        await random.choice([godownattack])()
-                    else:
-                        if x < ((right-left)/2):
-                            if self.replaceropeconnect:
-                                await random.choice([goupattackv3])()
-                            else:
-                                await random.choice([goupattack])()
-                        elif x >= ((right-left)/2):
-                            await random.choice([godownattack])()
-                else:
-                    await random.choice([godownattack])()
+                await self.character.perform_next_attack(x,y)
                 
                 self.now = perf_counter()
                 randommtimer = self.now - randommtimer0
@@ -1226,9 +1210,9 @@ class TkinterBot:
         self.canvas.coords(self.vertical_line4, 0, float(value), self.canvas_width, float(value))
 
     def reset(self):
-        global pause
-        pause=True
-        # self.pause=True
+        # global pause
+        # pause=True
+        self.pause=True
         # for _, stop_event in self.threads:
         #     stop_event.set()
         self.stop_event.set()
@@ -1366,6 +1350,17 @@ class TkinterBot:
         self.entrynpc = tk.Entry(self.framesettings)
         self.entrynpc.insert(0, self.npc)
         self.entrynpc.grid(row=5, column=1, padx=1, pady=1)
+        self.labelclasstype = tk.Label(self.framesettings, anchor='w', justify='left', text="classtype: ")
+        self.labelclasstype.grid(row=6, column=0, padx=1, pady=1, sticky='w')
+        
+        def on_select(event):
+            self.classtype = self.comboboxclasstype.get()
+        options = ['flashjump', 'teleport']
+        self.comboboxclasstype = ttk.Combobox(self.framesettings, values=options, state="readonly", width=17)
+        self.comboboxclasstype.grid(row=6, column=1, padx=1, pady=1)
+        self.comboboxclasstype.set(options[1]) if self.classtype=='teleport' else self.comboboxclasstype.set(options[0])
+        self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)        
+
 
         self.framesettings2 = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)
         self.framesettings2.pack(padx=0, pady=(20,20))
@@ -1379,9 +1374,11 @@ class TkinterBot:
         self.config.set('keybind', 'teleport', str(self.entryteleport.get()))
         self.config.set('keybind', 'ropeconnect', str(self.entryropeconnect.get()))
         self.config.set('keybind', 'npc', str(self.entrynpc.get()))
+        self.config.set('keybind', 'classtype', str(self.comboboxclasstype.get()))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
         refreshkeybind()
+        self.character.change_ac_type(Teleport()) if self.classtype=='teleport' else self.character.change_ac_type(Flashjump())
 
     def rebind(self):
         self.entrytoken.delete(0,tk.END)

@@ -1,7 +1,8 @@
 import random
 import time
 from configparser import ConfigParser
-from initinterception import interception, move_to, move_relative, left_click, keydown, keyup, sleep
+# from initinterception import interception, move_to, move_relative, left_click, keydown, keyup, sleep
+from initinterception import keydown, keyup, sleep
 
 
 
@@ -11,126 +12,6 @@ from initinterception import interception, move_to, move_relative, left_click, k
 
 
 
-config = ConfigParser()
-config.read('settings.ini')
-atk = config.get('keybind', 'attack')
-jump = config.get('keybind', 'jump')
-teleport = config.get('keybind', 'teleport')
-ropeconnect = config.get('keybind', 'ropeconnect')
-npc = config.get('keybind', 'npc')
-
-
-async def leftp(x=31,y=101):
-    keydown('left')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def leftr(x=31,y=101):
-    keyup('left')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def rightp(x=31,y=101):
-    keydown('right')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def rightr(x=31,y=101):
-    keyup('right')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def upp(x=31,y=101):
-    keydown('up')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def upr(x=31,y=101):
-    keyup('up')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def downp(x=31,y=101):
-    keydown('down')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def downr(x=31,y=101):
-    keyup('down')
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def jumpp(x=31,y=101):
-    keydown(jump)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def jumpr(x=31,y=101):
-    keyup(jump)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def teleportp(x=31,y=101):
-    keydown(teleport)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def teleportr(x=31,y=101):
-    keyup(teleport)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def npcp(x=31,y=101):
-    keydown(npc)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def npcr(x=31,y=101):
-    keyup(npc)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def attackp(x=31,y=101):
-    keydown(atk)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def attackr(x=31,y=101):
-    keyup(atk)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def ropeconnectp(x=31,y=101):
-    keydown(ropeconnect)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def ropeconnectr(x=31,y=101):
-    keyup(ropeconnect)
-    r = random.randint(x, y)
-    r /= 1000
-    await sleep(r)
-
-async def ropeconnectpr():
-    await ropeconnectp()
-    await ropeconnectr()
 
 
 
@@ -138,232 +19,360 @@ async def ropeconnectpr():
 
 class Action:
 
-    def __init__(self):
-        pass
+    def __init__(self):            
+        self.config = ConfigParser()
+        self.config.read('settings.ini')
+        self.atk = self.config.get('keybind', 'attack')
+        self.jump = self.config.get('keybind', 'jump')
+        self.teleport = self.config.get('keybind', 'teleport')
+        self.ropeconnect = self.config.get('keybind', 'ropeconnect')
+        self.npc = self.config.get('keybind', 'npc')
+    
+    def refreshkeybind(self):
+        self.config.read('settings.ini')
+        self.atk = self.config.get('keybind', 'attack')
+        self.jump = self.config.get('keybind', 'jump')
+        self.teleport = self.config.get('keybind', 'teleport')
+        self.ropeconnect = self.config.get('keybind', 'ropeconnect')
+        self.npc = self.config.get('keybind', 'npc')
 
+    async def leftp(self,x=31,y=101):
+        keydown('left')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def leftr(self,x=31,y=101):
+        keyup('left')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def rightp(self,x=31,y=101):
+        keydown('right')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def rightr(self,x=31,y=101):
+        keyup('right')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def upp(self,x=31,y=101):
+        keydown('up')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def upr(self,x=31,y=101):
+        keyup('up')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def downp(self,x=31,y=101):
+        keydown('down')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def downr(self,x=31,y=101):
+        keyup('down')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def jumpp(self,x=31,y=101):
+        keydown(self.jump)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def jumpr(self,x=31,y=101):
+        keyup(self.jump)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def teleportp(self,x=31,y=101):
+        keydown(self.teleport)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def teleportr(self,x=31,y=101):
+        keyup(self.teleport)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def npcp(self,x=31,y=101):
+        keydown(self.npc)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def npcr(self,x=31,y=101):
+        keyup(self.npc)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def attackp(self,x=31,y=101):
+        keydown(self.atk)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def attackr(self,x=31,y=101):
+        keyup(self.atk)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ropeconnectp(self,x=31,y=101):
+        keydown(self.ropeconnect)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ropeconnectr(self,x=31,y=101):
+        keyup(self.ropeconnect)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ropeconnectpr(self):
+        await self.ropeconnectp()
+        await self.ropeconnectr()
     
     async def leftattack(self):
         print(f'leftattack')
-        await leftp()
-        await attackp()
-        await attackr()
-        await leftr()
+        await self.leftp()
+        await self.attackp()
+        await self.attackr()
+        await self.leftr()
 
     async def rightattack(self):
         print(f'rightattack')
-        await rightp()
-        await attackp()
-        await attackr()
-        await rightr()
+        await self.rightp()
+        await self.attackp()
+        await self.attackr()
+        await self.rightr()
 
     async def leftattackk(self):
         print(f'leftattackk')
-        await leftp()
-        await attackp()
-        await attackr()
-        await attackp()
-        await attackr()
-        await leftr()
+        await self.leftp()
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
+        await self.leftr()
 
     async def rightattackk(self):
         print(f'rightattackk')
-        await rightp()
-        await attackp()
-        await attackr()
-        await rightr()
+        await self.rightp()
+        await self.attackp()
+        await self.attackr()
+        await self.rightr()
 
     async def goleftattack(self):
         print(f'self.goleftattack')
-        await leftp()
-        await teleportp()
-        await teleportr()
-        await attackp()
-        await attackr()
-        await leftr()
+        await self.leftp()
+        await self.teleportp()
+        await self.teleportr()
+        await self.attackp()
+        await self.attackr()
+        await self.leftr()
 
     async def goleftattackk(self):
         print(f'self.goleftattackk')
-        await leftp()
-        await teleportp()
-        await teleportr()
-        await attackp()
-        await attackr()
-        await attackp()
-        await attackr()
-        await leftr()
+        await self.leftp()
+        await self.teleportp()
+        await self.teleportr()
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
+        await self.leftr()
 
     async def goattackleft(self):
         print(f'self.goattackleft')
-        await leftp()
-        await attackp()
-        await attackr()
-        await teleportp()
-        await teleportr()
-        await leftr()
+        await self.leftp()
+        await self.attackp()
+        await self.attackr()
+        await self.teleportp()
+        await self.teleportr()
+        await self.leftr()
 
     async def goattackkleft(self):
         print(f'self.goattackkleft')
-        await leftp()
-        await attackp()
-        await attackr()
-        await attackp()
-        await attackr()
-        await teleportp()
-        await teleportr()
-        await leftr()
-
-    async def goleftattackv2(self):
-        print(f'self.goleftattackv2')
-        await leftp()
-        await jumpp()
-        await jumpr()    
-        await jumpp()
-        await jumpr()
-        await attackp()
-        await attackr()
-        await leftr()
+        await self.leftp()
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
+        await self.teleportp()
+        await self.teleportr()
+        await self.leftr()
 
     async def gorightattack(self):
         print(f'self.gorightattack')
-        await rightp()
-        await teleportp()
-        await teleportr()
-        await attackp()
-        await attackr()
-        await rightr()
+        await self.rightp()
+        await self.teleportp()
+        await self.teleportr()
+        await self.attackp()
+        await self.attackr()
+        await self.rightr()
 
     async def gorightattackk(self):
         print(f'self.gorightattackk')
-        await rightp()
-        await teleportp()
-        await teleportr()
-        await attackp()
-        await attackr()
-        await attackp()
-        await attackr()
-        await rightr()
+        await self.rightp()
+        await self.teleportp()
+        await self.teleportr()
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
+        await self.rightr()
 
     async def goattackright(self):
         print(f'self.goattackright')
-        await rightp()
-        await attackp()
-        await attackr()
-        await teleportp()
-        await teleportr()
-        await rightr()
+        await self.rightp()
+        await self.attackp()
+        await self.attackr()
+        await self.teleportp()
+        await self.teleportr()
+        await self.rightr()
 
     async def goattackkright(self):
         print(f'self.goattackkright')
-        await rightp()
-        await attackp()
-        await attackr()
-        await attackp()
-        await attackr()
-        await teleportp()
-        await teleportr()
-        await rightr()
-
-    async def gorightattackv2(self):
-        print(f'self.gorightattackv2')
-        await rightp()
-        await jumpp()
-        await jumpr()    
-        await jumpp()
-        await jumpr()
-        await attackp()
-        await attackr()
-        await rightr()
-
-    async def goupattackv2(self):
-        print(f'goupattackv2')
-        await rightp()
-        await ropeconnectp()
-        await ropeconnectr()
-        await attackp()
-        await attackr()
-        await rightr()
+        await self.rightp()
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
+        await self.teleportp()
+        await self.teleportr()
+        await self.rightr()
 
     async def goupattack(self):
         print(f'goupattack')
         await sleep(.1)
-        await upp()
-        await teleportp()
-        await teleportr()
-        await upr()
-        await attackp()
-        await attackr()
+        await self.upp()
+        await self.teleportp()
+        await self.teleportr()
+        await self.upr()
+        await self.attackp()
+        await self.attackr()
         await sleep(.1)
 
-    async def goupattackv3(self):
-        print(f'goupattackv3')
+    async def goupattack_v2(self):
+        print(f'goupattack_v2')
+        await self.rightp()
+        await self.ropeconnectp()
+        await self.ropeconnectr()
+        await self.attackp()
+        await self.attackr()
+        await self.rightr()
+
+    async def goupattack_v3(self):
+        print(f'goupattack_v3')
         await sleep(.1)
-        await jumpp()
-        await jumpr()
-        await ropeconnectp(31,101)
-        await ropeconnectr(31,101)
+        await self.jumpp()
+        await self.jumpr()
+        await self.ropeconnectp(31,101)
+        await self.ropeconnectr(31,101)
         await sleep(.333)
-        await attackp()
-        await attackr()
-        await attackp()
-        await attackr()
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
         await sleep(.1)
 
     async def upjumpattack(self):
         print(f'upjumpattack')
         await sleep(.1)
-        await upp()
-        await teleportp()
-        await teleportr()
-        await upr()
-        await attackp()
-        await attackr()
-        await sleep(.1)
-
-    async def upjumpattackv2(self): # adele upjump
-        print(f'upjumpattackv2')
-        await sleep(.1)
-        await jumpp()
-        await jumpr()
-        await upp()
-        await jumpp()
-        await jumpr()
-        await upr()
-        await attackp()
-        await attackr()
-        await attackp()
-        await attackr()
+        await self.upp()
+        await self.teleportp()
+        await self.teleportr()
+        await self.upr()
+        await self.attackp()
+        await self.attackr()
         await sleep(.1)
 
     async def godownattack(self):
         print(f'godownattack')
-        await downp()
-        await teleportp()
-        await teleportr()
-        await downr()
-        await attackp()
-        await attackr()
+        await self.downp()
+        await self.teleportp()
+        await self.teleportr()
+        await self.downr()
+        await self.attackp()
+        await self.attackr()
         await sleep(.1)
 
-    async def godownattackv2(self):
-        print(f'godownattackv2')
-        await downp()    
-        await jumpp()
-        await jumpr()
-        await attackp()
-        await attackr()
-        await downr()
+
+
+
+    async def goleftattack_fjump(self):
+        print(f'self.goleftattack_fjump')
+        await self.leftp()
+        await self.jumpp()
+        await self.jumpr()    
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.leftr()
+
+    async def gorightattack_fjump(self):
+        print(f'self.gorightattack_fjump')
+        await self.rightp()
+        await self.jumpp()
+        await self.jumpr()    
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.rightr()
+
+    async def goupattack_fjump(self): # adele upjump
+        print(f'goupattack_fjump')
+        await sleep(.1)
+        await self.jumpp()
+        await self.jumpr()
+        await self.upp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.upr()
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
+        await sleep(.1)
+
+    async def godownattack_fjump(self):
+        print(f'godownattack_fjump')
+        await self.downp()    
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.downr()
 
 
     # polo portal hunting map rotation patch
 
     async def upjumpup(self):
         print(f'upjumpup')
-        await jumpp()
-        await jumpr()
-        await upp()
-        await jumpp()
-        await jumpr()
-        await upr()
+        await self.jumpp()
+        await self.jumpr()
+        await self.upp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.upr()
 
     async def bountyhuntrotation(self):
         print(f'bountyhuntrotation')
@@ -410,7 +419,7 @@ class Action:
         time.sleep(.5)
         # await self.goleftattack()
         # time.sleep(.502)
-        await ropeconnectpr()
+        await self.ropeconnectpr()
         time.sleep(.802)
         await self.leftattack()
         time.sleep(.5)
@@ -426,15 +435,15 @@ class Action:
         for i in range(2):
             await self.goleftattack()
             time.sleep(.502)
-        await ropeconnectpr()
+        await self.ropeconnectpr()
         time.sleep(.802)
         for i in range(2):
             await self.gorightattack()
             time.sleep(.502)
         await self.downjump()
         time.sleep(.702)
-        await attackp()
-        await attackr()
+        await self.attackp()
+        await self.attackr()
         time.sleep(.502)
 
     async def stormwingrotation(self):
@@ -442,7 +451,7 @@ class Action:
         for i in range(5):
             await self.goleftattack()
             time.sleep(.502)
-        await ropeconnectpr()
+        await self.ropeconnectpr()
         time.sleep(.602)
         for i in range(5):
             await self.gorightattack()
@@ -468,5 +477,5 @@ class Action:
     # test purpose
 
     async def testnpc(self):
-        await npcp()
-        await npcr()
+        await self.npcp()
+        await self.npcr()

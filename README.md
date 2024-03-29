@@ -28,3 +28,4 @@ We do not encourage botting. This project is only for research purpose.
 # Credits:
 Part of the code taken from:
 - https://github.com/qlvbrknp/maple-bot
+- https://github.com/kennyhml/pyinterception
