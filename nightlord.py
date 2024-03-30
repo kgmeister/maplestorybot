@@ -1,5 +1,5 @@
-# import random
-# import time
+import random
+import time
 # from configparser import ConfigParser
 from action import Action
 from initinterception import sleep
@@ -11,7 +11,7 @@ from initinterception import sleep
 
 
 
-class Flashjump(Action):
+class Nightlord(Action):
 
     def __init__(self):
         super().__init__()
@@ -49,10 +49,14 @@ class Flashjump(Action):
         await sleep(.1)
         await self.jumpp()
         await self.jumpr()
-        await self.upp()
-        await self.jumpp()
-        await self.jumpr()
-        await self.upr()
+        print(f'press ropeconnect once. ')
+        await self.ropeconnectp(31,101)
+        await self.ropeconnectr(31,101)
+        await sleep(.555)
+        print(f'press ropeconnect twice. ')
+        await self.ropeconnectp(31,101)
+        await self.ropeconnectr(31,101)
+        print(f'attack.  ')
         await self.attackp()
         await self.attackr()
         await self.attackp()
@@ -146,3 +150,29 @@ class Flashjump(Action):
         await self.jumpp()
         await self.jumpr()
         await self.rightr()
+        
+    async def stormwing(self,x,y,goleft,goright):
+        if goright:
+            if y < self.top:
+                await self.godownattack()
+                time.sleep(.3)
+            elif y > self.top:
+                await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright])()
+            if x > self.right:
+                await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft])()
+                time.sleep(.1)
+                goright=False
+                goleft=True
+        elif goleft:
+            if y < self.top:
+                await self.godownattack()
+                time.sleep(.3)
+            elif y > self.top:
+                await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft])()
+                time.sleep(.1)
+            if x < self.left: # only if x < left
+                await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright])()
+                time.sleep(.1)
+                goright=True
+                goleft=False
+        return goleft,goright

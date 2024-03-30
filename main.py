@@ -86,7 +86,8 @@ class TkinterBot:
         #     self.ac = Flashjump()
         # else:        
         #     self.ac = Teleport()
-        self.ac=Teleport() if self.classtype=='teleport' else Flashjump()
+        # self.ac=Teleport() if self.classtype=='teleport' else Flashjump()
+        self.ac=None
         # self.hc = SystemCursor()
         self.he = Helper()
         self.character = None
@@ -336,7 +337,8 @@ class TkinterBot:
         top=self.line_position_slider3.get()/2-8
         btm=self.line_position_slider4.get()/2-8
         self.character = Character()
-        self.character.setup(left,right,top,btm,self.ac)
+        self.character.setup(left,right,top,btm,self.classtype)
+        self.ac=self.character.ac
         randomlist = ['z', 'x', 'c', 'space', '2', '3', '0', 'f9', 'w', 'e', 'r', 't', 's', 'd', 'f', 'v']
         offsetx=10
         offsety=10
@@ -619,14 +621,15 @@ class TkinterBot:
             print(f'dobountyhuntrotation')
             # do bountyhunt rotation for maybe 30sec
             for i in range(6):
-                await bountyhuntrotation()
+                # await bountyhuntrotation()
+                await self.character.bountyhuntrotation()
             while True:
                 huntingmaptimerchecker = self.g.hunting_map_timer_checker()
                 if huntingmaptimerchecker is not None:
                     # do bountyhunt rotation
                     print(f'stillinportal')
-                    await bountyhuntrotation()
-                    pass
+                    # await bountyhuntrotation()
+                    await self.character.bountyhuntrotation()
                 else:
                     print(f'notinportal')
                     while self.g.dark_checker() is not None:
@@ -649,14 +652,15 @@ class TkinterBot:
             print(f'doguardingrotation')
             # do guardingthecastlewall rotation
             for i in range(10):
-                await castlewallrotation()
+                # await castlewallrotation()                
+                await self.character.castlewallrotation()
             while True:
                 huntingmaptimerchecker = self.g.hunting_map_timer_checker()
                 if huntingmaptimerchecker is not None:
                     # do guardingthecastlewall rotation
                     print(f'stillinportal')
-                    await castlewallrotation()
-                    pass
+                    # await castlewallrotation()   
+                    await self.character.castlewallrotation()
                 else:
                     print(f'notinportal')
                     while self.g.dark_checker() is not None:
@@ -862,46 +866,47 @@ class TkinterBot:
             else:
                 xynotfound=0
                 print(f'{x=} {y=} {goleft=} {goright=}')
-                # time.sleep(.1)
-                if goright:
-                    if x > right:
-                        if y < btm:
-                            await godownattack()
-                            time.sleep(.3)
-                            await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
-                            time.sleep(.1)
-                        elif y > top:
-                            await upjumpattack()
-                            time.sleep(.3)
-                        goright=False
-                        goleft=True
-                    else:
-                        await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
-                        time.sleep(.3)
-                    if x < left: # only if x < left
-                        if y < btm:
-                            await godownattack()
-                            time.sleep(.3)
-                elif goleft:
-                    if x < left: # only if x < left
-                        if y > top:
-                            time.sleep(.1)
-                            await upjumpattack()
-                            time.sleep(.3)
-                        elif y < top:
-                            await godownattack()
-                            time.sleep(.3)
-                            await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
-                            time.sleep(.3)
-                        goright=True
-                        goleft=False
-                    else:
-                        await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
-                        time.sleep(.3)
-                    if x > right: # only if x > right
-                        if y < btm:
-                            await godownattack()
-                            time.sleep(.3)
+                goleft,goright = self.character.stormwing(x,y,goleft,goright)
+                # # time.sleep(.1)
+                # if goright:
+                #     if x > right:
+                #         if y < btm:
+                #             await godownattack()
+                #             time.sleep(.3)
+                #             await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
+                #             time.sleep(.1)
+                #         elif y > top:
+                #             await upjumpattack()
+                #             time.sleep(.3)
+                #         goright=False
+                #         goleft=True
+                #     else:
+                #         await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
+                #         time.sleep(.3)
+                #     if x < left: # only if x < left
+                #         if y < btm:
+                #             await godownattack()
+                #             time.sleep(.3)
+                # elif goleft:
+                #     if x < left: # only if x < left
+                #         if y > top:
+                #             time.sleep(.1)
+                #             await upjumpattack()
+                #             time.sleep(.3)
+                #         elif y < top:
+                #             await godownattack()
+                #             time.sleep(.3)
+                #             await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
+                #             time.sleep(.3)
+                #         goright=True
+                #         goleft=False
+                #     else:
+                #         await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
+                #         time.sleep(.3)
+                #     if x > right: # only if x > right
+                #         if y < btm:
+                #             await godownattack()
+                #             time.sleep(.3)
 
 
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -1357,10 +1362,11 @@ class TkinterBot:
         
         def on_select(event):
             self.classtype = self.comboboxclasstype.get()
-        options = ['flashjump', 'teleport']
+        options = ['flashjump', 'teleport', 'nightlord']
         self.comboboxclasstype = ttk.Combobox(self.framesettings, values=options, state="readonly", width=17)
         self.comboboxclasstype.grid(row=6, column=1, padx=1, pady=1)
-        self.comboboxclasstype.set(options[1]) if self.classtype=='teleport' else self.comboboxclasstype.set(options[0])
+        # self.comboboxclasstype.set(options[1]) if self.classtype=='teleport' else self.comboboxclasstype.set(options[0])
+        self.comboboxclasstype.set(options[options.index(self.classtype)])
         self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)        
 
 
@@ -1380,7 +1386,8 @@ class TkinterBot:
         with open('settings.ini', 'w') as f:
             self.config.write(f)
         refreshkeybind()
-        self.character.change_ac_type(Teleport()) if self.classtype=='teleport' else self.character.change_ac_type(Flashjump())
+        # self.character.change_ac_type(Teleport()) if self.classtype=='teleport' else self.character.change_ac_type(Flashjump())
+        self.character.change_ac_type(self.classtype)
 
     def rebind(self):
         self.entrytoken.delete(0,tk.END)
@@ -1731,5 +1738,5 @@ if __name__ == "__main__":
     mytkinter.start_threads()
     mytkinter.wait_for_threads()
     # asyncio.run(main2())
-    time.sleep(10)
+    # time.sleep(10) #????????
     pass

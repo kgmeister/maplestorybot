@@ -27,6 +27,13 @@ class Action:
         self.teleport = self.config.get('keybind', 'teleport')
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
+        self.offsety=10
+        self.offsetx=10
+        ## for stormwing map
+        self.top=29.0
+        self.left=35.0 # 18.0 # 27.0
+        self.right=130 # 125.0 # 135.0 140.0 132.5
+        self.btm=58.0 # 54.5
     
     def refreshkeybind(self):
         self.config.read('settings.ini')
@@ -361,7 +368,16 @@ class Action:
         await self.attackp()
         await self.attackr()
         await self.downr()
+        
+    async def leftwalk(self):
+        print(f'leftwalk')
+        await self.leftp(222,333)
+        await self.leftr()
 
+    async def rightwalk(self):
+        print(f'rightwalk')
+        await self.rightp(222,333)
+        await self.rightr()
 
     # polo portal hunting map rotation patch
 
@@ -459,6 +475,49 @@ class Action:
         for i in range(5):
             await self.downjump()
             time.sleep(.302)
+
+    async def stormwing(self,x,y,goleft,goright):
+        if goright:
+            if x > self.right:
+                if y < self.btm:
+                    await self.godownattack()
+                    time.sleep(.3)
+                    await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft])()
+                    time.sleep(.1)
+                elif y > self.top:
+                    await self.upjumpattack()
+                    time.sleep(.3)
+                goright=False
+                goleft=True
+            else:
+                await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright])()
+                time.sleep(.3)
+            if x < self.left: # only if x < left
+                if y < self.btm:
+                    await self.godownattack()
+                    time.sleep(.3)
+        elif goleft:
+            if x < self.left: # only if x < left
+                if y > self.top:
+                    time.sleep(.1)
+                    await self.upjumpattack()
+                    time.sleep(.3)
+                elif y < self.top:
+                    await self.godownattack()
+                    time.sleep(.3)
+                    await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright])()
+                    time.sleep(.3)
+                goright=True
+                goleft=False
+            else:
+                await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft])()
+                time.sleep(.3)
+            if x > self.right: # only if x > right
+                if y < self.btm:
+                    await self.godownattack()
+                    time.sleep(.3)
+        return goleft,goright
+
 
     # randomiser patch
 
