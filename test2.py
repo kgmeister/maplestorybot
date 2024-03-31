@@ -365,11 +365,19 @@ async def main():
     #     time.sleep(3)
     #     print(f'done')
 
-    for i in range(10):
-        action = Action()
-        await action.testnpc()
-        print(f'pressed. ')
-        time.sleep(1)
+    # for i in range(10):
+    #     action = Action()
+    #     await action.testnpc()
+    #     print(f'pressed. ')
+    #     time.sleep(1)
+
+    async def func(a,b):
+        return a,b    
+    async def func2(a,b):
+        return await func(a,b)
+    a,b = await func2(1,2)
+    print(a,b)
+
 
 
 # Run the event loop

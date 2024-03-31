@@ -108,7 +108,7 @@ class Character:
 
 
     async def stormwing(self,x,y,goleft,goright):
-        return self.ac.stormwing(x,y,goleft,goright)
+        return await self.ac.stormwing(x,y,goleft,goright)
     
     async def bountyhuntrotation(self):
         await self.ac.bountyhuntrotation()

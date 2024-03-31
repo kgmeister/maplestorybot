@@ -866,7 +866,7 @@ class TkinterBot:
             else:
                 xynotfound=0
                 print(f'{x=} {y=} {goleft=} {goright=}')
-                goleft,goright = self.character.stormwing(x,y,goleft,goright)
+                goleft,goright = await self.character.stormwing(x,y,goleft,goright)
                 # # time.sleep(.1)
                 # if goright:
                 #     if x > right:
@@ -982,7 +982,7 @@ class TkinterBot:
         # Add tabs to the Notebook
         self.notebook.add(self.tab1, text="Rotation")
         self.notebook.add(self.tab2, text="Tab 2")
-        self.notebook.add(self.tab3, text="Tab 3")
+        self.notebook.add(self.tab3, text="Custom")
         self.notebook.add(self.tab4, text="Telegram")
         self.notebook.add(self.tab5, text="Tab 5")
         self.notebook.add(self.tab6, text="Settings")
@@ -1369,6 +1369,13 @@ class TkinterBot:
         self.comboboxclasstype.set(options[options.index(self.classtype)])
         self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)        
 
+        ## todo: change to checkbox
+        # self.labelportal = tk.Label(self.framesettings, anchor='w', justify='left', text="teleport key: ")
+        # self.labelportal.grid(row=3, column=0, padx=1, pady=1, sticky='w')
+        # self.entryportal = tk.Entry(self.framesettings)
+        # self.entryportal.insert(0, self.teleport)
+        # self.entryportal.grid(row=3, column=1, padx=1, pady=1)
+        
 
         self.framesettings2 = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)
         self.framesettings2.pack(padx=0, pady=(20,20))
