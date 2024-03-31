@@ -509,7 +509,11 @@ class RuneSolver:
         # hwnd = win32gui.FindWindow(None, "MapleStory")
         position = win32gui.GetWindowRect(self.maplehwnd)
         x, y, w, h = position
-        runepos = (x+121, y+143, x+697, y+371)
+        runepos = (x+121, y+143, x+697, y+371) # 800x600
+        # runepos = (x+221, y+143, x+797, y+371) # 1074x768
+        # runepos = (x+341, y+143, x+917, y+371) # 1280x720
+        # runepos = (x+381, y+143, x+957, y+371) # 1366x768
+        # runepos = (x+381, y+143, x+957, y+371) # 1920x1080 # need help as i do not have monitor > 1920x1080
         screenshot = ImageGrab.grab(runepos)
         # screenshot.show()
         # time.sleep(5)
