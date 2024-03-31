@@ -413,8 +413,8 @@ class TkinterBot:
                 runetimer = self.now - runetimer0
                 # if runetimer > 600: # change to 600 when haste
                 if runetimer > 900: # change to 600 when haste
-                    checkrune = True
-                    # checkrune = False
+                    # checkrune = True
+                    checkrune = False
                 if checkrune:
                     solverune = self.runesolver.runechecker(self.g)
                 # print(f'{x=} {y=} {statuetimer=} {fountaintimer=}, {runetimer=}, {cctimer=}')
