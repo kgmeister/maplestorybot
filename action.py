@@ -378,6 +378,12 @@ class Action:
         print(f'rightwalk')
         await self.rightp(222,333)
         await self.rightr()
+        
+    async def downjump(self):
+        await self.downp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.downr()
 
     # polo portal hunting map rotation patch
 
@@ -393,10 +399,10 @@ class Action:
     async def bountyhuntrotation(self):
         print(f'bountyhuntrotation')
         for i in range(5):
-            await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft, self.leftattack, self.rightattack, self.leftattackk, self.rightattackk])()
+            await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft])()
             time.sleep(.502)
         for i in range(5):
-            await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright, self.leftattack, self.rightattack, self.leftattackk, self.rightattackk])()
+            await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright])()
             time.sleep(.502)
 
     async def bountyhuntrotationv2(self): # adele flash jump

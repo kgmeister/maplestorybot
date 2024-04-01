@@ -148,8 +148,8 @@ class TkinterBot:
         window_x = screen_width - window_width
         window_y = 0
         self.root.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")        
-        self.root.grid_rowconfigure(0, weight=1)
-        self.root.grid_columnconfigure(0, weight=1)
+        self.root.grid_rowconfigure(0, weight=1) # not sure bout this
+        self.root.grid_columnconfigure(0, weight=1) # not sure bout this
         # self.root.resizable(False,False)
         # # background_image = tk.PhotoImage(file="bumblebee.gif")
         # background_image = Image.open("bumblebee.gif")
@@ -169,8 +169,8 @@ class TkinterBot:
         print(f'setup_tab6')
         self.setup_tab6()
         print(f'setup_tabs_done')
-        self.root.grid_rowconfigure(0, weight=1)
-        self.root.grid_columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1) # not sure bout this
+        self.root.columnconfigure(0, weight=1) # not sure bout this
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         # self.threads = []
         # self.stop_event = threading.Event()
@@ -219,7 +219,11 @@ class TkinterBot:
     async def async_function2(self, thread_name, iterations):
         while not self.telegram_started:
             time.sleep(1)
-        self.init_tkinter()
+        try:
+            self.init_tkinter()
+        except Exception as e:
+            print(f'init_tkinter {e=}')
+            return
         # for i in range(iterations):
         #     print(f"{thread_name} - Iteration {i}")
         #     await asyncio.sleep(1)  # Simulating asynchronous work
@@ -621,27 +625,32 @@ class TkinterBot:
             print(f'dobountyhuntrotation')
             # do bountyhunt rotation for maybe 30sec
             for i in range(6):
-                # await bountyhuntrotation()
-                await self.character.bountyhuntrotation()
+                if not self.pause:
+                    # await bountyhuntrotation()
+                    await self.character.bountyhuntrotation()
             while True:
                 huntingmaptimerchecker = self.g.hunting_map_timer_checker()
                 if huntingmaptimerchecker is not None:
                     # do bountyhunt rotation
                     print(f'stillinportal')
-                    # await bountyhuntrotation()
-                    await self.character.bountyhuntrotation()
+                    # if not self.pause:
+                    #     # await bountyhuntrotation()
+                    #     await self.character.bountyhuntrotation()
+                    # else:
+                    #     time.sleep(1)
+                    if await self.pausewrapper(self.character.bountyhuntrotation): return
                 else:
                     print(f'notinportal')
                     while self.g.dark_checker() is not None:
                         print(f'map transitioning ..')
                         time.sleep(1)
                     await rightp()
-                    time.sleep(1.5)
+                    time.sleep(2.5)
                     await rightr()
                     break
             # press npc button 5 times to exit
             await leftp()
-            time.sleep(.8)
+            time.sleep(.5)
             await leftr()
             for i in range(6):
                 await npcp()
@@ -780,6 +789,16 @@ class TkinterBot:
             # means enter portal failed, or error, back to training. 
         self.polochecker=False
         return truefalse
+    
+    async def pausewrapper(self, func):
+        if not self.pause:
+            await func()
+        else:
+            time.sleep(1)            
+            if self.stop_event.is_set():
+                # self.thread4.join()
+                return True
+
     
     async def status_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         message_type: str = update.message.chat.type
@@ -1325,8 +1344,11 @@ class TkinterBot:
         pass
 
     def setup_tab6(self):        
+        # self.framesettings = tk.Frame(self.tab6, bg='#a1b2c3', bd=0)
         self.framesettings = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)
         self.framesettings.pack(padx=0, pady=0)
+        # self.framesettings.columnconfigure(0, weight='1') # not sure bout this
+        # self.framesettings.rowconfigure(0, weight='1') # not sure bout this
         self.labelipaddress = tk.Label(self.framesettings, anchor='w', justify='left', text="runesolver ip address: ")
         self.labelipaddress.grid(row=0, column=0, padx=1, pady=1, sticky='w')
         self.entryipaddress = tk.Entry(self.framesettings)
@@ -1358,8 +1380,7 @@ class TkinterBot:
         self.entrynpc.insert(0, self.npc)
         self.entrynpc.grid(row=5, column=1, padx=1, pady=1)
         self.labelclasstype = tk.Label(self.framesettings, anchor='w', justify='left', text="classtype: ")
-        self.labelclasstype.grid(row=6, column=0, padx=1, pady=1, sticky='w')
-        
+        self.labelclasstype.grid(row=6, column=0, padx=1, pady=1, sticky='w')        
         def on_select(event):
             self.classtype = self.comboboxclasstype.get()
         options = ['flashjump', 'teleport', 'nightlord']
@@ -1367,15 +1388,15 @@ class TkinterBot:
         self.comboboxclasstype.grid(row=6, column=1, padx=1, pady=1)
         # self.comboboxclasstype.set(options[1]) if self.classtype=='teleport' else self.comboboxclasstype.set(options[0])
         self.comboboxclasstype.set(options[options.index(self.classtype)])
-        self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)        
+        self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)
+        def on_checkbox_clicked():
+            print(f"Checkbox is checked {checkbox_var.get()=}")
+        self.labelportal = tk.Label(self.framesettings, anchor='w', justify='left', text="portal: ")
+        self.labelportal.grid(row=7, column=0, padx=1, pady=1, sticky='w')
+        checkbox_var = tk.IntVar()
+        self.checkboxportal = tk.Checkbutton(self.framesettings, text="", variable=checkbox_var, command=on_checkbox_clicked, font=('Arial', 10)) ## not sure bout this
+        self.checkboxportal.grid(row=7, column=1, padx=0, pady=0, sticky='w')
 
-        ## todo: change to checkbox
-        # self.labelportal = tk.Label(self.framesettings, anchor='w', justify='left', text="teleport key: ")
-        # self.labelportal.grid(row=3, column=0, padx=1, pady=1, sticky='w')
-        # self.entryportal = tk.Entry(self.framesettings)
-        # self.entryportal.insert(0, self.teleport)
-        # self.entryportal.grid(row=3, column=1, padx=1, pady=1)
-        
 
         self.framesettings2 = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)
         self.framesettings2.pack(padx=0, pady=(20,20))
