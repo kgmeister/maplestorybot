@@ -1,7 +1,7 @@
 import random
 import time
 # from configparser import ConfigParser
-from action import Action
+from classtype.action import Action
 from initinterception import sleep
 
 

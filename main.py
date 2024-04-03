@@ -7,7 +7,7 @@ import win32gui
 from io import BytesIO
 import requests
 import json
-# import os
+import os
 import sys
 # import uuid
 import random
@@ -27,6 +27,7 @@ import asyncio
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
+from tkinter import simpledialog
 from tkinter import *
 import gdi_capture
 from PIL import Image, ImageTk
@@ -38,9 +39,9 @@ from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybi
     goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
     stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
     goattackleft, goattackkleft, goattackright, goattackkright
-from action import Action
-from teleport import Teleport
-from flashjump import Flashjump
+from classtype.action import Action
+from classtype.teleport import Teleport
+from classtype.flashjump import Flashjump
 # from runesolver import runechecker, gotorune, enablerune, disablerune, gotopoloportal, set_hwnd
 from runesolver import RuneSolver
 
@@ -77,7 +78,11 @@ class TkinterBot:
         self.teleport = self.config.get('keybind', 'teleport')
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
+        self.fountainkey = self.config.get('keybind', 'fountainkey')
         self.classtype = self.config.get('keybind', 'classtype')
+        self.profile = self.config.get('main', 'profile')
+        self.preset = self.config.get('main', 'preset')
+        self.portaldisabled = self.config.getboolean('main', 'portaldisabled')
 
         self.runesolver = RuneSolver()
         # self.ac = Action()        
@@ -148,8 +153,8 @@ class TkinterBot:
         window_x = screen_width - window_width
         window_y = 0
         self.root.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")        
-        self.root.grid_rowconfigure(0, weight=1) # not sure bout this
-        self.root.grid_columnconfigure(0, weight=1) # not sure bout this
+        # self.root.grid_rowconfigure(0, weight=1) # not sure bout this
+        # self.root.grid_columnconfigure(0, weight=1) # not sure bout this
         # self.root.resizable(False,False)
         # # background_image = tk.PhotoImage(file="bumblebee.gif")
         # background_image = Image.open("bumblebee.gif")
@@ -162,6 +167,10 @@ class TkinterBot:
         self.setup_tab()
         print(f'setup_tab1')
         self.setup_tab1()
+        # print(f'setup_tab2')
+        # self.setup_tab2()
+        print(f'setup_tab3')
+        self.setup_tab3()
         print(f'setup_tab4')
         self.setup_tab4()
         # print(f'setup_tab5')
@@ -169,8 +178,8 @@ class TkinterBot:
         print(f'setup_tab6')
         self.setup_tab6()
         print(f'setup_tabs_done')
-        self.root.rowconfigure(0, weight=1) # not sure bout this
-        self.root.columnconfigure(0, weight=1) # not sure bout this
+        # self.root.rowconfigure(0, weight=1) # not sure bout this
+        # self.root.columnconfigure(0, weight=1) # not sure bout this
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         # self.threads = []
         # self.stop_event = threading.Event()
@@ -329,9 +338,9 @@ class TkinterBot:
         #     #
         #     time.sleep(1.011) # when testing ..
         self.thread4 = threading.Thread(target=self.run_thread4)
-        self.thread4.start()
+        self.thread4.start() # all the detector goes here
         self.thread5 = threading.Thread(target=self.run_thread5)
-        self.thread5.start()
+        self.thread5.start() # gma detector goes here
         left1=self.line_position_slider.get()
         right1=self.line_position_slider2.get()
         top1=self.line_position_slider3.get()
@@ -341,7 +350,7 @@ class TkinterBot:
         top=self.line_position_slider3.get()/2-8
         btm=self.line_position_slider4.get()/2-8
         self.character = Character()
-        self.character.setup(left,right,top,btm,self.classtype)
+        self.character.setup(left,right,top,btm,self.classtype,self.runesolver,self.g)
         self.ac=self.character.ac
         randomlist = ['z', 'x', 'c', 'space', '2', '3', '0', 'f9', 'w', 'e', 'r', 't', 's', 'd', 'f', 'v']
         offsetx=10
@@ -378,7 +387,7 @@ class TkinterBot:
             x, y = (None, None) if g_variable is None else g_variable
             if x == None or y == None:
                 xynotfound+=1
-                if xynotfound > 50:
+                if xynotfound > 70:
                     t = time.localtime()
                     currenttime = time.strftime("%H:%M:%S", t)
                     print(f'something is wrong .. character not found .. exiting .. {currenttime}')
@@ -393,49 +402,49 @@ class TkinterBot:
                 xynotfound=0
                 await self.character.perform_next_attack(x,y)
                 
-                self.now = perf_counter()
-                randommtimer = self.now - randommtimer0
-                if randommtimer > 15:
-                    randommtimer0 = self.now
-                    p = random.randint(0, len(randomlist)-1)
-                    code = random.choice(randomlist)
-                    if code is not None:
-                        print(f'randomiser {code=}')
-                        await send2(code)
-                        await send3(code)
-                if self.replaceropeconnect==True:
-                    if runonce:
-                        replaceropeconnecttimer0=self.now
-                        runonce=False
-                    replaceropeconnecttimer = self.now - replaceropeconnecttimer0
-                    if replaceropeconnecttimer > 90:
-                        self.replaceropeconnect=False
-                        runonce=True
-                polocheckertimer = self.now - self.polocheckertimer0
-                if polocheckertimer > 90:
-                    self.pausepolochecker=False
-                runetimer = self.now - runetimer0
-                # if runetimer > 600: # change to 600 when haste
-                if runetimer > 900: # change to 600 when haste
-                    # checkrune = True
-                    checkrune = False
-                if checkrune:
-                    solverune = self.runesolver.runechecker(self.g)
-                # print(f'{x=} {y=} {statuetimer=} {fountaintimer=}, {runetimer=}, {cctimer=}')
-                print(f'{x=} {y=} {runetimer=} {solverune=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
-                # print(f'{x=}, {y=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
+                # self.now = perf_counter()
+                # randommtimer = self.now - randommtimer0
+                # if randommtimer > 15:
+                #     randommtimer0 = self.now
+                #     p = random.randint(0, len(randomlist)-1)
+                #     code = random.choice(randomlist)
+                #     if code is not None:
+                #         print(f'randomiser {code=}')
+                #         await send2(code)
+                #         await send3(code)
+                # if self.replaceropeconnect==True:
+                #     if runonce:
+                #         replaceropeconnecttimer0=self.now
+                #         runonce=False
+                #     replaceropeconnecttimer = self.now - replaceropeconnecttimer0
+                #     if replaceropeconnecttimer > 90:
+                #         self.replaceropeconnect=False
+                #         runonce=True
+                # polocheckertimer = self.now - self.polocheckertimer0
+                # if polocheckertimer > 90:
+                #     self.pausepolochecker=False
+                # runetimer = self.now - runetimer0
+                # # if runetimer > 600: # change to 600 when haste
+                # if runetimer > 900: # change to 600 when haste
+                #     # checkrune = True
+                #     checkrune = False
+                # if checkrune:
+                #     solverune = self.runesolver.runechecker(self.g)
+                # # print(f'{x=} {y=} {statuetimer=} {fountaintimer=}, {runetimer=}, {cctimer=}')
+                # print(f'{x=} {y=} {runetimer=} {solverune=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
+                # # print(f'{x=}, {y=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
 
-                if solverune:
-                    await self.runesolver.gotorune(self.g)
-                elif self.polochecker:
-                    if self.whitedotoccur:
-                        if not await self.polocheckerfunc(self.gotoportal):
-                            self.replaceropeconnect=True
-                        self.whitedotoccur=False
-                    else:
-                        await self.polocheckerfunc(self.gotoportal)
-                else:
-                    pass
+                # if solverune:
+                #     await self.runesolver.gotorune(self.g)
+                # elif self.polochecker:
+                #     if self.whitedotoccur:
+                #         if not await self.polocheckerfunc(self.gotoportal):
+                #             self.replaceropeconnect=True
+                #         self.whitedotoccur=False
+                #     else:
+                #         await self.polocheckerfunc(self.gotoportal)
+                # else:
+                #     pass
             
             # print(f'{x=}, {y=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
 
@@ -463,7 +472,7 @@ class TkinterBot:
                 print(f'done clicking')
                 move_relative(10,0)
                 time.sleep(.1)
-            if not self.pausepolochecker:
+            if not self.pausepolochecker and not self.portaldisabled:
                 polocheckerlocations = self.g.polo_checker() # check for portal on minimap
                 if polocheckerlocations is not None:
                     print(f'{polocheckerlocations=}')
@@ -1001,7 +1010,7 @@ class TkinterBot:
         # Add tabs to the Notebook
         self.notebook.add(self.tab1, text="Rotation")
         self.notebook.add(self.tab2, text="Tab 2")
-        self.notebook.add(self.tab3, text="Custom")
+        self.notebook.add(self.tab3, text="Design")
         self.notebook.add(self.tab4, text="Telegram")
         self.notebook.add(self.tab5, text="Tab 5")
         self.notebook.add(self.tab6, text="Settings")
@@ -1010,11 +1019,11 @@ class TkinterBot:
         # Pack the Notebook widget
         self.notebook.pack(expand=1, fill="both")
         # Add content to each tab
-        label1 = tk.Label(self.tab1, text="Rectangular Rotation Method")
+        label1 = tk.Label(self.tab1, text="Main Rotation")
         label1.pack(padx=10, pady=10)
         label2 = tk.Label(self.tab2, text="Script Recording Method (Coming Soon .. )")
         label2.pack(padx=10, pady=10)
-        label3 = tk.Label(self.tab3, text="Custom Map Rotation Design Method (Coming Soon ..)")
+        label3 = tk.Label(self.tab3, text="Rotation Design")
         label3.pack(padx=10, pady=10)
         label4 = tk.Label(self.tab4, text="Telegram Setup")
         label4.pack(padx=10, pady=10)
@@ -1024,8 +1033,65 @@ class TkinterBot:
         label6.pack(padx=10, pady=10)
 
     def setup_tab1(self):
-        self.button = tk.Button(self.tab1, text="Resume", command=self.resumebutton, width=20, height=5, bg='tomato', font=('Helvetica', 16))
-        self.button.pack(pady=(10,20))
+        # framebase = tk.Frame(self.tab1, bg='', bd=0)
+        framebase = tk.Frame(self.tab1, bg='#3f5b79', bd=0)
+        # framebase.pack(padx=0, pady=0, fill='both', expand=True)
+        framebase.pack(padx=0, pady=(0,10), fill='x', expand=False)
+        framebase.columnconfigure(0,weight=1)
+        framebase.columnconfigure(1,weight=1)
+        framebase.columnconfigure(2,weight=1)
+        # framebase.grid_columnconfigure(0,weight=1)
+        # framebase.grid_columnconfigure(1,weight=1)
+        # framebase.grid_columnconfigure(2,weight=1)
+        # framebase.grid_propagate(False)
+        frameleft = tk.Frame(framebase, bg='#9eaa15', bd=0, width=170, height=110)
+        # frameleft = tk.Frame(framebase, bg='', bd=0, width=170, height=110)
+        frameleft.grid_propagate(0)
+        # frameleft.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
+        frameleft.grid(row=0,column=0,padx=(1,1),pady=(1,1))
+        framecenter = tk.Frame(framebase, bg='#1eaaf5', bd=0, width=170, height=110)
+        # framecenter = tk.Frame(framebase, bg='', bd=0, width=170, height=110)
+        framecenter.grid_propagate(0)
+        framecenter.grid_rowconfigure(0,weight=1)
+        framecenter.grid_columnconfigure(0,weight=1)
+        # framecenter.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
+        framecenter.grid(row=0,column=1,padx=(1,1),pady=(1,1))
+        frameright = tk.Frame(framebase, bg='#3e3aa4', bd=0, width=170, height=110)
+        # frameright = tk.Frame(framebase, bg='', bd=0, width=170, height=110)
+        frameright.grid_propagate(0)
+        # frameright.grid_rowconfigure(0,weight=1)
+        # frameright.grid_rowconfigure(1,weight=1)
+        frameright.grid_columnconfigure(0,weight=1)
+        # frameright.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
+        frameright.grid(row=0,column=2,padx=(1,1),pady=(1,1))
+        self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, bg='tomato', font=('Helvetica', 16))
+        # self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, width=8, height=4, bg='tomato', font=('Helvetica', 16))
+        # self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, bg='tomato')
+        # self.button.pack(pady=(1,1), fill='both', expand=True)
+        # self.button.pack(pady=(1,1))
+        self.button.grid(row=0,column=0,pady=(1,1), sticky=tk.N+tk.S+tk.E+tk.W)
+        def on_select(event):
+            self.preset = comboboxpreset.get()
+        folder_path = "preset"
+        file_list = os.listdir(folder_path)
+        json_files = [file for file in file_list if file.endswith(".json")]
+        json_file_names = [os.path.splitext(file)[0] for file in json_files]
+        # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=17)
+        comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=10)
+        # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne', fill='both', expand=True)
+        # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne')
+        comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
+        comboboxpreset.set(json_file_names[json_file_names.index(self.preset)])
+        comboboxpreset.bind("<<ComboboxSelected>>", on_select)
+        self.button = tk.Button(frameright, text="reload", command=self.reload)
+        self.button.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+
+        # self.button.grid(row=0,column=1,padx=(1,1),pady=(10,20))
+        # label1 = tk.Label(frame3, text="x:", fg="black", bg='#ffbb29')
+        # label1.pack(padx=(0,0), pady=0)
+        # label1.grid(row=0, column=0, padx=(5,0), pady=0)
+        # label2 = tk.Label(frame2, text="x:", fg="black", bg='#ffbb29')
+        # label2.grid(row=0, column=2, padx=(5,0), pady=0)
         frame = tk.Frame(self.tab1, bg='', bd=0)
         # frame = tk.Frame(root, bg='#ffbb29')
         frame.pack(padx=0, pady=0)
@@ -1056,7 +1122,6 @@ class TkinterBot:
         image_path = "minimap.png"  # Replace with the actual path to your image
         img = PhotoImage(file=image_path)
 
-
         # self.frame2 = tk.Frame(self.tab1, bg='orange', bd=0)
         self.frame2 = tk.Frame(self.tab1, bg='', bd=0)
         self.frame2.pack(padx=0, pady=0)
@@ -1064,29 +1129,43 @@ class TkinterBot:
         self.canvas.grid(row=0, column=0, rowspan=1, padx=10, pady=(10,0))
         self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
         
-        hwnd = gdi_capture.find_window_from_executable_name("MapleStory.exe")
-        top, left, bottom, right = 8, 63, self.minimapX, self.minimapY
-        with gdi_capture.CaptureWindow(hwnd) as gdiimg:
-            img_cropped = gdiimg[left:right, top:bottom]
-            img_cropped = cv2.cvtColor(img_cropped, cv2.COLOR_BGR2RGB)
-            height, width = img_cropped.shape[:2]
-            width = width*2
-            height = height*2
-            # width = (right-left)*2
-            # height = (bottom-top)*2
-            img_cropped = cv2.resize(img_cropped, (width, height))
-            img_cropped = Image.fromarray(img_cropped)
+        if self.preset:
+            width=(self.minimapX-8)*2
+            height=(self.minimapY-63)*2
+            img_cropped = Image.open(f'image/{self.preset}.png')
             tk_image = ImageTk.PhotoImage(img_cropped)
             self.canvas.delete("all")
             self.canvas.config(width=width,height=height)
-            self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)
-            self.canvas.image = tk_image 
-
-        self.canvas_width=width
-        self.canvas_height=height
-        # canvas_width=minimapX-8
-        # canvas_height=minimapY-63
-
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)        
+            self.canvas.image = tk_image
+            self.canvasimageholdertemp = img_cropped
+            self.canvas_width=(self.minimapX-8)*2
+            self.canvas_height=(self.minimapY-63)*2
+            # initial_line_position = self.canvas_width / 2
+        else:
+            hwnd = gdi_capture.find_window_from_executable_name("MapleStory.exe")
+            top, left, bottom, right = 8, 63, self.minimapX, self.minimapY
+            with gdi_capture.CaptureWindow(hwnd) as gdiimg:
+                img_cropped = gdiimg[left:right, top:bottom]
+                img_cropped = cv2.cvtColor(img_cropped, cv2.COLOR_BGR2RGB)
+                height, width = img_cropped.shape[:2]
+                width = width*2
+                height = height*2
+                # width = (right-left)*2
+                # height = (bottom-top)*2
+                img_cropped = cv2.resize(img_cropped, (width, height))
+                img_cropped = Image.fromarray(img_cropped)
+                tk_image = ImageTk.PhotoImage(img_cropped)
+                self.canvas.delete("all")
+                self.canvas.config(width=width,height=height)
+                self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)
+                self.canvas.image = tk_image 
+                canvasimageholdertemp = img_cropped
+                self.canvas_width=width
+                self.canvas_height=height
+                # canvas_width=minimapX-8
+                # canvas_height=minimapY-63
+        
         self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, self.minimapY-63, fill="red", width=2)    
         # slider_label = tk.Label(frame, text="left threshold:", bg='#ffbb29')
         # slider_label.grid(row=3, column=1, pady=5, padx=5)
@@ -1110,10 +1189,9 @@ class TkinterBot:
         self.line_position_slider4 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position4)
         self.line_position_slider4.set(self.initial_line_position4)
         self.line_position_slider4.grid(row=0, column=2, rowspan=3, pady=(10,10), padx=(0,10))
-
         
         self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
-        self.frame3.pack(padx=0, pady=0)  
+        self.frame3.pack(padx=0, pady=0)
         self.label_currentleft = tk.Label(self.frame3, text=f"current left: {self.line_position_slider.get()}")
         self.label_currentleft.grid(row=0, column=0, pady=0, padx=5)  
         self.label_currenttop = tk.Label(self.frame3, text=f"current top: {self.line_position_slider3.get()}")
@@ -1153,17 +1231,7 @@ class TkinterBot:
             self.button.config(text='Pause', bg='lime')
             self.runesolver.enablerune()
 
-    def button_adjustminimap(self):        
-        # self.root.resizable(True,True)
-        # global minimapX    
-        # global minimapY
-        # global vertical_line
-        # global vertical_line2
-        # global vertical_line3
-        # global vertical_line4
-        # global initial_line_position
-        # global canvas_width
-        # global canvas_height
+    def button_adjustminimap(self, setimage=False):
         self.minimapX = int(self.entry1.get())
         self.minimapY = int(self.entry2.get())
         if self.minimapX > 400:
@@ -1174,43 +1242,58 @@ class TkinterBot:
             self.minimapX=100
         if self.minimapY < 100:
             self.minimapY=100
-        hwnd = gdi_capture.find_window_from_executable_name("MapleStory.exe")
-        top, left, bottom, right = 8, 63, self.minimapX, self.minimapY
-        with gdi_capture.CaptureWindow(hwnd) as img:            
-            img_cropped = img[left:right, top:bottom]
-            height = (right-left)*2
-            width = (bottom-top)*2
-            img_cropped = cv2.resize(img_cropped, (width, height))
-            img_cropped = cv2.cvtColor(img_cropped, cv2.COLOR_BGR2RGB)
-            img_cropped = Image.fromarray(img_cropped)
+        if setimage:
+            width=(self.minimapX-8)*2
+            height=(self.minimapY-63)*2
+            img_cropped = Image.open(f'image/{self.preset}.png')
             tk_image = ImageTk.PhotoImage(img_cropped)
             self.canvas.delete("all")
             self.canvas.config(width=width,height=height)
             self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)        
             self.canvas.image = tk_image
-            
+            self.canvasimageholdertemp = img_cropped
             self.canvas_width=width
             self.canvas_height=height
-            # canvas_width=minimapX-8
-            # canvas_height=minimapY-63
             initial_line_position = self.canvas_width / 2
+        else:
+            hwnd = gdi_capture.find_window_from_executable_name("MapleStory.exe")
+            top, left, bottom, right = 8, 63, self.minimapX, self.minimapY
+            with gdi_capture.CaptureWindow(hwnd) as img:            
+                img_cropped = img[left:right, top:bottom]
+                height = (right-left)*2
+                width = (bottom-top)*2
+                img_cropped = cv2.resize(img_cropped, (width, height))
+                img_cropped = cv2.cvtColor(img_cropped, cv2.COLOR_BGR2RGB)
+                img_cropped = Image.fromarray(img_cropped)
+                tk_image = ImageTk.PhotoImage(img_cropped)
+                self.canvas.delete("all")
+                self.canvas.config(width=width,height=height)
+                self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)        
+                self.canvas.image = tk_image
+                self.canvasimageholdertemp = img_cropped
+                
+                self.canvas_width=width
+                self.canvas_height=height
+                # canvas_width=minimapX-8
+                # canvas_height=minimapY-63
+                initial_line_position = self.canvas_width / 2
 
-            self.vertical_line = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="red", width=2)
-            self.line_position_slider.config(to=self.canvas_width, length=self.canvas_width)
-            self.update_line_position(self.line_position_slider.get())
-            
-            self.vertical_line2 = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="yellow", width=2)
-            self.line_position_slider2.config(to=self.canvas_width, length=self.canvas_width)
-            self.update_line_position2(self.line_position_slider2.get())
-            
-            self.vertical_line3 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lime", width=2)
-            self.line_position_slider3.config(to=self.canvas_height, length=self.canvas_height*2)
-            self.update_line_position3(self.line_position_slider3.get())
-
-            self.vertical_line4 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lightblue", width=2)
-            self.line_position_slider4.config(to=self.canvas_height, length=self.canvas_height*2)
-            self.update_line_position4(self.line_position_slider4.get())
+        self.vertical_line = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="red", width=2)
+        self.line_position_slider.config(to=self.canvas_width, length=self.canvas_width)
+        self.update_line_position(self.line_position_slider.get())
         
+        self.vertical_line2 = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="yellow", width=2)
+        self.line_position_slider2.config(to=self.canvas_width, length=self.canvas_width)
+        self.update_line_position2(self.line_position_slider2.get())
+        
+        self.vertical_line3 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lime", width=2)
+        self.line_position_slider3.config(to=self.canvas_height, length=self.canvas_height*2)
+        self.update_line_position3(self.line_position_slider3.get())
+
+        self.vertical_line4 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lightblue", width=2)
+        self.line_position_slider4.config(to=self.canvas_height, length=self.canvas_height*2)
+        self.update_line_position4(self.line_position_slider4.get())
+
         self.g = Game((8, 63, self.minimapX, self.minimapY)) #         
         # background_image = Image.open("bumblebee.gif")
         # background_image = background_image.resize((window_width, window_height),  Image.Resampling.LANCZOS)
@@ -1234,6 +1317,48 @@ class TkinterBot:
     
     def update_line_position4(self, value):
         self.canvas.coords(self.vertical_line4, 0, float(value), self.canvas_width, float(value))
+
+    def reload(self):
+        self.pause=True
+        self.stop_event.set()
+        time.sleep(.1)        
+        try:
+            allpresets=[]
+            with open(f'preset/{self.preset}.json', 'r') as json_file:
+                arrays = json.load(json_file)
+                print(f'{arrays=}')
+            for array in arrays:
+                for item in array:
+                    print(f'{item=}')
+                    allpresets.append(item)
+            # allpresets.append(self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
+            # ,self.line_position_slider3.get(),self.line_position_slider4.get())
+            print(f'{allpresets=}')
+            self.minimapX=allpresets[0]
+            self.minimapY=allpresets[1]
+            self.line_position_slider.set(allpresets[2])
+            self.line_position_slider2.set(allpresets[3])
+            self.line_position_slider3.set(allpresets[4])
+            self.line_position_slider4.set(allpresets[5])           
+            self.entry1.delete(0,tk.END)
+            self.entry1.insert(0,self.minimapX)
+            self.entry2.delete(0,tk.END)
+            self.entry2.insert(0,self.minimapY)
+            self.button_adjustminimap(setimage=True)
+            self.label_currentleft.config(text=f"current left: {self.line_position_slider.get()}")
+            self.label_currenttop.config(text=f"current left: {self.line_position_slider3.get()}")
+            self.label_currentright.config(text=f"current left: {self.line_position_slider2.get()}")
+            self.label_currentbtm.config(text=f"current left: {self.line_position_slider4.get()}")
+            print(f'done reload. ')
+        except Exception as e:
+            print(f'reading json: {e=}')
+        print(f'thread3 joining. ')
+        self.thread3.join()
+        print(f'thread3 joined. ')
+        self.thread3 = threading.Thread(target=self.run_thread3)
+        self.stop_event.clear()
+        self.thread3.start()
+        print(f'thread3 started. ')
 
     def reset(self):
         # global pause
@@ -1264,6 +1389,143 @@ class TkinterBot:
     def on_tab_change(self, event):
         selected_tab = self.notebook.index(self.notebook.select())
         print("Selected Tab:", selected_tab)
+
+    def setup_tab3(self):
+        # welcome to the ultimate tab3.. 
+        # self.framedesign = tk.Frame(self.tab3, bg='#a132f3', bd=0)
+        # self.framedesign = tk.Frame(self.tab3, bg='#f1f2f3', bd=0)
+        # self.framedesign.pack(padx=0, pady=0)
+        input_fields = []
+        def on_entry_click1(event):
+            entry = event.widget
+            if entry.get() == 'x1':
+                entry.delete(0, tk.END)
+                entry.config(fg='black')
+        def on_entry_leave1(event):
+            entry = event.widget
+            if not entry.get():
+                entry.insert(0, 'x1')
+                entry.config(fg='gray')
+        def on_entry_click2(event):
+            entry = event.widget
+            if entry.get() == 'x2':
+                entry.delete(0, tk.END)
+                entry.config(fg='black')
+        def on_entry_leave2(event):
+            entry = event.widget
+            if not entry.get():
+                entry.insert(0, 'x2')
+                entry.config(fg='gray')
+        def on_entry_click3(event):
+            entry = event.widget
+            if entry.get() == 'y':
+                entry.delete(0, tk.END)
+                entry.config(fg='black')
+        def on_entry_leave3(event):
+            entry = event.widget
+            if not entry.get():
+                entry.insert(0, 'y')
+                entry.config(fg='gray')
+        def bind_entry_events(entry, placeholder_text,on_entry_click, on_entry_leave, loader=False):
+            entry.insert(0, placeholder_text)
+            entry.bind('<FocusIn>', on_entry_click)
+            entry.bind('<FocusOut>', on_entry_leave)            
+            entry.config(fg='black') if loader else entry.config(fg='gray')
+        def add_input_field(loader=False, data=None):
+            new_label = tk.Label(self.framedesign2, anchor='w', justify='left', text=f"platform {len(input_fields)+1}: ")
+            new_label.grid(row=len(input_fields), column=0, padx=1, pady=1, sticky='w')
+            new_entry = tk.Entry(self.framedesign2, width=5, justify='right')
+            new_entry.grid(row=len(input_fields), column=1, padx=1, pady=1)
+            bind_entry_events(new_entry, data[0] if data else 'x1', on_entry_click1, on_entry_leave1, loader)
+            new_entry2 = tk.Entry(self.framedesign2, width=5, justify='right')
+            new_entry2.grid(row=len(input_fields), column=2, padx=1, pady=1)
+            bind_entry_events(new_entry2, data[1] if data else 'x2', on_entry_click2, on_entry_leave2, loader)
+            new_entry3 = tk.Entry(self.framedesign2, width=5, justify='right')
+            new_entry3.grid(row=len(input_fields), column=3, padx=(10,1), pady=1)
+            bind_entry_events(new_entry3, data[2] if data else 'y', on_entry_click3, on_entry_leave3, loader)
+            input_fields.append([new_label,new_entry,new_entry2,new_entry3])
+        def minus_input_field():
+            if input_fields:
+                last_row = input_fields.pop()
+                for widget in last_row:
+                    widget.destroy()
+        def get_current_position():
+            g_variable = self.g.get_player_location()
+            x, y = (None, None) if g_variable is None else g_variable
+            self.labelcurrentpos.config(text=f'{x,y}')
+        self.frameprofile = tk.Frame(self.tab3, bg='#71f243', bd=0)
+        self.frameprofile.pack(padx=1, pady=1)
+        def new_profile():
+            profile_name = simpledialog.askstring("New Profile", "Enter the name for the new profile:")
+            if profile_name:
+                json_file_names.append(profile_name)
+                comboboxclasstype.set(json_file_names[len(json_file_names)-1])
+                comboboxclasstype['values'] = json_file_names                
+                for i in range(len(input_fields)):
+                    minus_input_field()
+        buttonnewprofile = tk.Button(self.frameprofile, text="new", command=new_profile, anchor='w')
+        buttonnewprofile.pack(side=tk.LEFT, padx=1, pady=1)
+        def on_select(event):
+            self.profile = comboboxclasstype.get()
+        folder_path = "json"
+        file_list = os.listdir(folder_path)
+        json_files = [file for file in file_list if file.endswith(".json")]
+        json_file_names = [os.path.splitext(file)[0] for file in json_files]
+        # num_json_files = len(json_files)
+        # print("Number of JSON files:", num_json_files)
+        # print("File names:", json_file_names)
+        # print("json_files:", json_files)
+        comboboxclasstype = ttk.Combobox(self.frameprofile, values=json_file_names, state="readonly", width=17)
+        comboboxclasstype.pack(side=tk.LEFT, padx=1, pady=1)
+        comboboxclasstype.set(json_file_names[json_file_names.index(self.profile)])
+        comboboxclasstype.bind("<<ComboboxSelected>>", on_select)
+        def load_profile():
+            for i in range(len(input_fields)):
+                minus_input_field()
+            self.profile = comboboxclasstype.get()
+            try:
+                with open(f'json/{self.profile}.json', 'r') as json_file:
+                    arrays = json.load(json_file)
+                    print(f'{arrays=}')
+                for array in arrays:
+                    print(f'{array=}')
+                    add_input_field(loader=True,data=array)
+            except Exception as e:
+                print(f'reading json: {e=}')
+        buttonnewprofile = tk.Button(self.frameprofile, text="load", command=load_profile, anchor='w')
+        buttonnewprofile.pack(side=tk.LEFT, padx=1, pady=1)
+        self.framebuttonxy = tk.Frame(self.tab3, bg='#71f243', bd=0)
+        self.framebuttonxy.pack(padx=1, pady=1)
+        self.buttoncurrentpos = tk.Button(self.framebuttonxy, text="get current position", command=get_current_position, anchor='w')
+        self.buttoncurrentpos.pack(side=tk.LEFT, padx=1, pady=1)
+        self.labelcurrentpos = tk.Label(self.framebuttonxy, anchor='w', justify='left', text=f"(0,0)")
+        self.labelcurrentpos.pack(side=tk.LEFT, padx=1, pady=1)
+        self.framebuttonadd = tk.Frame(self.tab3, bg='#71f243', bd=0)
+        self.framebuttonadd.pack(padx=1, pady=1)
+        self.buttondesign = tk.Button(self.framebuttonadd, text="new platform", command=add_input_field)
+        self.buttondesign.pack(side=tk.LEFT, padx=1, pady=1)
+        self.buttondesign2 = tk.Button(self.framebuttonadd, text="minus platform", command=minus_input_field)
+        self.buttondesign2.pack(side=tk.LEFT, padx=1, pady=1)
+        self.framedesign2 = tk.Frame(self.tab3, bg='#f132b3', bd=0)
+        # self.framedesign2 = tk.Frame(self.tab3, bg='#f1f2f3', bd=0)
+        self.framedesign2.pack(padx=0, pady=0)
+        self.framedesign3 = tk.Frame(self.tab3, bg='#a16213', bd=0)
+        self.framedesign3.pack(padx=0, pady=0)
+        def saveprofile():
+            platforms = []
+            for input_field in input_fields:
+                entry, entry2, entry3 = input_field[1].get(), input_field[2].get(), input_field[3].get()
+                platforms.append([entry, entry2, entry3])
+            self.profile = comboboxclasstype.get()
+            with open(f'json/{self.profile}.json', 'w') as json_file:
+                json.dump(platforms, json_file, indent=4)
+            print(f'saved platform. ')            
+        self.buttonsaveprofile = tk.Button(self.framedesign3, text="Save", command=saveprofile, state=tk.NORMAL)
+        self.buttonsaveprofile.grid(row=0, column=0, pady=2, padx=2, sticky='nsew')
+        load_profile()
+
+
+
 
     def setup_tab4(self):
         # frametelegram = tk.Frame(tab4, bg='#a1b2c3', bd=0)
@@ -1379,23 +1641,33 @@ class TkinterBot:
         self.entrynpc = tk.Entry(self.framesettings)
         self.entrynpc.insert(0, self.npc)
         self.entrynpc.grid(row=5, column=1, padx=1, pady=1)
+        self.labelfountainkey = tk.Label(self.framesettings, anchor='w', justify='left', text="fountainkey: ")
+        self.labelfountainkey.grid(row=6, column=0, padx=1, pady=1, sticky='w')
+        self.entryfountainkey = tk.Entry(self.framesettings)
+        self.entryfountainkey.insert(0, self.fountainkey)
+        self.entryfountainkey.grid(row=6, column=1, padx=1, pady=1)
         self.labelclasstype = tk.Label(self.framesettings, anchor='w', justify='left', text="classtype: ")
-        self.labelclasstype.grid(row=6, column=0, padx=1, pady=1, sticky='w')        
+        self.labelclasstype.grid(row=7, column=0, padx=1, pady=1, sticky='w')        
         def on_select(event):
             self.classtype = self.comboboxclasstype.get()
-        options = ['flashjump', 'teleport', 'nightlord']
-        self.comboboxclasstype = ttk.Combobox(self.framesettings, values=options, state="readonly", width=17)
-        self.comboboxclasstype.grid(row=6, column=1, padx=1, pady=1)
+        # options = ['flashjump', 'teleport', 'nightlord']        
+        folder_path = "classtype"
+        file_list = os.listdir(folder_path)
+        json_files = [file for file in file_list if file.endswith(".py")]
+        json_file_names = [os.path.splitext(file)[0] for file in json_files]
+        self.comboboxclasstype = ttk.Combobox(self.framesettings, values=json_file_names, state="readonly", width=17)
+        self.comboboxclasstype.grid(row=7, column=1, padx=1, pady=1)
         # self.comboboxclasstype.set(options[1]) if self.classtype=='teleport' else self.comboboxclasstype.set(options[0])
-        self.comboboxclasstype.set(options[options.index(self.classtype)])
+        self.comboboxclasstype.set(json_file_names[json_file_names.index(self.classtype)])
         self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)
-        def on_checkbox_clicked():
-            print(f"Checkbox is checked {checkbox_var.get()=}")
         self.labelportal = tk.Label(self.framesettings, anchor='w', justify='left', text="portal: ")
-        self.labelportal.grid(row=7, column=0, padx=1, pady=1, sticky='w')
-        checkbox_var = tk.IntVar()
+        self.labelportal.grid(row=8, column=0, padx=1, pady=1, sticky='w')
+        def on_checkbox_clicked():
+            self.portaldisabled=False if checkbox_var.get() else True
+            print(f"Checkbox is checked {checkbox_var=} {self.portaldisabled=} {checkbox_var.get()=}")
+        checkbox_var = tk.BooleanVar(value=False) if self.portaldisabled else tk.BooleanVar(value=True)
         self.checkboxportal = tk.Checkbutton(self.framesettings, text="", variable=checkbox_var, command=on_checkbox_clicked, font=('Arial', 10)) ## not sure bout this
-        self.checkboxportal.grid(row=7, column=1, padx=0, pady=0, sticky='w')
+        self.checkboxportal.grid(row=8, column=1, padx=0, pady=0, sticky='w')
 
 
         self.framesettings2 = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)
@@ -1410,6 +1682,7 @@ class TkinterBot:
         self.config.set('keybind', 'teleport', str(self.entryteleport.get()))
         self.config.set('keybind', 'ropeconnect', str(self.entryropeconnect.get()))
         self.config.set('keybind', 'npc', str(self.entrynpc.get()))
+        self.config.set('keybind', 'fountainkey', str(self.entryfountainkey.get()))
         self.config.set('keybind', 'classtype', str(self.comboboxclasstype.get()))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
@@ -1634,19 +1907,32 @@ class TkinterBot:
         self.config.set('main', 'initial_line_position2', str(self.line_position_slider2.get()))
         self.config.set('main', 'initial_line_position3', str(self.line_position_slider3.get()))
         self.config.set('main', 'initial_line_position4', str(self.line_position_slider4.get()))
+        self.config.set('main', 'profile', str(self.profile))
+        self.config.set('main', 'portaldisabled', str(self.portaldisabled))
         self.config2.set('telegram', 'token', str(self.TOKEN))
         self.config2.set('telegram', 'chat_id', str(self.chat_id))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
         with open('secret.ini', 'w') as f:
-            self.config2.write(f)
+            self.config2.write(f)            
+        # for input_field in input_fields:
+        #     entry, entry2, entry3 = input_field[1].get(), input_field[2].get(), input_field[3].get()
+        #     platforms.append([entry, entry2, entry3])
+        # self.profile = comboboxclasstype.get()
+        allpresets=[]
+        allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
+        ,self.line_position_slider3.get(),self.line_position_slider4.get()])
+        with open(f'preset/{self.preset}.json', 'w') as json_file:
+            json.dump(allpresets, json_file, indent=4)
+        self.canvasimageholdertemp.save(f'image/{self.preset}.png')
+        print(f'saved preset. ') 
         self.stop_event.set()
         # for _, stop_event in self.threads:
         #     stop_event.set()
         # for thread, _ in self.threads:
         #     thread.join()
-        self.root.destroy()
         self.telegram_keep_alive = False
+        self.root.destroy()
 
 
 

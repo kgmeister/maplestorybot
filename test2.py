@@ -13,8 +13,10 @@ import win32gui
 from pytweening import easeInPoly, easeOutPoly, easeInOutPoly
 from humancursor import SystemCursor
 from helper import Helper
+from configparser import ConfigParser
+import tkinter as tk
 from runesolver import RuneSolver
-from action import Action
+from classtype.action import Action
 
 # These ctypes structures are for Win32 INPUT, MOUSEINPUT, KEYBDINPUT, and HARDWAREINPUT structures,
 # used by SendInput and documented here: http://msdn.microsoft.com/en-us/library/windows/desktop/ms646270(v=vs.85).aspx
@@ -371,14 +373,62 @@ async def main():
     #     print(f'pressed. ')
     #     time.sleep(1)
 
-    async def func(a,b):
-        return a,b    
-    async def func2(a,b):
-        return await func(a,b)
-    a,b = await func2(1,2)
-    print(a,b)
+    # async def func(a,b):
+    #     return a,b    
+    # async def func2(a,b):
+    #     return await func(a,b)
+    # a,b = await func2(1,2)
+    # print(a,b)
 
+    # import os
+    # # Path to the directory containing JSON files
+    # folder_path = "json"
+    # # Get a list of all files in the directory
+    # file_list = os.listdir(folder_path)
+    # # Filter out the JSON files
+    # json_files = [file for file in file_list if file.endswith(".json")]
+    # # Get the number of JSON files
+    # num_json_files = len(json_files)
+    # # Append the file names to an array of strings
+    # json_file_names = [os.path.splitext(file)[0] for file in json_files]
+    # print("Number of JSON files:", num_json_files)
+    # print("File names:", json_file_names)
+    # print("json_files:", json_files)
 
+    # config = ConfigParser()
+    # config.read('settings.ini')
+    # atk = config.get('keybind', 'attack')
+    # jump = config.get('keybind', 'jump')
+    # teleport = config.get('keybind', 'teleport')
+    # ropeconnect = config.get('keybind', 'ropeconnect')
+    # npc = config.get('keybind', 'npc')
+    # fountain = config.get('keybind', 'fountain')
+    # print(atk, jump, teleport, ropeconnect, npc, fountain)
+
+    root = tk.Tk()
+    root.geometry("500x300")
+    def add():
+        tk.Entry(frame).grid()
+    def disable():
+        frame.configure(height=frame["height"],width=frame["width"])
+        frame.grid_propagate(0)
+    def enable():
+        frame.grid_propagate(1)
+    frame = tk.Frame(root, height=300,width=450,bg="grey")
+    # frame.grid(row=1,column=0)
+    frame.pack()
+    frame.grid_propagate(0)
+    # frame.grid_rowconfigure(0,weight=1)
+    frame.grid_columnconfigure(0,weight=1)
+    # tk.Button(root, text="add widget", command=add).grid(row=0,column=0)
+    # tk.Button(root, text="disable propagation", command=disable).grid(row=0,column=1)
+    # tk.Button(root, text="enable propagation", command=enable).grid(row=0,column=2)
+    # tk.Button(frame,bg='#123456',text='resume').grid(row=0,column=0,sticky='ne')
+    tk.Frame(frame, height=50,width=75,bg="blue").grid(row=0,column=0,sticky='ne')
+    tk.Frame(frame, height=50,width=75,bg="red").grid(row=1,column=0,sticky='ne')
+    tk.Frame(frame, height=50,width=75,bg="yellow").grid(row=2,column=0,sticky='ne')
+    tk.Frame(frame, height=50,width=75,bg="green").grid(row=3,column=0,sticky='ne')
+    root.mainloop()
 
 # Run the event loop
 if __name__ == "__main__":

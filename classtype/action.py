@@ -19,7 +19,7 @@ from initinterception import keydown, keyup, sleep
 
 class Action:
 
-    def __init__(self):            
+    def __init__(self):
         self.config = ConfigParser()
         self.config.read('settings.ini')
         self.atk = self.config.get('keybind', 'attack')
@@ -27,13 +27,21 @@ class Action:
         self.teleport = self.config.get('keybind', 'teleport')
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
+        self.fountainkey = self.config.get('keybind', 'fountainkey')
         self.offsety=10
         self.offsetx=10
+        ## for main rotation
+        self.top=10.0
+        self.left=10.0
+        self.right=10.0
+        self.btm=10.0 
         ## for stormwing map
-        self.top=29.0
-        self.left=35.0 # 18.0 # 27.0
-        self.right=130 # 125.0 # 135.0 140.0 132.5
-        self.btm=58.0 # 54.5
+        self.stop=29.0
+        self.sleft=35.0 # 18.0 # 27.0
+        self.sright=130 # 125.0 # 135.0 140.0 132.5
+        self.sbtm=58.0 # 54.5
+        self.runesolver=None
+        self.g=None
     
     def refreshkeybind(self):
         self.config.read('settings.ini')
@@ -42,6 +50,10 @@ class Action:
         self.teleport = self.config.get('keybind', 'teleport')
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
+
+    def setup(self,runesolver,g):
+        self.runesolver=runesolver
+        self.g=g
 
     async def leftp(self,x=31,y=101):
         keydown('left')
@@ -103,6 +115,18 @@ class Action:
         r /= 1000
         await sleep(r)
 
+    async def bp(self,x=31,y=101):
+        keydown('b')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def br(self,x=31,y=101):
+        keyup('b')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
     async def teleportp(self,x=31,y=101):
         keydown(self.teleport)
         r = random.randint(x, y)
@@ -111,18 +135,6 @@ class Action:
 
     async def teleportr(self,x=31,y=101):
         keyup(self.teleport)
-        r = random.randint(x, y)
-        r /= 1000
-        await sleep(r)
-
-    async def npcp(self,x=31,y=101):
-        keydown(self.npc)
-        r = random.randint(x, y)
-        r /= 1000
-        await sleep(r)
-
-    async def npcr(self,x=31,y=101):
-        keyup(self.npc)
         r = random.randint(x, y)
         r /= 1000
         await sleep(r)
@@ -151,9 +163,34 @@ class Action:
         r /= 1000
         await sleep(r)
 
-    async def ropeconnectpr(self):
+    async def ropeconnectpr(self,x=111,y=222,x2=111,y2=222):
         await self.ropeconnectp()
         await self.ropeconnectr()
+
+    async def npcp(self,x=31,y=101):
+        keydown(self.npc)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def npcr(self,x=31,y=101):
+        keyup(self.npc)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def fountainp(self,x=31,y=101):
+        # print(f'{self.fountainkey=}')
+        keydown(self.fountainkey)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def fountainr(self,x=31,y=101):
+        keyup(self.fountainkey)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
     
     async def leftattack(self):
         print(f'leftattack')
@@ -484,13 +521,13 @@ class Action:
 
     async def stormwing(self,x,y,goleft,goright):
         if goright:
-            if x > self.right:
-                if y < self.btm:
+            if x > self.sright:
+                if y < self.sbtm:
                     await self.godownattack()
                     time.sleep(.3)
                     await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft])()
                     time.sleep(.1)
-                elif y > self.top:
+                elif y > self.stop:
                     await self.upjumpattack()
                     time.sleep(.3)
                 goright=False
@@ -498,17 +535,17 @@ class Action:
             else:
                 await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright])()
                 time.sleep(.3)
-            if x < self.left: # only if x < left
-                if y < self.btm:
+            if x < self.sleft: # only if x < left
+                if y < self.sbtm:
                     await self.godownattack()
                     time.sleep(.3)
         elif goleft:
-            if x < self.left: # only if x < left
-                if y > self.top:
+            if x < self.sleft: # only if x < left
+                if y > self.stop:
                     time.sleep(.1)
                     await self.upjumpattack()
                     time.sleep(.3)
-                elif y < self.top:
+                elif y < self.stop:
                     await self.godownattack()
                     time.sleep(.3)
                     await random.choice([self.gorightattack,self.goattackright,self.gorightattackk,self.goattackkright])()
@@ -518,11 +555,57 @@ class Action:
             else:
                 await random.choice([self.goleftattack,self.goattackleft,self.goleftattackk,self.goattackkleft])()
                 time.sleep(.3)
-            if x > self.right: # only if x > right
-                if y < self.btm:
+            if x > self.sright: # only if x > right
+                if y < self.sbtm:
                     await self.godownattack()
                     time.sleep(.3)
         return goleft,goright
+
+
+    # main rotation
+    #     
+    async def perform_next_attack(self,x,y):
+        if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x > self.left+self.offsetx:
+                if x < self.left+self.offsetx+5:
+                    await random.choice([self.leftwalk])()
+                else:
+                    await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x < self.left-self.offsetx:
+                if x > self.left-self.offsetx-5:
+                    await random.choice([self.rightwalk])()
+                else:
+                    await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+        elif y <= self.top+self.offsety and y > self.top-self.offsety:
+            if x < self.right-self.offsetx:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x > self.right+self.offsetx:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+        elif y > self.top and not (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+            else:
+                if x < ((self.right-self.left)/2):
+                    if self.replaceropeconnect:
+                        await random.choice([self.goupattack_v3])()
+                    else:
+                        await random.choice([self.goupattack])()
+                elif x >= ((self.right-self.left)/2):
+                    await random.choice([self.godownattack])()
+        else:
+            await random.choice([self.godownattack])()
 
 
     # randomiser patch

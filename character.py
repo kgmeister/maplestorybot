@@ -12,10 +12,11 @@
 
 
 import random
-from action import Action
-from flashjump import Flashjump
-from teleport import Teleport
-from nightlord import Nightlord
+from classtype.action import Action
+from classtype.flashjump import Flashjump
+from classtype.teleport import Teleport
+from classtype.nightlord import Nightlord
+from classtype.soulmaster import Soulmaster
 
 
 
@@ -37,15 +38,22 @@ class Character:
             'teleport': Teleport,
             'flashjump': Flashjump,
             'nightlord': Nightlord,
+            'soulmaster': Soulmaster,
         }
 
-    def setup(self,left,right,top,btm,classtype):
+    def setup(self,left,right,top,btm,classtype,runesolver,g):
         self.left=left
         self.right=right
         self.top=top
         self.btm=btm
         self.ac=self.classtype[classtype]()
+        self.ac.left=left
+        self.ac.right=right
+        self.ac.top=top
+        self.ac.btm=btm
+        self.ac.setup(runesolver,g)
         print(f'setup complete. {left=} {right=} {top=} {btm=}')
+        print(f'{self.ac.left=} {self.ac.right=} {self.ac.top=} {self.ac.btm=}')
 
     def change_ac_type(self, classtype):
         if classtype in self.classtype:
@@ -64,6 +72,9 @@ class Character:
         #     print(f'tp: {type(self.ac)=}')
 
     async def perform_next_attack(self,x,y):
+        await self.ac.perform_next_attack(x,y)
+
+    async def perform_next_attack2(self,x,y):
         if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):
             if x > self.left+self.offsetx:
                 if x < self.left+self.offsetx+5:
