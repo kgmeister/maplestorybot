@@ -4,6 +4,7 @@ This bot does not trigger in-game lie detector in MapleSEA (tested), however not
 It is open sourced and free to use. 
 
 # Features:
+- now possible to self-code high efficiency custom rotation. video showcase available in discord. 
 - to_be_update
 
 # Bot Limitations:
