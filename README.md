@@ -5,6 +5,7 @@ It is open sourced and free to use.
 
 # Features:
 - now possible to self-code high efficiency custom rotation. video showcase available in discord. 
+- GMA detector. (need external chat window)
 - to_be_update
 
 # Bot Limitations:
