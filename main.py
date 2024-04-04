@@ -29,6 +29,7 @@ from tkinter import messagebox
 from tkinter import ttk
 from tkinter import simpledialog
 from tkinter import *
+import customtkinter
 import gdi_capture
 from PIL import Image, ImageTk
 from configparser import ConfigParser
@@ -52,6 +53,9 @@ from initinterception import interception, move_to, move_relative, left_click, m
 from helper import Helper
 from character import Character
 
+
+customtkinter.set_appearance_mode('dark')
+customtkinter.set_default_color_theme('dark-blue')
 
 
 class TkinterBot:
@@ -142,17 +146,22 @@ class TkinterBot:
         self.thread6 = threading.Thread(target=self.run_thread6)
 
     def init_tkinter(self):        
-        self.root = tk.Tk()
+        # self.root = tk.Tk()
+        self.root = customtkinter.CTk()
         self.root.title("chrome")
-        photo=PhotoImage(file='icon.ico')
-        self.root.iconphoto(False,photo)
+        # photo=PhotoImage(file='icon.ico')
+        # self.root.iconphoto(False,photo)
+        self.root.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
+        self.root.wm_iconbitmap()
+        self.root.iconphoto(False, self.root.iconpath)
+        # self.root.iconbitmap(default="icon.ico")
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         window_width = 600
         window_height = 800
         window_x = screen_width - window_width
         window_y = 0
-        self.root.geometry(f"{window_width}x{window_height}+{window_x}+{window_y}")        
+        self.root.geometry(f"{window_width}x{window_height}+{window_x-10}+{window_y}")        
         # self.root.grid_rowconfigure(0, weight=1) # not sure bout this
         # self.root.grid_columnconfigure(0, weight=1) # not sure bout this
         # self.root.resizable(False,False)
@@ -228,8 +237,10 @@ class TkinterBot:
     async def async_function2(self, thread_name, iterations):
         while not self.telegram_started:
             time.sleep(1)
+        self.init_tkinter()
         try:
-            self.init_tkinter()
+            # self.init_tkinter()
+            pass
         except Exception as e:
             print(f'init_tkinter {e=}')
             return
@@ -999,44 +1010,58 @@ class TkinterBot:
         # title_bar.bind("<B1-Motion>", drag)
 
     def setup_tab(self):
-        self.notebook = ttk.Notebook(self.root)
-        # Create tabs (frames) to be added to the Notebook
-        self.tab1 = ttk.Frame(self.notebook)
-        self.tab2 = ttk.Frame(self.notebook)
-        self.tab3 = ttk.Frame(self.notebook)
-        self.tab4 = ttk.Frame(self.notebook)
-        self.tab5 = ttk.Frame(self.notebook)
-        self.tab6 = ttk.Frame(self.notebook)
-        # Add tabs to the Notebook
-        self.notebook.add(self.tab1, text="Rotation")
-        self.notebook.add(self.tab2, text="Tab 2")
-        self.notebook.add(self.tab3, text="Design")
-        self.notebook.add(self.tab4, text="Telegram")
-        self.notebook.add(self.tab5, text="Tab 5")
-        self.notebook.add(self.tab6, text="Settings")
-        # Bind the tab change event
-        self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_change)
-        # Pack the Notebook widget
-        self.notebook.pack(expand=1, fill="both")
-        # Add content to each tab
-        label1 = tk.Label(self.tab1, text="Main Rotation")
-        label1.pack(padx=10, pady=10)
-        label2 = tk.Label(self.tab2, text="Script Recording Method (Coming Soon .. )")
-        label2.pack(padx=10, pady=10)
-        label3 = tk.Label(self.tab3, text="Rotation Design")
-        label3.pack(padx=10, pady=10)
-        label4 = tk.Label(self.tab4, text="Telegram Setup")
-        label4.pack(padx=10, pady=10)
-        label5 = tk.Label(self.tab5, text="Autoclicker (Monster Life)")
-        label5.pack(padx=10, pady=10)
-        label6 = tk.Label(self.tab6, text="Settings")
-        label6.pack(padx=10, pady=10)
+        # self.mytab = customtkinter.CTkTabview(self.root,width=600,height=800,corner_radius=5, fg_color="#123456")
+        self.mytab = customtkinter.CTkTabview(self.root,width=600,height=800,corner_radius=5)
+            # segmented_button_fg_color="#1a4b6c", segmented_button_selected_color="#45ab65", , fg_color="#123456", 
+            # segmented_button_selected_hover_color="#fc31ab", segmented_button_unselected_color="#1b5fcf", 
+            # segmented_button_unselected_hover_color="#0abf45",text_color="#4cff4f",
+            # state='normal',command=None)
+        self.mytab.pack(padx=(1,1),pady=(1,1))
+        self.tab1 = self.mytab.add("Rotation")
+        self.tab2 = self.mytab.add("Script")
+        self.tab3 = self.mytab.add("Design")
+        self.tab4 = self.mytab.add("Telegram")
+        self.tab5 = self.mytab.add("Autoclicker")
+        self.tab6 = self.mytab.add("Settings")
+
+        # self.notebook = ttk.Notebook(self.root)
+        # # Create tabs (frames) to be added to the Notebook
+        # self.tab1 = ttk.Frame(self.notebook)
+        # self.tab2 = ttk.Frame(self.notebook)
+        # self.tab3 = ttk.Frame(self.notebook)
+        # self.tab4 = ttk.Frame(self.notebook)
+        # self.tab5 = ttk.Frame(self.notebook)
+        # self.tab6 = ttk.Frame(self.notebook)
+        # # Add tabs to the Notebook
+        # self.notebook.add(self.tab1, text="Rotation")
+        # self.notebook.add(self.tab2, text="Tab 2")
+        # self.notebook.add(self.tab3, text="Design")
+        # self.notebook.add(self.tab4, text="Telegram")
+        # self.notebook.add(self.tab5, text="Tab 5")
+        # self.notebook.add(self.tab6, text="Settings")
+        # # Bind the tab change event
+        # self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_change)
+        # # Pack the Notebook widget
+        # self.notebook.pack(expand=1, fill="both")
+        # # Add content to each tab
+        # label1 = tk.Label(self.tab1, text="Main Rotation")
+        # label1.pack(padx=10, pady=10)
+        # label2 = tk.Label(self.tab2, text="Script Recording Method (Coming Soon .. )")
+        # label2.pack(padx=10, pady=10)
+        # label3 = tk.Label(self.tab3, text="Rotation Design")
+        # label3.pack(padx=10, pady=10)
+        # label4 = tk.Label(self.tab4, text="Telegram Setup")
+        # label4.pack(padx=10, pady=10)
+        # label5 = tk.Label(self.tab5, text="Autoclicker (Monster Life)")
+        # label5.pack(padx=10, pady=10)
+        # label6 = tk.Label(self.tab6, text="Settings")
+        # label6.pack(padx=10, pady=10)
 
     def setup_tab1(self):
-        # framebase = tk.Frame(self.tab1, bg='', bd=0)
-        framebase = tk.Frame(self.tab1, bg='#3f5b79', bd=0)
+        # framebase = tk.Frame(self.tab1, bg='#3f5b79', bd=0)
+        framebase = customtkinter.CTkFrame(self.tab1)
         # framebase.pack(padx=0, pady=0, fill='both', expand=True)
-        framebase.pack(padx=0, pady=(0,10), fill='x', expand=False)
+        framebase.pack(padx=0, pady=(0,2), fill='x', expand=False)
         framebase.columnconfigure(0,weight=1)
         framebase.columnconfigure(1,weight=1)
         framebase.columnconfigure(2,weight=1)
@@ -1044,27 +1069,27 @@ class TkinterBot:
         # framebase.grid_columnconfigure(1,weight=1)
         # framebase.grid_columnconfigure(2,weight=1)
         # framebase.grid_propagate(False)
-        frameleft = tk.Frame(framebase, bg='#9eaa15', bd=0, width=170, height=110)
-        # frameleft = tk.Frame(framebase, bg='', bd=0, width=170, height=110)
+        # frameleft = tk.Frame(framebase, bg='#9eaa15', bd=0, width=170, height=110)
+        frameleft = customtkinter.CTkFrame(framebase, width=195, height=120, fg_color='transparent')
         frameleft.grid_propagate(0)
         # frameleft.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
         frameleft.grid(row=0,column=0,padx=(1,1),pady=(1,1))
-        framecenter = tk.Frame(framebase, bg='#1eaaf5', bd=0, width=170, height=110)
-        # framecenter = tk.Frame(framebase, bg='', bd=0, width=170, height=110)
+        # framecenter = tk.Frame(framebase, bg='#1eaaf5', bd=0, width=170, height=110)
+        framecenter = customtkinter.CTkFrame(framebase, width=195, height=120)
         framecenter.grid_propagate(0)
         framecenter.grid_rowconfigure(0,weight=1)
         framecenter.grid_columnconfigure(0,weight=1)
         # framecenter.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
         framecenter.grid(row=0,column=1,padx=(1,1),pady=(1,1))
-        frameright = tk.Frame(framebase, bg='#3e3aa4', bd=0, width=170, height=110)
-        # frameright = tk.Frame(framebase, bg='', bd=0, width=170, height=110)
+        # frameright = tk.Frame(framebase, bg='#3e3aa4', bd=0, width=170, height=110)
+        frameright = customtkinter.CTkFrame(framebase, width=195, height=120, fg_color='transparent')
         frameright.grid_propagate(0)
         # frameright.grid_rowconfigure(0,weight=1)
         # frameright.grid_rowconfigure(1,weight=1)
         frameright.grid_columnconfigure(0,weight=1)
         # frameright.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
         frameright.grid(row=0,column=2,padx=(1,1),pady=(1,1))
-        self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, bg='tomato', font=('Helvetica', 16))
+        self.button = customtkinter.CTkButton(framecenter, text="Resume", command=self.resumebutton, fg_color='tomato', font=('Helvetica', 16), text_color='black',hover=False)
         # self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, width=8, height=4, bg='tomato', font=('Helvetica', 16))
         # self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, bg='tomato')
         # self.button.pack(pady=(1,1), fill='both', expand=True)
@@ -1077,14 +1102,33 @@ class TkinterBot:
         json_files = [file for file in file_list if file.endswith(".json")]
         json_file_names = [os.path.splitext(file)[0] for file in json_files]
         # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=17)
-        comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=10)
+        # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=10)
         # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne', fill='both', expand=True)
         # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne')
+        # comboboxpreset.bind("<<ComboboxSelected>>", on_select)
+        comboboxpreset = customtkinter.CTkComboBox(frameright, values=json_file_names, state="readonly",command=on_select,justify='left', width=100)
         comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
         comboboxpreset.set(json_file_names[json_file_names.index(self.preset)])
-        comboboxpreset.bind("<<ComboboxSelected>>", on_select)
-        self.button = tk.Button(frameright, text="reload", command=self.reload)
-        self.button.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+        buttonreload = customtkinter.CTkButton(frameright, text="reload", command=self.reload, width=100)
+        buttonreload.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+        def new():
+            profile_name = simpledialog.askstring("New Profile", "Enter the name for the new profile:")
+            if profile_name:
+                json_file_names.append(profile_name)
+                comboboxpreset.set(json_file_names[len(json_file_names)-1])
+                comboboxpreset['values'] = json_file_names
+        buttonnew = customtkinter.CTkButton(frameright, text="new", command=new, width=100)
+        buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)        
+        def save():
+            allpresets=[]
+            allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
+            ,self.line_position_slider3.get(),self.line_position_slider4.get()])
+            with open(f'preset/{self.preset}.json', 'w') as json_file:
+                json.dump(allpresets, json_file, indent=4)
+            self.canvasimageholdertemp.save(f'image/{self.preset}.png')
+            print(f'saved preset. ') 
+        buttonsave = customtkinter.CTkButton(frameright, text="save", command=save, width=100)
+        buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
 
         # self.button.grid(row=0,column=1,padx=(1,1),pady=(10,20))
         # label1 = tk.Label(frame3, text="x:", fg="black", bg='#ffbb29')
@@ -1092,41 +1136,118 @@ class TkinterBot:
         # label1.grid(row=0, column=0, padx=(5,0), pady=0)
         # label2 = tk.Label(frame2, text="x:", fg="black", bg='#ffbb29')
         # label2.grid(row=0, column=2, padx=(5,0), pady=0)
-        frame = tk.Frame(self.tab1, bg='', bd=0)
+        # frame = tk.Frame(self.tab1, bg='', bd=0)
         # frame = tk.Frame(root, bg='#ffbb29')
-        frame.pack(padx=0, pady=0)
-        # # label1 = tk.Label(frame, text="x:", fg="black", bg='#ffbb29')
-        # # label1.grid(row=0, column=0, padx=(5,0), pady=0, sticky=tk.E)
-        # entry1 = tk.Entry(frame, width=10, fg='Gray')
-        # entry1.insert(0, 'Enter x...')
-        # entry1.bind("<FocusIn>", entry_focus_in)
-        # entry1.bind("<FocusOut>", entry_focus_out)
-        # entry1.grid(row=0, column=0, padx=(0,1), pady=(0,1))
-        # # label2 = tk.Label(frame, text="y:", fg="black", bg='#ffbb29')
-        # # label2.grid(row=1, column=0, padx=(5,0), pady=0, sticky=tk.E)
-        # entry2 = tk.Entry(frame, width=10, fg='Gray')
-        # entry2.insert(0, 'Enter y...')
-        # entry2.bind("<FocusIn>", entry2_focus_in)
-        # entry2.bind("<FocusOut>", entry2_focus_out)
-        # entry2.grid(row=0, column=1, padx=(1,0), pady=(0,1))
-        self.entry1 = Spinbox(frame, from_=100, to=400, font=("Helvetica", 16), width=5, increment=10)
-        self.entry1.delete(0,tk.END)
-        self.entry1.insert(0,self.minimapX)
-        self.entry1.grid(row=0,column=0, padx=(0,0), pady=(0,0))
-        self.entry2 = Spinbox(frame, from_=100, to=300, font=("Helvetica", 16), width=5, increment=10)
-        self.entry2.delete(0,tk.END)
-        self.entry2.insert(0,self.minimapY)
-        self.entry2.grid(row=0,column=1, padx=(0,0), pady=(0,0))
-        self.button2 = tk.Button(frame, text="adjust minimap", command=self.button_adjustminimap)
-        self.button2.grid(row=0, column=2, padx=(1,0), pady=(0,1))
-        image_path = "minimap.png"  # Replace with the actual path to your image
-        img = PhotoImage(file=image_path)
+        # frame = tk.Frame(self.tab1)
+        # frame.pack(padx=0, pady=0)
+        # # # label1 = tk.Label(frame, text="x:", fg="black", bg='#ffbb29')
+        # # # label1.grid(row=0, column=0, padx=(5,0), pady=0, sticky=tk.E)
+        # # entry1 = tk.Entry(frame, width=10, fg='Gray')
+        # # entry1.insert(0, 'Enter x...')
+        # # entry1.bind("<FocusIn>", entry_focus_in)
+        # # entry1.bind("<FocusOut>", entry_focus_out)
+        # # entry1.grid(row=0, column=0, padx=(0,1), pady=(0,1))
+        # # # label2 = tk.Label(frame, text="y:", fg="black", bg='#ffbb29')
+        # # # label2.grid(row=1, column=0, padx=(5,0), pady=0, sticky=tk.E)
+        # # entry2 = tk.Entry(frame, width=10, fg='Gray')
+        # # entry2.insert(0, 'Enter y...')
+        # # entry2.bind("<FocusIn>", entry2_focus_in)
+        # # entry2.bind("<FocusOut>", entry2_focus_out)
+        # # entry2.grid(row=0, column=1, padx=(1,0), pady=(0,1))
+        # self.entry1 = Spinbox(frame, from_=100, to=400, font=("Helvetica", 16), width=5, increment=10)
+        # self.entry1.delete(0,tk.END)
+        # self.entry1.insert(0,self.minimapX)
+        # self.entry1.grid(row=0,column=0, padx=(0,0), pady=(0,0))
+        # self.entry2 = Spinbox(frame, from_=100, to=300, font=("Helvetica", 16), width=5, increment=10)
+        # self.entry2.delete(0,tk.END)
+        # self.entry2.insert(0,self.minimapY)
+        # self.entry2.grid(row=0,column=1, padx=(0,0), pady=(0,0))
+        # self.button2 = customtkinter.CTkButton(frame, text="adjust minimap", command=self.button_adjustminimap)
+        # self.button2.grid(row=0, column=2, padx=(1,0), pady=(0,1))
+        
+        def minus():
+            try:
+                value = int(self.widthentry.get())
+                value = value-10 if value > 100 else value
+                self.widthentry.delete(0,tk.END)
+                self.widthentry.insert(0,str(value))
+            except Exception as e:
+                print(f'not a digit. {e=}')
+                self.widthentry.delete(0,tk.END)
+                self.widthentry.insert(0,self.minimapX)
+        def plus():
+            try:
+                value = int(self.widthentry.get())
+                value = value+10 if value < 400 else value
+                self.widthentry.delete(0,tk.END)
+                self.widthentry.insert(0,str(value))
+            except Exception as e:
+                print(f'not a digit. {e=}')
+                self.widthentry.delete(0,tk.END)
+                self.widthentry.insert(0,self.minimapX)
+        def minus2():
+            try:
+                value = int(self.heightentry.get())
+                value = value-10 if value > 100 else value
+                self.heightentry.delete(0,tk.END)
+                self.heightentry.insert(0,str(value))
+            except Exception as e:
+                print(f'not a digit. {e=}')
+                self.heightentry.delete(0,tk.END)
+                self.heightentry.insert(0,self.minimapY)
+        def plus2():
+            try:
+                value = int(self.heightentry.get())
+                value = value+10 if value < 300 else value
+                self.heightentry.delete(0,tk.END)
+                self.heightentry.insert(0,str(value))
+            except Exception as e:
+                print(f'not a digit. {e=}')
+                self.heightentry.delete(0,tk.END)
+                self.heightentry.insert(0,self.minimapY)
+        frame = customtkinter.CTkFrame(self.tab1)
+        frame.pack(padx=1, pady=2)
+        widthframe = customtkinter.CTkFrame(frame, fg_color="transparent", height=30, width=150)
+        widthframe.grid(row=0, column=0, padx=(2, 2), pady=1)
+        widthframe.grid_columnconfigure((0, 2), weight=0)   # buttons don't expand
+        widthframe.grid_columnconfigure(1, weight=0)        # entry expands
+        widthsub = customtkinter.CTkButton(widthframe, text="-", command=minus,height=30, width=30)
+        widthsub.grid(row=0, column=0, padx=(2, 2), pady=1, sticky='w')
+        self.widthentry = customtkinter.CTkEntry (widthframe, border_width=1,justify='right',placeholder_text='x',placeholder_text_color='grey',font=('Helvetica', 12),state='normal',height=30, width=80)
+        self.widthentry.grid(row=0, column=1, padx=(2, 2), pady=1, sticky='we')
+        widthadd = customtkinter.CTkButton(widthframe, text="+", command=plus,height=30, width=30)
+        widthadd.grid(row=0, column=2, padx=(2, 1), pady=1, sticky='w')
+        heightframe = customtkinter.CTkFrame(frame, fg_color="transparent", height=30, width=150)
+        heightframe.grid(row=0, column=1, padx=(0, 0), pady=1)
+        heightframe.grid_columnconfigure((0, 2), weight=0)   # buttons don't expand
+        heightframe.grid_columnconfigure(1, weight=0)        # entry expands
+        heightsub = customtkinter.CTkButton(heightframe, text="-", command=minus2,height=30, width=30)
+        heightsub.grid(row=0, column=0, padx=(1, 2), pady=1, sticky='w')
+        self.heightentry = customtkinter.CTkEntry (heightframe,border_width=1,justify='right',placeholder_text='y',placeholder_text_color='grey',font=('Helvetica', 12),state='normal',height=30, width=80)
+        self.heightentry.grid(row=0, column=1, padx=(2, 2), pady=1, sticky='we')
+        heightadd = customtkinter.CTkButton(heightframe, text="+", command=plus2,height=30, width=30)
+        heightadd.grid(row=0, column=2, padx=(2, 2), pady=1, sticky='w')
+        buttonframe = customtkinter.CTkFrame(frame, fg_color="transparent", height=30, width=150)
+        buttonframe.grid(row=0, column=2, padx=(1, 2), pady=1)
+        button2 = customtkinter.CTkButton(buttonframe, text="adjust", command=self.button_adjustminimap,height=30, width=110)
+        button2.grid(row=0, column=0, padx=(0,0), pady=(0,0))
+        
+        self.widthentry.delete(0,tk.END)
+        self.widthentry.insert(0,self.minimapX)
+        self.heightentry.delete(0,tk.END)
+        self.heightentry.insert(0,self.minimapY)
 
         # self.frame2 = tk.Frame(self.tab1, bg='orange', bd=0)
-        self.frame2 = tk.Frame(self.tab1, bg='', bd=0)
+        # self.frame2 = tk.Frame(self.tab1, bg='', bd=0)
+        self.frame2 = customtkinter.CTkFrame(self.tab1)
         self.frame2.pack(padx=0, pady=0)
-        self.canvas = tk.Canvas(self.frame2, width=self.minimapX-8, height=self.minimapY-63, bg='#fabb29')
-        self.canvas.grid(row=0, column=0, rowspan=1, padx=10, pady=(10,0))
+        # self.frame2.grid_rowconfigure((1,2),weight=0)
+        # self.frame2.grid_columnconfigure((1,2),weight=0)
+        image_path = "minimap.png"  # Replace with the actual path to your image
+        img = PhotoImage(file=image_path)
+        # self.canvas = tk.Canvas(self.frame2, width=self.minimapX-8, height=self.minimapY-63, bg='#fabb29')
+        self.canvas = customtkinter.CTkCanvas(self.frame2, width=self.minimapX-8, height=self.minimapY-63)
+        self.canvas.grid(row=0, column=0, rowspan=1, padx=0, pady=(0,0))
         self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
         
         if self.preset:
@@ -1166,51 +1287,63 @@ class TkinterBot:
                 # canvas_width=minimapX-8
                 # canvas_height=minimapY-63
         
-        self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, self.minimapY-63, fill="red", width=2)    
-        # slider_label = tk.Label(frame, text="left threshold:", bg='#ffbb29')
-        # slider_label.grid(row=3, column=1, pady=5, padx=5)
-        self.line_position_slider = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position)
-        self.line_position_slider.set(self.initial_line_position)
-        self.line_position_slider.grid(row=1, column=0, pady=1, padx=1)
-        
-        self.vertical_line2 = self.canvas.create_line(self.initial_line_position2, 0, self.initial_line_position2, self.minimapY-63, fill="yellow", width=2)    
-        # slider_label2 = tk.Label(frame, text="right threshold:", bg='#ffbb29')
-        # slider_label2.grid(row=4, column=1, pady=5, padx=5)
-        self.line_position_slider2 = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position2)
-        self.line_position_slider2.set(self.initial_line_position2)
-        self.line_position_slider2.grid(row=2, column=0, pady=(0,10), padx=1)
 
-        self.vertical_line3 = self.canvas.create_line(2, self.initial_line_position, self.canvas_height, self.initial_line_position, fill="lime", width=2)
-        self.line_position_slider3 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position3)
-        self.line_position_slider3.set(self.initial_line_position3)
-        self.line_position_slider3.grid(row=0, column=1, rowspan=3, pady=(10,10), padx=(0,10))
 
-        self.vertical_line4 = self.canvas.create_line(2, self.initial_line_position, self.canvas_height, self.initial_line_position, fill="lightblue", width=2)
-        self.line_position_slider4 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position4)
-        self.line_position_slider4.set(self.initial_line_position4)
-        self.line_position_slider4.grid(row=0, column=2, rowspan=3, pady=(10,10), padx=(0,10))
-        
-        self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
-        self.frame3.pack(padx=0, pady=0)
-        self.label_currentleft = tk.Label(self.frame3, text=f"current left: {self.line_position_slider.get()}")
-        self.label_currentleft.grid(row=0, column=0, pady=0, padx=5)  
-        self.label_currenttop = tk.Label(self.frame3, text=f"current top: {self.line_position_slider3.get()}")
-        self.label_currenttop.grid(row=0, column=1, pady=0, padx=5)  
-        self.label_currentright = tk.Label(self.frame3, text=f"current right: {self.line_position_slider2.get()}")
-        self.label_currentright.grid(row=1, column=0, pady=0, padx=5)  
-        self.label_currentbtm = tk.Label(self.frame3, text=f"current btm: {self.line_position_slider4.get()}")
-        self.label_currentbtm.grid(row=1, column=1, pady=0, padx=5)  
-        self.button3 = tk.Button(self.frame3, text="  Confirm New Threshold  ", command=self.reset, bg='yellow', font=('Helvetica', 8))
-        self.button3.grid(row=2, column=0, columnspan=2, pady=(10,10), padx=(20,20))
+        # def tempunused(self):
+        if True:
+            print(f'{height=} {self.minimapY=} {self.initial_line_position=} {self.canvas_height=}')
+            # self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, self.minimapY-63, fill="red", width=2)    
+            self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, height, fill="red", width=2)    
+            # # slider_label = tk.Label(frame, text="left threshold:", bg='#ffbb29')
+            # # slider_label.grid(row=3, column=1, pady=5, padx=5)
+            # self.line_position_slider = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position)
+            self.line_position_slider = customtkinter.CTkSlider(self.frame2,from_=2,to=self.canvas_width,orientation='horizontal',number_of_steps=self.canvas_width-2, width=self.canvas_width, command=self.update_line_position)
+            self.line_position_slider.set(self.initial_line_position)
+            self.line_position_slider.grid(row=1, column=0, pady=0, padx=0, sticky='we')
+            
+            self.vertical_line2 = self.canvas.create_line(self.initial_line_position2, 0, self.initial_line_position2, height, fill="yellow", width=2)    
+            # slider_label2 = tk.Label(frame, text="right threshold:", bg='#ffbb29')
+            # slider_label2.grid(row=4, column=1, pady=5, padx=5)
+            # self.line_position_slider2 = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position2)
+            self.line_position_slider2 = customtkinter.CTkSlider(self.frame2,from_=2,to=self.canvas_width,orientation='horizontal',number_of_steps=self.canvas_width-2, width=self.canvas_width, command=self.update_line_position2)
+            self.line_position_slider2.set(self.initial_line_position2)
+            self.line_position_slider2.grid(row=2, column=0, pady=(0,2), padx=0, sticky='we')
 
-        self.frame4 = tk.Frame(self.tab1, bg='yellow', bd=0, height=50, width=100)
-        self.frame4.pack(padx=0, pady=0, side='bottom', fill='x')
-        self.button4 = tk.Button(self.frame4, text="Test Mouse", command=self.testmouse, font=('Helvetica', 8))
-        self.button4.grid(row=0, column=0, pady=(0,0), padx=(1,1))
-        self.button4 = tk.Button(self.frame4, text="Rebind Mouse", command=self.rebindmouse, font=('Helvetica', 8))
-        self.button4.grid(row=0, column=1, pady=(0,0), padx=(1,1))
-        self.button4 = tk.Button(self.frame4, text="Rebind Chat Window", command=self.rebindchathwnd, font=('Helvetica', 8))
-        self.button4.grid(row=0, column=2, pady=(0,0), padx=(1,1))
+            self.vertical_line3 = self.canvas.create_line(self.canvas_width, self.initial_line_position3, 2, self.initial_line_position3, fill="lime", width=2)
+            # self.line_position_slider3 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position3)
+            self.line_position_slider3 = customtkinter.CTkSlider(self.frame2,to=2,from_=self.canvas_height,orientation='vertical',number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3, command=self.update_line_position3)
+            self.line_position_slider3.set(self.initial_line_position3)
+            self.line_position_slider3.grid(row=0, column=1, rowspan=3, pady=(0,0), padx=(2,1), sticky='ns')
+
+            self.vertical_line4 = self.canvas.create_line(self.canvas_width, self.initial_line_position4, 2, self.initial_line_position4, fill="lightblue", width=2)
+            # self.line_position_slider4 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position4)
+            self.line_position_slider4 = customtkinter.CTkSlider(self.frame2,to=2,from_=self.canvas_height,orientation='vertical',number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3, command=self.update_line_position4)
+            self.line_position_slider4.set(self.initial_line_position4)
+            self.line_position_slider4.grid(row=0, column=2, rowspan=3, pady=(0,0), padx=(0,0), sticky='ns')
+            
+            # self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
+            # self.frame3.pack(padx=0, pady=0)
+            # self.label_currentleft = tk.Label(self.frame3, text=f"current left: {self.line_position_slider.get()}")
+            # self.label_currentleft.grid(row=0, column=0, pady=0, padx=5)  
+            # self.label_currenttop = tk.Label(self.frame3, text=f"current top: {self.line_position_slider3.get()}")
+            # self.label_currenttop.grid(row=0, column=1, pady=0, padx=5)  
+            # self.label_currentright = tk.Label(self.frame3, text=f"current right: {self.line_position_slider2.get()}")
+            # self.label_currentright.grid(row=1, column=0, pady=0, padx=5)  
+            # self.label_currentbtm = tk.Label(self.frame3, text=f"current btm: {self.line_position_slider4.get()}")
+            # self.label_currentbtm.grid(row=1, column=1, pady=0, padx=5)  
+            # self.button3 = tk.Button(self.frame3, text="  Confirm New Threshold  ", command=self.reset, bg='yellow', font=('Helvetica', 8))
+            # self.button3.grid(row=2, column=0, columnspan=2, pady=(10,10), padx=(20,20))
+
+            self.frame4 = customtkinter.CTkFrame(self.tab1, height=50, width=100)
+            # self.frame4 = tk.Frame(self.tab1, bg='yellow', bd=0, height=50, width=100)
+            self.frame4.pack(padx=0, pady=0, side='bottom', fill='x')
+            # self.button4 = tk.Button(self.frame4, text="Test Mouse", command=self.testmouse, font=('Helvetica', 8))
+            button4 = customtkinter.CTkButton(self.frame4, text="Test Mouse", command=self.testmouse, font=('Helvetica', 12))
+            button4.grid(row=0, column=0, pady=(0,0), padx=(1,1))
+            button5 = customtkinter.CTkButton(self.frame4, text="Rebind Mouse", command=self.rebindmouse, font=('Helvetica', 12))
+            button5.grid(row=0, column=1, pady=(0,0), padx=(1,1))
+            button6 = customtkinter.CTkButton(self.frame4, text="Rebind Chat Window", command=self.rebindchathwnd, font=('Helvetica', 12))
+            button6.grid(row=0, column=2, pady=(0,0), padx=(1,1))
 
     def testmouse(self):
         self.triggermousetest=True
@@ -1225,15 +1358,25 @@ class TkinterBot:
         self.pause = not self.pause
         print(f'resumebutton pressed .. {self.pause}')
         if self.pause:
-            self.button.config(text='Resume', bg='tomato')
+            self.button.configure(text='Resume', fg_color='tomato')
             self.runesolver.disablerune()
         else:
-            self.button.config(text='Pause', bg='lime')
+            self.button.configure(text='Pause', fg_color='lime')
             self.runesolver.enablerune()
 
     def button_adjustminimap(self, setimage=False):
-        self.minimapX = int(self.entry1.get())
-        self.minimapY = int(self.entry2.get())
+        try: # will remain as original value even if error
+            self.minimapX = int(self.widthentry.get())
+        except Exception as e:
+            print(f'adjust button: {e=}')
+            self.widthentry.delete(0,tk.END)
+            self.widthentry.insert(0,self.minimapX)
+        try: # will remain as original value even if error
+            self.minimapY = int(self.heightentry.get())
+        except Exception as e:
+            print(f'adjust button: {e=}')
+            self.heightentry.delete(0,tk.END)
+            self.heightentry.insert(0,self.minimapY)
         if self.minimapX > 400:
             self.minimapX=400
         if self.minimapY > 300:
@@ -1248,7 +1391,7 @@ class TkinterBot:
             img_cropped = Image.open(f'image/{self.preset}.png')
             tk_image = ImageTk.PhotoImage(img_cropped)
             self.canvas.delete("all")
-            self.canvas.config(width=width,height=height)
+            self.canvas.configure(width=width,height=height)
             self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)        
             self.canvas.image = tk_image
             self.canvasimageholdertemp = img_cropped
@@ -1267,7 +1410,7 @@ class TkinterBot:
                 img_cropped = Image.fromarray(img_cropped)
                 tk_image = ImageTk.PhotoImage(img_cropped)
                 self.canvas.delete("all")
-                self.canvas.config(width=width,height=height)
+                self.canvas.configure(width=width,height=height)
                 self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)        
                 self.canvas.image = tk_image
                 self.canvasimageholdertemp = img_cropped
@@ -1278,20 +1421,24 @@ class TkinterBot:
                 # canvas_height=minimapY-63
                 initial_line_position = self.canvas_width / 2
 
-        self.vertical_line = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="red", width=2)
-        self.line_position_slider.config(to=self.canvas_width, length=self.canvas_width)
+        # self.vertical_line = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="red", width=2)
+        self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, height, fill="red", width=2)    
+        self.line_position_slider.configure(to=self.canvas_width, width=self.canvas_width)
         self.update_line_position(self.line_position_slider.get())
         
-        self.vertical_line2 = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="yellow", width=2)
-        self.line_position_slider2.config(to=self.canvas_width, length=self.canvas_width)
+        # self.vertical_line2 = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="yellow", width=2)
+        self.vertical_line2 = self.canvas.create_line(self.initial_line_position2, 0, self.initial_line_position2, height, fill="yellow", width=2)    
+        self.line_position_slider2.configure(to=self.canvas_width, width=self.canvas_width)
         self.update_line_position2(self.line_position_slider2.get())
         
-        self.vertical_line3 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lime", width=2)
-        self.line_position_slider3.config(to=self.canvas_height, length=self.canvas_height*2)
+        # self.vertical_line3 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lime", width=2)
+        self.vertical_line3 = self.canvas.create_line(self.canvas_width, self.initial_line_position3, 2, self.initial_line_position3, fill="lime", width=2)
+        self.line_position_slider3.configure(from_=self.canvas_height, height=self.canvas_height*1.2)
         self.update_line_position3(self.line_position_slider3.get())
 
-        self.vertical_line4 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lightblue", width=2)
-        self.line_position_slider4.config(to=self.canvas_height, length=self.canvas_height*2)
+        # self.vertical_line4 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lightblue", width=2)
+        self.vertical_line4 = self.canvas.create_line(self.canvas_width, self.initial_line_position4, 2, self.initial_line_position4, fill="lightblue", width=2)
+        self.line_position_slider4.configure(from_=self.canvas_height, height=self.canvas_height*1.2)
         self.update_line_position4(self.line_position_slider4.get())
 
         self.g = Game((8, 63, self.minimapX, self.minimapY)) #         
@@ -1340,10 +1487,10 @@ class TkinterBot:
             self.line_position_slider2.set(allpresets[3])
             self.line_position_slider3.set(allpresets[4])
             self.line_position_slider4.set(allpresets[5])           
-            self.entry1.delete(0,tk.END)
-            self.entry1.insert(0,self.minimapX)
-            self.entry2.delete(0,tk.END)
-            self.entry2.insert(0,self.minimapY)
+            self.widthentry.delete(0,tk.END)
+            self.widthentry.insert(0,self.minimapX)
+            self.heightentry.delete(0,tk.END)
+            self.heightentry.insert(0,self.minimapY)
             self.button_adjustminimap(setimage=True)
             self.label_currentleft.config(text=f"current left: {self.line_position_slider.get()}")
             self.label_currenttop.config(text=f"current left: {self.line_position_slider3.get()}")
@@ -1519,7 +1666,7 @@ class TkinterBot:
             self.profile = comboboxclasstype.get()
             with open(f'json/{self.profile}.json', 'w') as json_file:
                 json.dump(platforms, json_file, indent=4)
-            print(f'saved platform. ')            
+            print(f'saved platform. ')
         self.buttonsaveprofile = tk.Button(self.framedesign3, text="Save", command=saveprofile, state=tk.NORMAL)
         self.buttonsaveprofile.grid(row=0, column=0, pady=2, padx=2, sticky='nsew')
         load_profile()

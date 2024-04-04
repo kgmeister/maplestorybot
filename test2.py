@@ -15,6 +15,7 @@ from humancursor import SystemCursor
 from helper import Helper
 from configparser import ConfigParser
 import tkinter as tk
+import customtkinter
 from runesolver import RuneSolver
 from classtype.action import Action
 
@@ -405,30 +406,79 @@ async def main():
     # fountain = config.get('keybind', 'fountain')
     # print(atk, jump, teleport, ropeconnect, npc, fountain)
 
-    root = tk.Tk()
-    root.geometry("500x300")
-    def add():
-        tk.Entry(frame).grid()
-    def disable():
-        frame.configure(height=frame["height"],width=frame["width"])
-        frame.grid_propagate(0)
-    def enable():
-        frame.grid_propagate(1)
-    frame = tk.Frame(root, height=300,width=450,bg="grey")
-    # frame.grid(row=1,column=0)
-    frame.pack()
-    frame.grid_propagate(0)
-    # frame.grid_rowconfigure(0,weight=1)
-    frame.grid_columnconfigure(0,weight=1)
-    # tk.Button(root, text="add widget", command=add).grid(row=0,column=0)
-    # tk.Button(root, text="disable propagation", command=disable).grid(row=0,column=1)
-    # tk.Button(root, text="enable propagation", command=enable).grid(row=0,column=2)
-    # tk.Button(frame,bg='#123456',text='resume').grid(row=0,column=0,sticky='ne')
-    tk.Frame(frame, height=50,width=75,bg="blue").grid(row=0,column=0,sticky='ne')
-    tk.Frame(frame, height=50,width=75,bg="red").grid(row=1,column=0,sticky='ne')
-    tk.Frame(frame, height=50,width=75,bg="yellow").grid(row=2,column=0,sticky='ne')
-    tk.Frame(frame, height=50,width=75,bg="green").grid(row=3,column=0,sticky='ne')
-    root.mainloop()
+    # # root = tk.Tk()
+    # root = customtkinter.CTk()
+    # root.geometry("800x600")
+    # frame = tk.Frame(root, height=100,width=200,bg="grey")
+    # frame.pack()
+    # # frame.grid_propagate(0)
+    # # frame.grid_columnconfigure(0,weight=1)
+    # # # frame.grid(row=1,column=0)
+    # # frame.grid_rowconfigure(0,weight=1)
+    # # def add():
+    # #     tk.Entry(frame).grid()
+    # # def disable():
+    # #     frame.configure(height=frame["height"],width=frame["width"])
+    # #     frame.grid_propagate(0)
+    # # def enable():
+    # #     frame.grid_propagate(1)
+    # # # tk.Button(root, text="add widget", command=add).grid(row=0,column=0)
+    # # # tk.Button(root, text="disable propagation", command=disable).grid(row=0,column=1)
+    # # # tk.Button(root, text="enable propagation", command=enable).grid(row=0,column=2)
+    # # # tk.Button(frame,bg='#123456',text='resume').grid(row=0,column=0,sticky='ne')
+    # # tk.Frame(frame, height=50,width=75,bg="blue").grid(row=0,column=0,sticky='ne')
+    # # tk.Frame(frame, height=50,width=75,bg="red").grid(row=1,column=0,sticky='ne')
+    # # tk.Frame(frame, height=50,width=75,bg="yellow").grid(row=2,column=0,sticky='ne')
+    # # tk.Frame(frame, height=50,width=75,bg="green").grid(row=3,column=0,sticky='ne')
+    # # slider1 = customtkinter.CTkSlider(frame,from_=0,to=100,orientation='horizontal',number_of_steps=100,command=None)
+    # # slider1.grid(row=4,column=0)    
+    # def minus():
+    #     pass
+    # def plus():
+    #     pass
+    # def minus2():
+    #     pass
+    # def plus2():
+    #     pass
+    # frame2 = customtkinter.CTkFrame(root, width=400, height=300)
+    # frame2.pack(padx=1, pady=1)
+    # widthframe = customtkinter.CTkFrame(frame2, fg_color="transparent", bg_color='#123fec',height=5, width=20)
+    # widthframe.grid(row=0, column=0, padx=(1, 1), pady=1)
+    # # widthframe.grid_columnconfigure((0, 2), weight=0)   # buttons don't expand
+    # # widthframe.grid_columnconfigure(1, weight=0)        # entry expands
+    # # widthsub = customtkinter.CTkButton(widthframe, text="-", command=minus,width=10, height=10)
+    # # widthsub.grid(row=0, column=0, padx=(1, 1), pady=1, sticky='w')
+    # # widthentry = customtkinter.CTkEntry (widthframe, width=15, height=5, border_width=1,justify='right')
+    # # widthentry.grid(row=0, column=1, padx=(1, 1), pady=1, sticky='we')
+    # # widthadd = customtkinter.CTkButton(widthframe, text="+", command=plus,width=10, height=10)
+    # # widthadd.grid(row=0, column=2, padx=(1, 1), pady=1, sticky='w')
+    # heightframe = customtkinter.CTkFrame(frame2, fg_color="transparent", bg_color='#1f3f3c',height=5, width=20)
+    # heightframe.grid(row=0, column=1, padx=(1, 1), pady=1)
+    # # heightframe.grid_columnconfigure((0, 2), weight=0)   # buttons don't expand
+    # # heightframe.grid_columnconfigure(1, weight=0)        # entry expands
+    # # heightsub = customtkinter.CTkButton(heightframe, text="-", command=minus2,width=10, height=10)
+    # # heightsub.grid(row=0, column=0, padx=(1, 1), pady=1, sticky='w')
+    # # heightentry = customtkinter.CTkEntry (heightframe, width=15, height=5, border_width=1,justify='right')
+    # # heightentry.grid(row=0, column=1, padx=(1, 1), pady=1, sticky='we')
+    # # heightadd = customtkinter.CTkButton(heightframe, text="+", command=plus2,width=10, height=10)
+    # # heightadd.grid(row=0, column=2, padx=(1, 1), pady=1, sticky='w')
+    # buttonframe = customtkinter.CTkFrame(frame2, fg_color="transparent", bg_color='#f233ec',height=5, width=20)
+    # buttonframe.grid(row=0, column=2, padx=(1, 1), pady=1)
+    # # button2 = customtkinter.CTkButton(frame, text="adjust", command=self.button_adjustminimap)
+    # # button2.grid(row=0, column=0, padx=(1,0), pady=(0,1))
+    # root.mainloop()
+
+    a='b'
+    x=0
+    y=None
+    try:
+        x=int(a)
+    except Exception as e:
+        print(f'{e=}')
+    print(x)
+    print(a)
+    print(y)
+
 
 # Run the event loop
 if __name__ == "__main__":
