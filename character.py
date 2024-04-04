@@ -17,6 +17,7 @@ from classtype.flashjump import Flashjump
 from classtype.teleport import Teleport
 from classtype.nightlord import Nightlord
 from classtype.soulmaster import Soulmaster
+from classtype.zero import Zero
 
 
 
@@ -39,6 +40,7 @@ class Character:
             'flashjump': Flashjump,
             'nightlord': Nightlord,
             'soulmaster': Soulmaster,
+            'zero': Zero,
         }
 
     def setup(self,left,right,top,btm,classtype,runesolver,g):

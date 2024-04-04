@@ -12,7 +12,7 @@ from initinterception import sleep
 
 
 
-class Soulmaster(Action):
+class Zero(Action):
 
     def __init__(self):
         super().__init__()
@@ -328,7 +328,8 @@ class Soulmaster(Action):
         #     await self.rightr()
 
     async def perform_next_attack(self, x, y):
-        await self.limen1_7(x,y)
+        # await self.limen1_7(x,y)
+        await self.clockwise(x,y)
 
     async def limen1_7(self,x,y):    
         if y > 34.5 and y <= 47.5:
@@ -500,3 +501,75 @@ class Soulmaster(Action):
 
 
 
+
+
+    async def clockwise(self,x,y):
+        if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x > self.left+self.offsetx:
+                if x < self.left+self.offsetx+5:
+                    await random.choice([self.leftwalk])()
+                else:
+                    await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x < self.left-self.offsetx:
+                if x > self.left-self.offsetx-5:
+                    await random.choice([self.rightwalk])()
+                else:
+                    await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+        elif y <= self.top+self.offsety and y > self.top-self.offsety:
+            if x < self.right-self.offsetx:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x > self.right+self.offsetx:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+        elif y > self.top and not (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+            else:
+                if x < ((self.right-self.left)/2):
+                    if self.replaceropeconnect:
+                        await random.choice([self.goupattack_v3])()
+                    else:
+                        await random.choice([self.goupattack])()
+                elif x >= ((self.right-self.left)/2):
+                    await random.choice([self.godownattack])()
+        else:
+            await random.choice([self.godownattack])()
+
+        self.now = perf_counter()
+        self.randommtimer = self.now - self.randommtimer0
+        if self.randommtimer > 15:
+            self.randommtimer0 = self.now
+            # p = random.randint(0, len(self.randomlist)-1)
+            code = random.choice(self.randomlist)
+            if code is not None:
+                print(f'randomiser {code=}')
+                await self.send2(code)
+                await self.send3(code)                
+        self.cosmicshowerplanttimer = self.now - self.cosmicshowerplanttimer0
+        if self.cosmicshowerplanttimer > 59:
+            self.cosmicshowerplant = True
+        self.fountaintimer = self.now - self.fountaintimer0
+        if self.fountaintimer > 59:
+            self.fountain = True
+        self.runetimer = self.now - self.runetimer0
+        # if runetimer > 600: # change to 600 when haste
+        if self.runetimer > 900: # change to 600 when haste
+            self.checkrune = True
+            # self.checkrune = False
+        if self.checkrune:
+            self.solverune = self.runesolver.runechecker(self.g)
+        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft=} gr={self.goright=}')
+
+        if self.solverune:
+            await self.runesolver.gotorune(self.g)
