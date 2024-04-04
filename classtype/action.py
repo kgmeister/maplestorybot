@@ -42,6 +42,8 @@ class Action:
         self.sbtm=58.0 # 54.5
         self.runesolver=None
         self.g=None
+        ## misc
+        self.replaceropeconnect=False
     
     def refreshkeybind(self):
         self.config.read('settings.ini')

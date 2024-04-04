@@ -358,8 +358,8 @@ class TkinterBot:
         btm1=self.line_position_slider4.get()
         left=self.line_position_slider.get()/2+0
         right=self.line_position_slider2.get()/2+0
-        top=self.line_position_slider3.get()/2-8
-        btm=self.line_position_slider4.get()/2-8
+        top=self.line_position_slider3.get()/2-2
+        btm=self.line_position_slider4.get()/2-2
         self.character = Character()
         self.character.setup(left,right,top,btm,self.classtype,self.runesolver,self.g)
         self.ac=self.character.ac
@@ -1109,16 +1109,14 @@ class TkinterBot:
         comboboxpreset = customtkinter.CTkComboBox(frameright, values=json_file_names, state="readonly",command=on_select,justify='left', width=100)
         comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
         comboboxpreset.set(json_file_names[json_file_names.index(self.preset)])
-        buttonreload = customtkinter.CTkButton(frameright, text="reload", command=self.reload, width=100)
-        buttonreload.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
         def new():
             profile_name = simpledialog.askstring("New Profile", "Enter the name for the new profile:")
             if profile_name:
                 json_file_names.append(profile_name)
                 comboboxpreset.set(json_file_names[len(json_file_names)-1])
-                comboboxpreset['values'] = json_file_names
+                comboboxpreset.configure(values=json_file_names)
         buttonnew = customtkinter.CTkButton(frameright, text="new", command=new, width=100)
-        buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)        
+        buttonnew.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)        
         def save():
             allpresets=[]
             allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
@@ -1128,7 +1126,9 @@ class TkinterBot:
             self.canvasimageholdertemp.save(f'image/{self.preset}.png')
             print(f'saved preset. ') 
         buttonsave = customtkinter.CTkButton(frameright, text="save", command=save, width=100)
-        buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+        buttonsave.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+        buttonreload = customtkinter.CTkButton(frameright, text="reload", command=self.reload, width=100)
+        buttonreload.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
 
         # self.button.grid(row=0,column=1,padx=(1,1),pady=(10,20))
         # label1 = tk.Label(frame3, text="x:", fg="black", bg='#ffbb29')

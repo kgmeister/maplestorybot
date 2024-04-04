@@ -8,3 +8,4 @@ requests
 pynput
 pillow
 Pillow
+customtkinter

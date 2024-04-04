@@ -481,7 +481,7 @@ class Soulmaster(Action):
         if self.checkrune:
             self.solverune = self.runesolver.runechecker(self.g)
         # print(f'{x=} {y=} {statuetimer=} {fountaintimer=}, {runetimer=}, {cctimer=}')
-        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft=} gr={self.goright=}')
+        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft} gr={self.goright}')
         # print(f'{x=} {y=} {self.runetimer} {self.solverune} | {self.left}, {self.top}, {self.right}, {self.btm} | {self.left1}, {self.top1}, {self.right1}, {self.btm1}')
         # print(f'{x=}, {y=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
 

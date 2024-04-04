@@ -555,7 +555,15 @@ class Zero(Action):
             if code is not None:
                 print(f'randomiser {code=}')
                 await self.send2(code)
-                await self.send3(code)                
+                await self.send3(code)
+        if self.replaceropeconnect==True:
+            if runonce:
+                replaceropeconnecttimer0=self.now
+                runonce=False
+            replaceropeconnecttimer = self.now - replaceropeconnecttimer0
+            if replaceropeconnecttimer > 90:
+                self.replaceropeconnect=False
+                runonce=True
         self.cosmicshowerplanttimer = self.now - self.cosmicshowerplanttimer0
         if self.cosmicshowerplanttimer > 59:
             self.cosmicshowerplant = True
@@ -569,7 +577,7 @@ class Zero(Action):
             # self.checkrune = False
         if self.checkrune:
             self.solverune = self.runesolver.runechecker(self.g)
-        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft=} gr={self.goright=}')
+        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft} gr={self.goright}')
 
         if self.solverune:
             await self.runesolver.gotorune(self.g)
