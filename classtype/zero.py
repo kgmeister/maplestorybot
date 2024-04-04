@@ -220,6 +220,48 @@ class Zero(Action):
                 goleft=False
         return goleft,goright
 
+    # zero patch for additional custom attacks
+    
+    async def zeroZatt(self):
+        # print(f'aaaa')
+        await self.zp()
+        await self.zr()
+        
+    async def zeroXatt(self):
+        # print(f'aaaa')
+        await self.xp()
+        await self.xr()
+        
+    async def zeroCatt(self):
+        # print(f'aaaa')
+        await self.cp()
+        await self.cr()
+        
+    async def zeroVatt(self):
+        # print(f'aaaa')
+        await self.vp()
+        await self.vr()
+        
+    async def zeroAatt(self):
+        # print(f'aaaa')
+        await self.ap()
+        await self.ar()
+        
+    async def zeroSatt(self):
+        # print(f'aaaa')
+        await self.sp()
+        await self.sr()
+        
+    async def zeroDatt(self):
+        # print(f'aaaa')
+        await self.dp()
+        await self.dr()
+        
+    async def zeroFatt(self):
+        # print(f'aaaa')
+        await self.fp()
+        await self.fr()        
+
     # soul master actions patch for limen 1-7
     
     async def rightupjump(self):

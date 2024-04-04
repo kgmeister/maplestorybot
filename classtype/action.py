@@ -118,6 +118,8 @@ class Action:
         r /= 1000
         await sleep(r)
 
+    ## additional patch for extra key buttons. 
+
     async def bp(self,x=31,y=101):
         keydown('b')
         r = random.randint(x, y)
@@ -126,6 +128,102 @@ class Action:
 
     async def br(self,x=31,y=101):
         keyup('b')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def zp(self,x=31,y=101):
+        keydown('z')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def zr(self,x=31,y=101):
+        keyup('z')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def xp(self,x=31,y=101):
+        keydown('x')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def xr(self,x=31,y=101):
+        keyup('x')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def cp(self,x=31,y=101):
+        keydown('c')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def cr(self,x=31,y=101):
+        keyup('c')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def vp(self,x=31,y=101):
+        keydown('v')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def vr(self,x=31,y=101):
+        keyup('v')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def ap(self,x=31,y=101):
+        keydown('a')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ar(self,x=31,y=101):
+        keyup('a')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def sp(self,x=31,y=101):
+        keydown('s')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def sr(self,x=31,y=101):
+        keyup('s')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def dp(self,x=31,y=101):
+        keydown('d')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def dr(self,x=31,y=101):
+        keyup('d')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+        
+    async def fp(self,x=31,y=101):
+        keydown('f')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def fr(self,x=31,y=101):
+        keyup('f')
         r = random.randint(x, y)
         r /= 1000
         await sleep(r)
