@@ -36,10 +36,10 @@ from configparser import ConfigParser
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybind, goleftattack, gorightattack, goleftattackk, gorightattackk, \
-    goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
-    stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
-    goattackleft, goattackkleft, goattackright, goattackkright
+# from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybind, goleftattack, gorightattack, goleftattackk, gorightattackk, \
+#     goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
+#     stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
+#     goattackleft, goattackkleft, goattackright, goattackkright
 from classtype.action import Action
 from classtype.teleport import Teleport
 from classtype.flashjump import Flashjump
@@ -1833,7 +1833,7 @@ class TkinterBot:
         self.config.set('keybind', 'classtype', str(self.comboboxclasstype.get()))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
-        refreshkeybind()
+        # refreshkeybind()
         # self.character.change_ac_type(Teleport()) if self.classtype=='teleport' else self.character.change_ac_type(Flashjump())
         self.character.change_ac_type(self.classtype)
 

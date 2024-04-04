@@ -52,6 +52,7 @@ class Action:
         self.teleport = self.config.get('keybind', 'teleport')
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
+        
 
     def setup(self,runesolver,g):
         self.runesolver=runesolver

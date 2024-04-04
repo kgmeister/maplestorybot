@@ -63,6 +63,10 @@ class Character:
             self.offsetx=self.ac.offsetx
             self.offsety=self.ac.offsety
             print(f'{self.offsetx=} {self.offsety=} {self.classtype=}')
+            self.ac.refresh_key_bind()
+
+    def refresh_key_bind(self):
+        self.ac.refresh_key_bind()
 
     # def change_ac_type(self,ac):
         # self.ac=ac
