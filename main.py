@@ -58,9 +58,10 @@ customtkinter.set_appearance_mode('dark')
 customtkinter.set_default_color_theme('dark-blue')
 
 
-class TkinterBot:
+class TkinterBot(customtkinter.CTk):
     
     def __init__(self):
+        super().__init__()
 
         self.config = ConfigParser()
         self.config.read('settings.ini')
@@ -99,7 +100,8 @@ class TkinterBot:
         self.ac=None
         # self.hc = SystemCursor()
         self.he = Helper()
-        self.character = None
+        # self.character = None
+        self.character = Character()
 
         self.application = None
         self.threads = []
@@ -145,7 +147,35 @@ class TkinterBot:
         self.thread3 = threading.Thread(target=self.run_thread3)
         self.thread6 = threading.Thread(target=self.run_thread6)
 
-    def init_tkinter(self):        
+    def init_tkinter(self):
+        self.title("chrome")
+        self.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
+        self.wm_iconbitmap()
+        self.iconphoto(False, self.iconpath)
+        self.screen_width = self.winfo_screenwidth()
+        self.screen_height = self.winfo_screenheight()
+        window_width = 600
+        window_height = 800
+        window_x = self.screen_width - window_width
+        window_y = 0
+        self.geometry(f"{window_width}x{window_height}+{window_x-10}+{window_y}")
+        print(f'setup_tab')
+        self.setup_tab()
+        print(f'setup_tab1')
+        self.setup_tab1()
+        print(f'setup_tab3')
+        self.setup_tab3()
+        print(f'setup_tab4')
+        self.setup_tab4()
+        print(f'setup_tab6')
+        self.setup_tab6()
+        print(f'setup_tabs_done')
+        # self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.tkinter_started=True
+        # self.root.mainloop()
+        
+    def init_tkinter2(self):
         # self.root = tk.Tk()
         self.root = customtkinter.CTk()
         self.root.title("chrome")
@@ -155,13 +185,13 @@ class TkinterBot:
         self.root.wm_iconbitmap()
         self.root.iconphoto(False, self.root.iconpath)
         # self.root.iconbitmap(default="icon.ico")
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
+        self.screen_width = self.root.winfo_screenwidth()
+        self.screen_height = self.root.winfo_screenheight()
         window_width = 600
         window_height = 800
-        window_x = screen_width - window_width
+        window_x = self.screen_width - window_width
         window_y = 0
-        self.root.geometry(f"{window_width}x{window_height}+{window_x-10}+{window_y}")        
+        self.root.geometry(f"{window_width}x{window_height}+{window_x-10}+{window_y}")
         # self.root.grid_rowconfigure(0, weight=1) # not sure bout this
         # self.root.grid_columnconfigure(0, weight=1) # not sure bout this
         # self.root.resizable(False,False)
@@ -279,7 +309,7 @@ class TkinterBot:
     def start_threads(self):
         # Start both threads
         self.thread1.start()
-        self.thread2.start()
+        # self.thread2.start()
         self.thread3.start()
         self.thread6.start()
 
@@ -287,8 +317,8 @@ class TkinterBot:
         # Wait for both threads to finish
         self.thread1.join()
         print(f'thread1 joined. ')
-        self.thread2.join()
-        print(f'thread2 joined. ')
+        # self.thread2.join()
+        # print(f'thread2 joined. ')
         self.thread3.join()
         print(f'thread3 joined. ')
         self.thread6.join()
@@ -356,12 +386,13 @@ class TkinterBot:
         right1=self.line_position_slider2.get()
         top1=self.line_position_slider3.get()
         btm1=self.line_position_slider4.get()
-        left=self.line_position_slider.get()/2+0
-        right=self.line_position_slider2.get()/2+0
-        top=self.line_position_slider3.get()/2-2
-        btm=self.line_position_slider4.get()/2-2
-        self.character = Character()
-        self.character.setup(left,right,top,btm,self.classtype,self.runesolver,self.g)
+        self.left=self.line_position_slider.get()/2+0
+        self.right=self.line_position_slider2.get()/2+0
+        self.top=self.line_position_slider3.get()/2-2
+        self.btm=self.line_position_slider4.get()/2-2
+        self.g = Game((8, 63, self.minimapX, self.minimapY))
+        # self.character = Character()
+        self.character.setup(self.left,self.right,self.top,self.btm,self.classtype,self.runesolver,self.g)
         self.ac=self.character.ac
         randomlist = ['z', 'x', 'c', 'space', '2', '3', '0', 'f9', 'w', 'e', 'r', 't', 's', 'd', 'f', 'v']
         offsetx=10
@@ -411,7 +442,8 @@ class TkinterBot:
                 pass
             else: # 111.5 27.5
                 xynotfound=0
-                await self.character.perform_next_attack(x,y)
+                # await self.character.perform_next_attack(x,y)
+                print(f'character_next_move')
                 
                 # self.now = perf_counter()
                 # randommtimer = self.now - randommtimer0
@@ -1011,7 +1043,8 @@ class TkinterBot:
 
     def setup_tab(self):
         # self.mytab = customtkinter.CTkTabview(self.root,width=600,height=800,corner_radius=5, fg_color="#123456")
-        self.mytab = customtkinter.CTkTabview(self.root,width=600,height=800,corner_radius=5)
+        # self.mytab = customtkinter.CTkTabview(self.root,width=600,height=800,corner_radius=5)
+        self.mytab = customtkinter.CTkTabview(self,width=600,height=800,corner_radius=5)
             # segmented_button_fg_color="#1a4b6c", segmented_button_selected_color="#45ab65", , fg_color="#123456", 
             # segmented_button_selected_hover_color="#fc31ab", segmented_button_unselected_color="#1b5fcf", 
             # segmented_button_unselected_hover_color="#0abf45",text_color="#4cff4f",
@@ -1095,40 +1128,132 @@ class TkinterBot:
         # self.button.pack(pady=(1,1), fill='both', expand=True)
         # self.button.pack(pady=(1,1))
         self.button.grid(row=0,column=0,pady=(1,1), sticky=tk.N+tk.S+tk.E+tk.W)
+        self.presettemp=self.preset
         def on_select(event):
-            self.preset = comboboxpreset.get()
+            # self.preset = comboboxpreset.get()
+            self.presettemp = comboboxpreset.get()
+            print(f'{self.preset=} {self.presettemp=}')
         folder_path = "preset"
         file_list = os.listdir(folder_path)
         json_files = [file for file in file_list if file.endswith(".json")]
         json_file_names = [os.path.splitext(file)[0] for file in json_files]
-        # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=17)
-        # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=10)
-        # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne', fill='both', expand=True)
-        # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne')
-        # comboboxpreset.bind("<<ComboboxSelected>>", on_select)
-        comboboxpreset = customtkinter.CTkComboBox(frameright, values=json_file_names, state="readonly",command=on_select,justify='left', width=100)
-        comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
+        comboboxpreset = customtkinter.CTkComboBox(frameleft, values=json_file_names, state="readonly",command=on_select,justify='left', width=120)
+        comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NW)
         comboboxpreset.set(json_file_names[json_file_names.index(self.preset)])
+        buttonreload = customtkinter.CTkButton(frameleft, text="load preset", command=self.reload, width=100)
+        buttonreload.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
         def new():
             profile_name = simpledialog.askstring("New Profile", "Enter the name for the new profile:")
             if profile_name:
                 json_file_names.append(profile_name)
                 comboboxpreset.set(json_file_names[len(json_file_names)-1])
                 comboboxpreset.configure(values=json_file_names)
-        buttonnew = customtkinter.CTkButton(frameright, text="new", command=new, width=100)
-        buttonnew.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)        
+                self.widthentry.delete(0,tk.END)
+                self.widthentry.insert(0,200)
+                self.heightentry.delete(0,tk.END)
+                self.heightentry.insert(0,150)
+                self.button_adjustminimap_fake()
+                self.update_four_lines(180,220,60,90)                
+                self.presettemp = comboboxpreset.get()
+        buttonnew = customtkinter.CTkButton(frameleft, text="new preset", command=new, width=100)
+        buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)        
         def save():
+            print(f'{self.preset=} {self.presettemp=}')
+            self.preset=self.presettemp
+            print(f'{self.preset=} {self.presettemp=}')
+            self.button_adjustminimap()
             allpresets=[]
             allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
             ,self.line_position_slider3.get(),self.line_position_slider4.get()])
             with open(f'preset/{self.preset}.json', 'w') as json_file:
                 json.dump(allpresets, json_file, indent=4)
             self.canvasimageholdertemp.save(f'image/{self.preset}.png')
-            print(f'saved preset. ') 
-        buttonsave = customtkinter.CTkButton(frameright, text="save", command=save, width=100)
-        buttonsave.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
-        buttonreload = customtkinter.CTkButton(frameright, text="reload", command=self.reload, width=100)
-        buttonreload.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+            print(f'saved preset. ')
+            saved_window = customtkinter.CTkToplevel(frameleft, fg_color='#abcdef')
+            saved_window.title('chrome')
+            saved_window.resizable(False,False)#width,height
+            def close():
+                saved_window.destroy()
+                saved_window.update()
+            label=customtkinter.CTkLabel(saved_window,text=f'saved preset: {self.preset}. ', text_color='#123321')
+            label.pack(padx=10,pady=(10,1), fill='none', expand=True)
+            label2=customtkinter.CTkLabel(saved_window,text=f'{allpresets}', text_color='#123321')
+            label2.pack(padx=10,pady=(1,10), fill='none', expand=True)
+            button=customtkinter.CTkButton(saved_window,text='ok',command=close)
+            button.pack(padx=10,pady=10, fill='none', expand=True)
+            saved_window.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
+            saved_window.wm_iconbitmap()
+            saved_window.iconphoto(False, saved_window.iconpath)
+            saved_window.after(200,lambda: saved_window.iconphoto(False, saved_window.iconpath))
+            width=int(self.winfo_screenwidth()/2)
+            height=int(self.winfo_screenheight()/2)
+            print(f'{width=} {height=}')
+            # saved_window.geometry(f'400x100+{width-100}+{height-200}')
+            saved_window.geometry(f'{width-300}+{height-200}')
+        buttonsave = customtkinter.CTkButton(frameleft, text="save preset", command=save, width=100)
+        buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
+        ## ------------------------------------------------------------------------------------------------------------- ##
+        # def on_select(event):
+        #     self.preset = comboboxpreset.get()
+        # folder_path = "preset"
+        # file_list = os.listdir(folder_path)
+        # json_files = [file for file in file_list if file.endswith(".json")]
+        # json_file_names = [os.path.splitext(file)[0] for file in json_files]
+        # # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=17)
+        # # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=10)
+        # # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne', fill='both', expand=True)
+        # # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne')
+        # # comboboxpreset.bind("<<ComboboxSelected>>", on_select)
+        # comboboxpreset = customtkinter.CTkComboBox(frameright, values=json_file_names, state="readonly",command=on_select,justify='left', width=120)
+        # comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
+        # comboboxpreset.set(json_file_names[json_file_names.index(self.preset)])
+        # buttonreload = customtkinter.CTkButton(frameright, text="load preset", command=self.reload, width=100)
+        # buttonreload.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+        # def new():
+        #     profile_name = simpledialog.askstring("New Profile", "Enter the name for the new profile:")
+        #     if profile_name:
+        #         json_file_names.append(profile_name)
+        #         comboboxpreset.set(json_file_names[len(json_file_names)-1])
+        #         comboboxpreset.configure(values=json_file_names)
+        #         self.widthentry.delete(0,tk.END)
+        #         self.widthentry.insert(0,200)
+        #         self.heightentry.delete(0,tk.END)
+        #         self.heightentry.insert(0,150)
+        #         self.button_adjustminimap_fake()
+        #         # self.update_four_lines(50,350,50,150)
+        #         self.update_four_lines(180,220,60,90)
+        # buttonnew = customtkinter.CTkButton(frameright, text="new preset", command=new, width=100)
+        # buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)        
+        # def save():
+        #     allpresets=[]
+        #     allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
+        #     ,self.line_position_slider3.get(),self.line_position_slider4.get()])
+        #     with open(f'preset/{self.preset}.json', 'w') as json_file:
+        #         json.dump(allpresets, json_file, indent=4)
+        #     self.canvasimageholdertemp.save(f'image/{self.preset}.png')
+        #     print(f'saved preset. ')
+        #     saved_window = customtkinter.CTkToplevel(frameright, fg_color='#abcdef')
+        #     saved_window.title('chrome')
+        #     saved_window.resizable(False,False)#width,height
+        #     def close():
+        #         saved_window.destroy()
+        #         saved_window.update()
+        #     label=customtkinter.CTkLabel(saved_window,text=f'saved. {self.preset}: {allpresets}', text_color='#123321')
+        #     label.pack(padx=1,pady=(10,1), fill='none', expand=True)
+        #     button=customtkinter.CTkButton(saved_window,text='ok',command=close)
+        #     button.pack(padx=1,pady=1, fill='none', expand=True)
+        #     # saved_window.focus()
+        #     saved_window.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
+        #     saved_window.wm_iconbitmap()
+        #     saved_window.iconphoto(False, saved_window.iconpath)
+        #     # saved_window.after(1000,lambda: saved_window.iconbitmap(os.path.join("icon.ico")))
+        #     saved_window.after(200,lambda: saved_window.iconphoto(False, saved_window.iconpath))
+        #     width=int(self.root.winfo_screenwidth()/2)
+        #     height=int(self.root.winfo_screenheight()/2)
+        #     print(f'{width=} {height=}')
+        #     saved_window.geometry(f'400x100+{width-100}+{height-200}')
+        # buttonsave = customtkinter.CTkButton(frameright, text="save preset", command=save, width=100)
+        # buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
 
         # self.button.grid(row=0,column=1,padx=(1,1),pady=(10,20))
         # label1 = tk.Label(frame3, text="x:", fg="black", bg='#ffbb29')
@@ -1232,10 +1357,10 @@ class TkinterBot:
         button2 = customtkinter.CTkButton(buttonframe, text="adjust", command=self.button_adjustminimap,height=30, width=110)
         button2.grid(row=0, column=0, padx=(0,0), pady=(0,0))
         
-        self.widthentry.delete(0,tk.END)
-        self.widthentry.insert(0,self.minimapX)
-        self.heightentry.delete(0,tk.END)
-        self.heightentry.insert(0,self.minimapY)
+        # self.widthentry.delete(0,tk.END)
+        # self.widthentry.insert(0,self.minimapX)
+        # self.heightentry.delete(0,tk.END)
+        # self.heightentry.insert(0,self.minimapY)
 
         # self.frame2 = tk.Frame(self.tab1, bg='orange', bd=0)
         # self.frame2 = tk.Frame(self.tab1, bg='', bd=0)
@@ -1249,7 +1374,7 @@ class TkinterBot:
         self.canvas = customtkinter.CTkCanvas(self.frame2, width=self.minimapX-8, height=self.minimapY-63)
         self.canvas.grid(row=0, column=0, rowspan=1, padx=0, pady=(0,0))
         self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
-        
+        #reload
         if self.preset:
             width=(self.minimapX-8)*2
             height=(self.minimapY-63)*2
@@ -1292,13 +1417,14 @@ class TkinterBot:
         # def tempunused(self):
         if True:
             print(f'{height=} {self.minimapY=} {self.initial_line_position=} {self.canvas_height=}')
+            print(f'setuptab1: {self.initial_line_position} {self.initial_line_position2} {self.initial_line_position3} {self.initial_line_position4}')
             # self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, self.minimapY-63, fill="red", width=2)    
             self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, height, fill="red", width=2)    
             # # slider_label = tk.Label(frame, text="left threshold:", bg='#ffbb29')
             # # slider_label.grid(row=3, column=1, pady=5, padx=5)
             # self.line_position_slider = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position)
             self.line_position_slider = customtkinter.CTkSlider(self.frame2,from_=2,to=self.canvas_width,orientation='horizontal',number_of_steps=self.canvas_width-2, width=self.canvas_width, command=self.update_line_position)
-            self.line_position_slider.set(self.initial_line_position)
+            # self.line_position_slider.set(self.initial_line_position)
             self.line_position_slider.grid(row=1, column=0, pady=0, padx=0, sticky='we')
             
             self.vertical_line2 = self.canvas.create_line(self.initial_line_position2, 0, self.initial_line_position2, height, fill="yellow", width=2)    
@@ -1306,21 +1432,23 @@ class TkinterBot:
             # slider_label2.grid(row=4, column=1, pady=5, padx=5)
             # self.line_position_slider2 = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position2)
             self.line_position_slider2 = customtkinter.CTkSlider(self.frame2,from_=2,to=self.canvas_width,orientation='horizontal',number_of_steps=self.canvas_width-2, width=self.canvas_width, command=self.update_line_position2)
-            self.line_position_slider2.set(self.initial_line_position2)
+            # self.line_position_slider2.set(self.initial_line_position2)
             self.line_position_slider2.grid(row=2, column=0, pady=(0,2), padx=0, sticky='we')
 
             self.vertical_line3 = self.canvas.create_line(self.canvas_width, self.initial_line_position3, 2, self.initial_line_position3, fill="lime", width=2)
             # self.line_position_slider3 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position3)
             self.line_position_slider3 = customtkinter.CTkSlider(self.frame2,to=2,from_=self.canvas_height,orientation='vertical',number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3, command=self.update_line_position3)
-            self.line_position_slider3.set(self.initial_line_position3)
+            # self.line_position_slider3.set(self.initial_line_position3)
             self.line_position_slider3.grid(row=0, column=1, rowspan=3, pady=(0,0), padx=(2,1), sticky='ns')
 
             self.vertical_line4 = self.canvas.create_line(self.canvas_width, self.initial_line_position4, 2, self.initial_line_position4, fill="lightblue", width=2)
             # self.line_position_slider4 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position4)
             self.line_position_slider4 = customtkinter.CTkSlider(self.frame2,to=2,from_=self.canvas_height,orientation='vertical',number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3, command=self.update_line_position4)
-            self.line_position_slider4.set(self.initial_line_position4)
+            # self.line_position_slider4.set(self.initial_line_position4)
             self.line_position_slider4.grid(row=0, column=2, rowspan=3, pady=(0,0), padx=(0,0), sticky='ns')
             
+            self.reload()
+            print(f'reloaded after UI initiated. ')
             # self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
             # self.frame3.pack(padx=0, pady=0)
             # self.label_currentleft = tk.Label(self.frame3, text=f"current left: {self.line_position_slider.get()}")
@@ -1363,6 +1491,40 @@ class TkinterBot:
         else:
             self.button.configure(text='Pause', fg_color='lime')
             self.runesolver.enablerune()
+
+    def button_adjustminimap_fake(self):
+        minimapX = int(self.widthentry.get())
+        minimapY = int(self.heightentry.get())
+        hwnd = gdi_capture.find_window_from_executable_name("MapleStory.exe")
+        top, left, bottom, right = 8, 63, minimapX, minimapY
+        with gdi_capture.CaptureWindow(hwnd) as img:            
+            img_cropped = img[left:right, top:bottom]
+            height = (right-left)*2
+            width = (bottom-top)*2
+            img_cropped = cv2.resize(img_cropped, (width, height))
+            img_cropped = cv2.cvtColor(img_cropped, cv2.COLOR_BGR2RGB)
+            img_cropped = Image.fromarray(img_cropped)
+            tk_image = ImageTk.PhotoImage(img_cropped)
+            self.canvas.delete("all")
+            self.canvas.configure(width=width,height=height)
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)        
+            self.canvas.image = tk_image
+            self.canvasimageholdertemp = img_cropped            
+            self.canvas_width=width
+            self.canvas_height=height
+        self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, height, fill="red", width=2)    
+        self.line_position_slider.configure(to=self.canvas_width, width=self.canvas_width)
+        self.update_line_position(self.line_position_slider.get())
+        self.vertical_line2 = self.canvas.create_line(self.initial_line_position2, 0, self.initial_line_position2, height, fill="yellow", width=2)    
+        self.line_position_slider2.configure(to=self.canvas_width, width=self.canvas_width)
+        self.update_line_position2(self.line_position_slider2.get())
+        self.vertical_line3 = self.canvas.create_line(self.canvas_width, self.initial_line_position3, 2, self.initial_line_position3, fill="lime", width=2)
+        self.line_position_slider3.configure(from_=self.canvas_height, height=self.canvas_height*1.2)
+        self.update_line_position3(self.line_position_slider3.get())
+        self.vertical_line4 = self.canvas.create_line(self.canvas_width, self.initial_line_position4, 2, self.initial_line_position4, fill="lightblue", width=2)
+        self.line_position_slider4.configure(from_=self.canvas_height, height=self.canvas_height*1.2)
+        self.update_line_position4(self.line_position_slider4.get())
+        self.g = Game((8, 63, self.minimapX, self.minimapY)) #   
 
     def button_adjustminimap(self, setimage=False):
         try: # will remain as original value even if error
@@ -1421,6 +1583,7 @@ class TkinterBot:
                 # canvas_height=minimapY-63
                 initial_line_position = self.canvas_width / 2
 
+        print(f'adjustbutton: {self.canvas_width=} {self.canvas_height=}')
         # self.vertical_line = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="red", width=2)
         self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, height, fill="red", width=2)    
         self.line_position_slider.configure(to=self.canvas_width, width=self.canvas_width)
@@ -1440,8 +1603,25 @@ class TkinterBot:
         self.vertical_line4 = self.canvas.create_line(self.canvas_width, self.initial_line_position4, 2, self.initial_line_position4, fill="lightblue", width=2)
         self.line_position_slider4.configure(from_=self.canvas_height, height=self.canvas_height*1.2)
         self.update_line_position4(self.line_position_slider4.get())
+        
+        # self.update_line_position(allpresets[2])
+        # self.update_line_position2(allpresets[3])
+        # self.update_line_position3(allpresets[4])
+        # self.update_line_position4(allpresets[5])
+        self.line_position_slider.set(self.line_position_slider.get())
+        self.line_position_slider2.set(self.line_position_slider2.get())
+        self.line_position_slider3.set(self.line_position_slider3.get())
+        self.line_position_slider4.set(self.line_position_slider4.get())
 
-        self.g = Game((8, 63, self.minimapX, self.minimapY)) #         
+        # self.g = Game((8, 63, self.minimapX, self.minimapY)) #
+        # self.character.setup(
+        #     left=self.line_position_slider.get()/2,
+        #     right=self.line_position_slider2.get()/2,
+        #     top=self.line_position_slider3.get()/2,
+        #     btm=self.line_position_slider4.get()/2,
+        #     g=self.g
+        # )
+
         # background_image = Image.open("bumblebee.gif")
         # background_image = background_image.resize((window_width, window_height),  Image.Resampling.LANCZOS)
         # background_photo = ImageTk.PhotoImage(background_image)
@@ -1452,23 +1632,39 @@ class TkinterBot:
         # frame2.config(bg='', bd=0)
         # self.root.resizable(False,False)
 
+    def update_four_lines(self,line1,line2,line3,line4):        
+        self.line_position_slider.set(line1)
+        self.line_position_slider2.set(line2)
+        self.line_position_slider3.set(line3)
+        self.line_position_slider4.set(line4)
+        self.update_line_position(line1)
+        self.update_line_position2(line2)
+        self.update_line_position3(line3)
+        self.update_line_position4(line4)
 
     def update_line_position(self, value):
         self.canvas.coords(self.vertical_line, float(value), 0, float(value), self.canvas_height)
+        # print(value)
     
     def update_line_position2(self, value):
         self.canvas.coords(self.vertical_line2, float(value), 0, float(value), self.canvas_height)
+        # print(value)
 
     def update_line_position3(self, value):
         self.canvas.coords(self.vertical_line3, 0, float(value), self.canvas_width, float(value))
+        # print(value)
     
     def update_line_position4(self, value):
         self.canvas.coords(self.vertical_line4, 0, float(value), self.canvas_width, float(value))
+        # print(value)
 
     def reload(self):
         self.pause=True
-        self.stop_event.set()
-        time.sleep(.1)        
+        # self.stop_event.set()
+        # time.sleep(.1)
+        print(f'reload: {self.preset=} {self.presettemp=}')
+        self.preset=self.presettemp
+        print(f'reload: {self.preset=} {self.presettemp=}')
         try:
             allpresets=[]
             with open(f'preset/{self.preset}.json', 'r') as json_file:
@@ -1476,36 +1672,55 @@ class TkinterBot:
                 print(f'{arrays=}')
             for array in arrays:
                 for item in array:
-                    print(f'{item=}')
+                    print(f'{item=} {type(item)}')
                     allpresets.append(item)
             # allpresets.append(self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
             # ,self.line_position_slider3.get(),self.line_position_slider4.get())
             print(f'{allpresets=}')
             self.minimapX=allpresets[0]
             self.minimapY=allpresets[1]
-            self.line_position_slider.set(allpresets[2])
-            self.line_position_slider2.set(allpresets[3])
-            self.line_position_slider3.set(allpresets[4])
-            self.line_position_slider4.set(allpresets[5])           
             self.widthentry.delete(0,tk.END)
             self.widthentry.insert(0,self.minimapX)
             self.heightentry.delete(0,tk.END)
             self.heightentry.insert(0,self.minimapY)
+            print(f'reload1: {self.canvas_width=} {self.canvas_height=}')
             self.button_adjustminimap(setimage=True)
-            self.label_currentleft.config(text=f"current left: {self.line_position_slider.get()}")
-            self.label_currenttop.config(text=f"current left: {self.line_position_slider3.get()}")
-            self.label_currentright.config(text=f"current left: {self.line_position_slider2.get()}")
-            self.label_currentbtm.config(text=f"current left: {self.line_position_slider4.get()}")
+            print(f'reload2: {self.canvas_width=} {self.canvas_height=}')
+            self.update_line_position(allpresets[2])
+            self.update_line_position2(allpresets[3])
+            self.update_line_position3(allpresets[4])
+            self.update_line_position4(allpresets[5])
+            self.line_position_slider.set(allpresets[2])
+            self.line_position_slider2.set(allpresets[3])
+            self.line_position_slider3.set(allpresets[4])
+            self.line_position_slider4.set(allpresets[5])
+  
+
+            # self.line_position_slider.configure(to=self.canvas_width,number_of_steps=self.canvas_width-2, width=self.canvas_width)
+            # self.line_position_slider2.configure(to=self.canvas_width,number_of_steps=self.canvas_width-2, width=self.canvas_width)
+            # self.line_position_slider3.configure(from_=self.canvas_height,number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3)
+            # self.line_position_slider4.configure(from_=self.canvas_height,number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3)
+            
+            # self.label_currentleft.config(text=f"current left: {self.line_position_slider.get()}")
+            # self.label_currenttop.config(text=f"current left: {self.line_position_slider3.get()}")
+            # self.label_currentright.config(text=f"current left: {self.line_position_slider2.get()}")
+            # self.label_currentbtm.config(text=f"current left: {self.line_position_slider4.get()}")
             print(f'done reload. ')
         except Exception as e:
             print(f'reading json: {e=}')
-        print(f'thread3 joining. ')
-        self.thread3.join()
-        print(f'thread3 joined. ')
-        self.thread3 = threading.Thread(target=self.run_thread3)
-        self.stop_event.clear()
-        self.thread3.start()
-        print(f'thread3 started. ')
+        self.left=self.line_position_slider.get()/2
+        self.right=self.line_position_slider2.get()/2
+        self.top=self.line_position_slider3.get()/2
+        self.btm=self.line_position_slider4.get()/2
+        self.g=Game((6,83,self.minimapX,self.minimapY))
+        self.character.setup(left=self.left,right=self.right,top=self.top,btm=self.btm,classtype=self.classtype,runesolver=self.runesolver,g=self.g)
+        # print(f'thread3 joining. ')
+        # self.thread3.join()
+        # print(f'thread3 joined. (reload function)')
+        # self.thread3 = threading.Thread(target=self.run_thread3)
+        # self.stop_event.clear()
+        # self.thread3.start()
+        # print(f'thread3 started. ')
 
     def reset(self):
         # global pause
@@ -2043,43 +2258,59 @@ class TkinterBot:
         print("Closing the window")
         #
         self.pause=True
-        # Add your code here to run before closing the window
-        # config.add_section('main')
-        self.config.set('main', 'key1', 'value1')
-        self.config.set('main', 'key2', 'value2')
-        self.config.set('main', 'key3', 'value3')
-        self.config.set('main', 'minimapX', str(self.minimapX))
-        self.config.set('main', 'minimapY', str(self.minimapY))
-        self.config.set('main', 'initial_line_position', str(self.line_position_slider.get()))
-        self.config.set('main', 'initial_line_position2', str(self.line_position_slider2.get()))
-        self.config.set('main', 'initial_line_position3', str(self.line_position_slider3.get()))
-        self.config.set('main', 'initial_line_position4', str(self.line_position_slider4.get()))
+        # # Add your code here to run before closing the window
+        # # config.add_section('main')
+        # self.config.set('main', 'key1', 'value1')
+        # self.config.set('main', 'key2', 'value2')
+        # self.config.set('main', 'key3', 'value3')
+        # self.config.set('main', 'minimapX', str(self.minimapX))
+        # self.config.set('main', 'minimapY', str(self.minimapY))
+        # self.config.set('main', 'initial_line_position', str(self.line_position_slider.get()))
+        # self.config.set('main', 'initial_line_position2', str(self.line_position_slider2.get()))
+        # self.config.set('main', 'initial_line_position3', str(self.line_position_slider3.get()))
+        # self.config.set('main', 'initial_line_position4', str(self.line_position_slider4.get()))
+        # self.config.set('main', 'initial_line_position', str(self.left))
+        # self.config.set('main', 'initial_line_position2', str(self.right))
+        # self.config.set('main', 'initial_line_position3', str(self.top))
+        # self.config.set('main', 'initial_line_position4', str(self.btm))
         self.config.set('main', 'profile', str(self.profile))
-        self.config.set('main', 'portaldisabled', str(self.portaldisabled))
+        self.config.set('main', 'preset', str(self.preset))
+        # self.config.set('main', 'portaldisabled', str(self.portaldisabled))
         self.config2.set('telegram', 'token', str(self.TOKEN))
         self.config2.set('telegram', 'chat_id', str(self.chat_id))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
         with open('secret.ini', 'w') as f:
             self.config2.write(f)            
-        # for input_field in input_fields:
-        #     entry, entry2, entry3 = input_field[1].get(), input_field[2].get(), input_field[3].get()
-        #     platforms.append([entry, entry2, entry3])
-        # self.profile = comboboxclasstype.get()
-        allpresets=[]
-        allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
-        ,self.line_position_slider3.get(),self.line_position_slider4.get()])
-        with open(f'preset/{self.preset}.json', 'w') as json_file:
-            json.dump(allpresets, json_file, indent=4)
-        self.canvasimageholdertemp.save(f'image/{self.preset}.png')
-        print(f'saved preset. ') 
+        # # for input_field in input_fields:
+        # #     entry, entry2, entry3 = input_field[1].get(), input_field[2].get(), input_field[3].get()
+        # #     platforms.append([entry, entry2, entry3])
+        # # self.profile = comboboxclasstype.get()
+        
+        # allpresets=[]
+        # allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
+        # ,self.line_position_slider3.get(),self.line_position_slider4.get()])
+        # with open(f'preset/{self.preset}.json', 'w') as json_file:
+        #     json.dump(allpresets, json_file, indent=4)
+        # self.canvasimageholdertemp.save(f'image/{self.preset}.png')
+        # print(f'saved preset. ') 
+        #
         self.stop_event.set()
         # for _, stop_event in self.threads:
         #     stop_event.set()
         # for thread, _ in self.threads:
         #     thread.join()
         self.telegram_keep_alive = False
-        self.root.destroy()
+        # self.root.destroy()
+        self.destroy()
+        self.thread1.join()
+        print(f'thread1 joined. ')
+        # self.thread2.join()
+        # print(f'thread2 joined. ')
+        self.thread3.join()
+        print(f'thread3 joined. ')
+        self.thread6.join()
+        print(f'thread6 joined. ')
 
 
 
@@ -2184,6 +2415,11 @@ async def main2():
     #     await application.start()
     #     await application.updater.start_polling()
     #     await asyncio.sleep(60)
+    
+    mytkinter = TkinterBot()
+    mytkinter.start_threads()
+    mytkinter.init_tkinter()
+    mytkinter.mainloop()
 
     print('done!')
 
@@ -2193,11 +2429,11 @@ if __name__ == "__main__":
     # loop = asyncio.new_event_loop()
     # loop.run_until_complete(main2())
     
-    mytkinter = TkinterBot()
-    # await mytkinter.telegram_run()
-    # asyncio.run(mytkinter.telegram_run())    
-    mytkinter.start_threads()
-    mytkinter.wait_for_threads()
-    # asyncio.run(main2())
-    # time.sleep(10) #????????
+    # mytkinter = TkinterBot()
+    # # await mytkinter.telegram_run()
+    # # asyncio.run(mytkinter.telegram_run())    
+    # mytkinter.start_threads()
+    # mytkinter.wait_for_threads()
+    asyncio.run(main2())
+    # # time.sleep(10) #????????
     pass

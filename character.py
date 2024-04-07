@@ -18,6 +18,7 @@ from classtype.teleport import Teleport
 from classtype.nightlord import Nightlord
 from classtype.soulmaster import Soulmaster
 from classtype.zero import Zero
+from classtype.adele import Adele
 
 
 
@@ -29,6 +30,8 @@ class Character:
         self.btm=0
         self.left=0
         self.right=0
+        self.runesolver=None
+        self.g=None
         self.offsety=10
         self.offsetx=10
         self.replaceropeconnect=False
@@ -41,14 +44,15 @@ class Character:
             'nightlord': Nightlord,
             'soulmaster': Soulmaster,
             'zero': Zero,
+            'adele': Adele,
         }
 
-    def setup(self,left,right,top,btm,classtype,runesolver,g):
+    def setup(self,left,right,top,btm,classtype=None,runesolver=None,g=None):
         self.left=left
         self.right=right
         self.top=top
         self.btm=btm
-        self.ac=self.classtype[classtype]()
+        self.ac=self.classtype[classtype]() if classtype is not None else self.ac
         self.ac.left=left
         self.ac.right=right
         self.ac.top=top

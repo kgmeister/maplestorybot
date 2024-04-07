@@ -16,6 +16,12 @@ from helper import Helper
 from configparser import ConfigParser
 import tkinter as tk
 import customtkinter
+import threading
+from PIL import Image, ImageTk
+import os
+import gc
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from runesolver import RuneSolver
 from classtype.action import Action
 
@@ -317,7 +323,153 @@ class MyMouse(unittest.TestCase):
 
 
 
+class Aclass():
 
+    def __init__(self,g=0) -> None:
+        self.g=g
+        pass
+
+    def getg(self):
+        return self.g
+
+    def setg(self,g):
+        self.g=g
+
+    def printg(self):
+        print(f'{self.g=}')
+
+class Bclass():
+
+    def __init__(self,g=0) -> None:
+        self.g=g
+        pass
+
+    def getg(self):
+        return self.g
+
+    def setg(self,g):
+        self.g=g
+
+    def printg(self):
+        print(f'{self.g=}')
+
+
+
+class mytkinter(customtkinter.CTk):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.config2 = ConfigParser()
+        self.config2.read('secret.ini')
+        self.TOKEN = self.config2.get('telegram', 'TOKEN')
+        self.telegram_keep_alive = True
+        self.loop1 = asyncio.new_event_loop()
+        self.loop2 = asyncio.new_event_loop()
+        self.loop3 = asyncio.new_event_loop()
+        # self.loop4 = asyncio.new_event_loop()
+        # self.loop5 = asyncio.new_event_loop()
+        # self.loop6 = asyncio.new_event_loop()
+        self.thread1 = threading.Thread(target=self.run_thread1)
+        self.thread2 = threading.Thread(target=self.run_thread2)
+        self.thread3 = threading.Thread(target=self.run_thread3)
+        # self.thread6 = threading.Thread(target=self.run_thread6)
+        pass
+
+    def run_threads(self):
+        pass
+
+    def join_threads(self):
+        pass
+
+
+    def run_thread1(self):
+        asyncio.set_event_loop(self.loop1)
+        self.loop1.run_until_complete(self.async_function("Thread 1", 5)) # telegram thread
+
+    def run_thread2(self):
+        asyncio.set_event_loop(self.loop2)
+        self.loop2.run_until_complete(self.async_function2("Thread 2", 5)) # tkinter init thread
+
+    def run_thread3(self):
+        asyncio.set_event_loop(self.loop3)
+        self.loop3.run_until_complete(self.async_function3("Thread 3", 5)) # main thread
+
+
+    def start_threads(self):
+        # Start both threads
+        self.thread1.start()
+        # self.thread2.start()
+        self.thread3.start()
+        pass
+
+    def wait_for_threads(self):
+        # Wait for both threads to finish
+        self.thread1.join()
+        print(f'thread1 joined. ')
+        # self.thread2.join()
+        # print(f'thread2 joined. ')
+        self.thread3.join()
+        print(f'thread3 joined. ')
+        # self.thread6.join()
+        # print(f'thread6 joined. ')
+        pass
+
+
+    async def async_function(self, thread_name, iterations):
+        print(f'bot has started1 ..')
+        try:
+            # self.application = Application.builder().token(self.TOKEN).build()
+            # # self.application.add_handler(CommandHandler('status', self.status_command))
+            # # self.application.add_error_handler(self.error)
+            # await self.application.initialize()
+            # await self.application.start()
+            # await self.application.updater.start_polling()
+            # self.telegram_started = True
+            while self.telegram_keep_alive:
+                await asyncio.sleep(1)  # Simulating asynchronous work
+            print(f'finished telegram_run1')
+            # await self.application.updater.stop()
+            # await self.application.stop()
+            # await self.application.shutdown()
+            print(f'finished telegram_run2')
+        except Exception as e:
+            print(f'{e=}')
+            self.acc_not_bind = True
+            self.telegram_started = True
+        finally:
+            print(f'exiting telegram thread ..')
+        
+    async def async_function2(self, thread_name, iterations):
+        print(f'bot has started2 ..')
+        self.root = customtkinter.CTk()
+        # self.root.title("chrome")
+        # self.root.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
+        # self.root.wm_iconbitmap()
+        # self.root.iconphoto(False, self.root.iconpath)
+        # self.screen_width = self.root.winfo_screenwidth()
+        # self.screen_height = self.root.winfo_screenheight()
+        # window_width = 600
+        # window_height = 800
+        # window_x = self.screen_width - window_width
+        # window_y = 0
+        # self.root.geometry(f"{window_width}x{window_height}+{window_x-10}+{window_y}")
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.tkinter_started=True
+        self.root.mainloop()
+            
+    def on_close(self):
+        print("Closing the window")
+        self.telegram_keep_alive = False
+        self.destroy()
+        self.thread1.join()
+        print(f'thread1 joined. ')
+        self.thread3.join()
+        print(f'thread3 joined. ')
+        # self.root=None
+        # gc.collect()
+
+    async def async_function3(self, thread_name, iterations):
+        print(f'bot has started3 ..')
 
 
 
@@ -326,6 +478,12 @@ class MyMouse(unittest.TestCase):
 
 async def main():
     print("Main function started")
+
+    # mtkinter=mytkinter()
+    # mtkinter.start_threads()
+    # # mtkinter.wait_for_threads()
+    # mtkinter.protocol("WM_DELETE_WINDOW", mtkinter.on_close)
+    # mtkinter.mainloop()
     
     # mymouse = MyMouse()
     # mymouse.setUp()
@@ -468,16 +626,67 @@ async def main():
     # # button2.grid(row=0, column=0, padx=(1,0), pady=(0,1))
     # root.mainloop()
 
-    a='b'
-    x=0
-    y=None
-    try:
-        x=int(a)
-    except Exception as e:
-        print(f'{e=}')
-    print(x)
-    print(a)
-    print(y)
+    # a='b'
+    # x=0
+    # y=None
+    # try:
+    #     x=int(a)
+    # except Exception as e:
+    #     print(f'{e=}')
+    # print(x)
+    # print(a)
+    # print(y)
+    
+    # aclass = Aclass()
+    # bclass = Bclass()
+    # bclass.setg(9.81)
+    # aclass.setg(bclass.getg())
+    # aclass.printg()
+    # bclass.setg(8.81)
+    # aclass.printg()
+
+    class MyClass2:
+        def __init__(self) -> None:
+            # self.class1 = MyClass()
+            # self.class1.set_values(10, "hello")
+            pass
+        def set_values(self, arg1=None, arg2=None):
+            self.arg1 = arg1
+            self.arg2 = arg2
+        def setclass1(self, l,r,t,b,classtype,arg1=None, arg2=None):
+            self.l=l
+            self.r=r
+            self.t=t
+            self.b=b
+            self.class1=MyClass()
+            self.class1.set_values(arg1,arg2)
+        def printclass1(self):
+            print(self.class1.arg1, self.class1.arg2)  # Output: None world
+    class MyClass:
+        def __init__(self) -> None:
+            self.arg1=None
+            self.arg2=None
+        def set_values(self, arg1, arg2):
+            if arg1 is not None:
+                self.arg1 = arg1
+            if arg2 is not None:
+                self.arg2 = arg2
+    # obj = MyClass()
+    obj2 = MyClass2()
+    # obj2.set_values(10, "hello")
+    # obj2.printclass1()
+    # obj2.setclass1(arg1=None,arg2='hhh')
+    obj2.setclass1(l=0,r=1,t=2,b=3,classtype='meow',arg2='hhh')
+    obj2.printclass1()
+    obj2.setclass1(l=0,r=1,t=2,b=3,classtype='woof',arg1=11)
+    obj2.printclass1()
+    # obj.set_values(10, "hello")
+    # print(obj.arg1, obj.arg2)  # Output: 10 hello
+    # obj.set_values(20, None)
+    # print(obj.arg1, obj.arg2)  # Output: 20 None
+    # obj.set_values(None, "world")
+    # print(obj.arg1, obj.arg2)  # Output: None world
+
 
 
 # Run the event loop

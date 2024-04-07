@@ -53,9 +53,9 @@ class Action:
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
         
-
-    def setup(self,runesolver,g):
-        self.runesolver=runesolver
+    def setup(self,runesolver,g):        
+        if runesolver is not None:
+            self.runesolver=runesolver
         self.g=g
 
     async def leftp(self,x=31,y=101):

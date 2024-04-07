@@ -42,6 +42,10 @@ class Zero(Action):
         if runesolver is not None:
             self.runesolver=runesolver
         self.g=g
+        
+    async def perform_next_attack(self, x, y):
+        # await self.limen1_7(x,y)
+        await self.clockwise(x,y)
     
     # basic 4x direction movement (goleft, goright, gooup, godown)
     async def goleftattack(self):
@@ -370,9 +374,6 @@ class Zero(Action):
         #     await self.rightp(distance*388,distance*444) # calculate sleep time according to distance. 
         #     await self.rightr()
 
-    async def perform_next_attack(self, x, y):
-        # await self.limen1_7(x,y)
-        await self.clockwise(x,y)
 
     async def limen1_7(self,x,y):    
         if y > 34.5 and y <= 47.5:
@@ -607,12 +608,12 @@ class Zero(Action):
             if replaceropeconnecttimer > 90:
                 self.replaceropeconnect=False
                 runonce=True
-        self.cosmicshowerplanttimer = self.now - self.cosmicshowerplanttimer0
-        if self.cosmicshowerplanttimer > 59:
-            self.cosmicshowerplant = True
-        self.fountaintimer = self.now - self.fountaintimer0
-        if self.fountaintimer > 59:
-            self.fountain = True
+        # self.cosmicshowerplanttimer = self.now - self.cosmicshowerplanttimer0
+        # if self.cosmicshowerplanttimer > 59:
+        #     self.cosmicshowerplant = True
+        # self.fountaintimer = self.now - self.fountaintimer0
+        # if self.fountaintimer > 59:
+        #     self.fountain = True
         self.runetimer = self.now - self.runetimer0
         # if runetimer > 600: # change to 600 when haste
         if self.runetimer > 900: # change to 600 when haste
