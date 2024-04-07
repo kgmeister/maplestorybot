@@ -44,6 +44,11 @@ class Action:
         self.g=None
         ## misc
         self.replaceropeconnect=False
+        self.rotation_list = ['default']
+        self.rotation='default'
+        self.rotation_mapping = {
+            'default': self.clockwise,
+        }
     
     def refreshkeybind(self):
         self.config.read('settings.ini')
@@ -53,10 +58,19 @@ class Action:
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
         
-    def setup(self,runesolver,g):        
+    def setup(self,runesolver,g,rotation):
         if runesolver is not None:
             self.runesolver=runesolver
-        self.g=g
+        if g is not None:
+            self.g=g
+        if rotation is not None:
+            self.rotation=rotation
+        
+    def get_rotation_list(self):
+        return self.rotation_list
+
+    def set_rotation(self, rotation):
+        self.rotation = rotation
 
     async def leftp(self,x=31,y=101):
         keydown('left')
@@ -708,6 +722,120 @@ class Action:
         else:
             await random.choice([self.godownattack])()
 
+    # should this be remove
+
+    
+
+    async def clockwise(self,x,y):
+        if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x > self.left+self.offsetx:
+                if x < self.left+self.offsetx+5:
+                    await random.choice([self.leftwalk])()
+                else:
+                    await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x < self.left-self.offsetx:
+                if x > self.left-self.offsetx-5:
+                    await random.choice([self.rightwalk])()
+                else:
+                    await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+        elif y <= self.top+self.offsety and y > self.top-self.offsety:
+            if x < self.right-self.offsetx:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x > self.right+self.offsetx:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+        elif y > self.top and not (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+            else:
+                if x < ((self.right-self.left)/2):
+                    if self.replaceropeconnect:
+                        await random.choice([self.goupattack_v3])()
+                    else:
+                        await random.choice([self.goupattack])()
+                elif x >= ((self.right-self.left)/2):
+                    await random.choice([self.godownattack])()
+        else:
+            await random.choice([self.godownattack])()
+
+        await self.post_perform_action(x,y)
+
+
+
+
+            
+    async def leftright(self,x,y):
+        if self.goleft:
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                await random.choice([self.goupattack])()
+                if y > self.top-self.offsety and y <= self.top+self.offsety:
+                    self.goright=True
+                    self.goleft=False
+                print(f'testing: heightdiff={y-self.top}')
+            else:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+        elif self.goright:
+            if x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+                if y > self.btm-self.offsety and y <= self.btm+self.offsety:
+                    self.goleft=True
+                    self.goright=False
+            else:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+        else:
+            print(f'exception coordinates .. please fix asap .. {x=} {y=}')
+
+        await self.post_perform_action(x,y)
+        
+
+
+    async def post_perform_action(self,x,y):
+        self.now = perf_counter()
+        self.randommtimer = self.now - self.randommtimer0
+        if self.randommtimer > 15:
+            self.randommtimer0 = self.now
+            # p = random.randint(0, len(self.randomlist)-1)
+            code = random.choice(self.randomlist)
+            if code is not None:
+                print(f'randomiser {code=}')
+                await self.send2(code)
+                await self.send3(code)
+        if self.replaceropeconnect==True:
+            if runonce:
+                replaceropeconnecttimer0=self.now
+                runonce=False
+            replaceropeconnecttimer = self.now - replaceropeconnecttimer0
+            if replaceropeconnecttimer > 90:
+                self.replaceropeconnect=False
+                runonce=True
+        # self.cosmicshowerplanttimer = self.now - self.cosmicshowerplanttimer0
+        # if self.cosmicshowerplanttimer > 59:
+        #     self.cosmicshowerplant = True
+        # self.fountaintimer = self.now - self.fountaintimer0
+        # if self.fountaintimer > 59:
+        #     self.fountain = True
+        self.runetimer = self.now - self.runetimer0
+        # if runetimer > 600: # change to 600 when haste
+        if self.runetimer > 900: # change to 600 when haste
+            self.checkrune = True
+            # self.checkrune = False
+        if self.checkrune:
+            self.solverune = self.runesolver.runechecker(self.g)
+        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft} gr={self.goright}')
+
+        if self.solverune:
+            await self.runesolver.gotorune(self.g)
 
     # randomiser patch
 
@@ -728,3 +856,5 @@ class Action:
     async def testnpc(self):
         await self.npcp()
         await self.npcr()
+
+

@@ -47,17 +47,18 @@ class Character:
             'adele': Adele,
         }
 
-    def setup(self,left,right,top,btm,classtype=None,runesolver=None,g=None):
+    def setup(self,left,right,top,btm,classtype=None,runesolver=None,g=None,rotation=None):
         self.left=left
         self.right=right
         self.top=top
         self.btm=btm
         self.ac=self.classtype[classtype]() if classtype is not None else self.ac
+        print(f'{self.ac=} {classtype=}')
         self.ac.left=left
         self.ac.right=right
         self.ac.top=top
         self.ac.btm=btm
-        self.ac.setup(runesolver,g)
+        self.ac.setup(runesolver,g,rotation)
         print(f'setup complete. {left=} {right=} {top=} {btm=}')
         print(f'{self.ac.left=} {self.ac.right=} {self.ac.top=} {self.ac.btm=}')
 
@@ -67,10 +68,10 @@ class Character:
             self.offsetx=self.ac.offsetx
             self.offsety=self.ac.offsety
             print(f'{self.offsetx=} {self.offsety=} {self.classtype=}')
-            self.ac.refresh_key_bind()
+            self.ac.refreshkeybind()
 
-    def refresh_key_bind(self):
-        self.ac.refresh_key_bind()
+    def refreshkeybind(self):
+        self.ac.refreshkeybind()
 
     # def change_ac_type(self,ac):
         # self.ac=ac
@@ -83,6 +84,12 @@ class Character:
 
     async def perform_next_attack(self,x,y):
         await self.ac.perform_next_attack(x,y)
+
+    def get_rotation_list(self):
+        return self.ac.get_rotation_list()
+
+    def set_rotation(self,rotation):
+        self.ac.set_rotation(rotation)
 
     async def perform_next_attack2(self,x,y):
         if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):

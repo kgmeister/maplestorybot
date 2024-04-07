@@ -87,6 +87,7 @@ class TkinterBot(customtkinter.CTk):
         self.classtype = self.config.get('keybind', 'classtype')
         self.profile = self.config.get('main', 'profile')
         self.preset = self.config.get('main', 'preset')
+        self.rotation = self.config.get('main', 'rotation')
         self.portaldisabled = self.config.getboolean('main', 'portaldisabled')
 
         self.runesolver = RuneSolver()
@@ -382,17 +383,17 @@ class TkinterBot(customtkinter.CTk):
         self.thread4.start() # all the detector goes here
         self.thread5 = threading.Thread(target=self.run_thread5)
         self.thread5.start() # gma detector goes here
-        left1=self.line_position_slider.get()
-        right1=self.line_position_slider2.get()
-        top1=self.line_position_slider3.get()
-        btm1=self.line_position_slider4.get()
-        self.left=self.line_position_slider.get()/2+0
-        self.right=self.line_position_slider2.get()/2+0
-        self.top=self.line_position_slider3.get()/2-2
-        self.btm=self.line_position_slider4.get()/2-2
-        self.g = Game((8, 63, self.minimapX, self.minimapY))
+        # left1=self.line_position_slider.get()
+        # right1=self.line_position_slider2.get()
+        # top1=self.line_position_slider3.get()
+        # btm1=self.line_position_slider4.get()
+        # self.left=self.line_position_slider.get()/2+0
+        # self.right=self.line_position_slider2.get()/2+0
+        # self.top=self.line_position_slider3.get()/2-2
+        # self.btm=self.line_position_slider4.get()/2-2
+        # self.g = Game((8, 63, self.minimapX, self.minimapY))
         # self.character = Character()
-        self.character.setup(self.left,self.right,self.top,self.btm,self.classtype,self.runesolver,self.g)
+        # self.character.setup(self.left,self.right,self.top,self.btm,self.classtype,self.runesolver,self.g)
         self.ac=self.character.ac
         randomlist = ['z', 'x', 'c', 'space', '2', '3', '0', 'f9', 'w', 'e', 'r', 't', 's', 'd', 'f', 'v']
         offsetx=10
@@ -442,8 +443,8 @@ class TkinterBot(customtkinter.CTk):
                 pass
             else: # 111.5 27.5
                 xynotfound=0
-                # await self.character.perform_next_attack(x,y)
-                print(f'character_next_move')
+                await self.character.perform_next_attack(x,y)
+                # print(f'character_next_move')
                 
                 # self.now = perf_counter()
                 # randommtimer = self.now - randommtimer0
@@ -1153,7 +1154,7 @@ class TkinterBot(customtkinter.CTk):
                 self.heightentry.delete(0,tk.END)
                 self.heightentry.insert(0,150)
                 self.button_adjustminimap_fake()
-                self.update_four_lines(180,220,60,90)                
+                self.update_four_lines(180,220,60,90)
                 self.presettemp = comboboxpreset.get()
         buttonnew = customtkinter.CTkButton(frameleft, text="new preset", command=new, width=100)
         buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)        
@@ -1193,22 +1194,24 @@ class TkinterBot(customtkinter.CTk):
         buttonsave = customtkinter.CTkButton(frameleft, text="save preset", command=save, width=100)
         buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
         ## ------------------------------------------------------------------------------------------------------------- ##
-        # def on_select(event):
-        #     self.preset = comboboxpreset.get()
-        # folder_path = "preset"
-        # file_list = os.listdir(folder_path)
-        # json_files = [file for file in file_list if file.endswith(".json")]
-        # json_file_names = [os.path.splitext(file)[0] for file in json_files]
+        # def on_select_rotation(event): # tag UI placement order
+        #     rotation = comboboxrotation.get()
+        #     self.character.set_rotation(rotation)
+        # # folder_path = "preset"
+        # # file_list = os.listdir(folder_path)
+        # # json_files = [file for file in file_list if file.endswith(".json")]
+        # # json_file_names = [os.path.splitext(file)[0] for file in json_files]
+        # rotation_list = self.character.get_rotation_list()
         # # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=17)
         # # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=10)
         # # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne', fill='both', expand=True)
         # # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne')
         # # comboboxpreset.bind("<<ComboboxSelected>>", on_select)
-        # comboboxpreset = customtkinter.CTkComboBox(frameright, values=json_file_names, state="readonly",command=on_select,justify='left', width=120)
-        # comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
-        # comboboxpreset.set(json_file_names[json_file_names.index(self.preset)])
-        # buttonreload = customtkinter.CTkButton(frameright, text="load preset", command=self.reload, width=100)
-        # buttonreload.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
+        # comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=120)
+        # comboboxrotation.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
+        # comboboxrotation.set(json_file_names[json_file_names.index(self.preset)])
+        # buttonchange = customtkinter.CTkButton(frameright, text="change rotation", command=self.reload, width=100)
+        # buttonchange.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
         # def new():
         #     profile_name = simpledialog.askstring("New Profile", "Enter the name for the new profile:")
         #     if profile_name:
@@ -1448,7 +1451,14 @@ class TkinterBot(customtkinter.CTk):
             self.line_position_slider4.grid(row=0, column=2, rowspan=3, pady=(0,0), padx=(0,0), sticky='ns')
             
             self.reload()
-            print(f'reloaded after UI initiated. ')
+            print(f'reloaded after UI initiated. {self.classtype}')
+            def on_select_rotation(event): # tag UI placement order # can only initializd after reload() # todo: organize code nicer
+                self.rotation = comboboxrotation.get()
+                self.character.set_rotation(self.rotation)                
+            rotation_list = self.character.get_rotation_list()
+            comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=120)
+            comboboxrotation.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
+            comboboxrotation.set(rotation_list[rotation_list.index(self.rotation)])
             # self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
             # self.frame3.pack(padx=0, pady=0)
             # self.label_currentleft = tk.Label(self.frame3, text=f"current left: {self.line_position_slider.get()}")
@@ -1612,15 +1622,20 @@ class TkinterBot(customtkinter.CTk):
         self.line_position_slider2.set(self.line_position_slider2.get())
         self.line_position_slider3.set(self.line_position_slider3.get())
         self.line_position_slider4.set(self.line_position_slider4.get())
-
-        # self.g = Game((8, 63, self.minimapX, self.minimapY)) #
-        # self.character.setup(
-        #     left=self.line_position_slider.get()/2,
-        #     right=self.line_position_slider2.get()/2,
-        #     top=self.line_position_slider3.get()/2,
-        #     btm=self.line_position_slider4.get()/2,
-        #     g=self.g
-        # )
+        # button_adjustminimap
+        # print(f'{self.rotation=}')
+        print(f'{self.line_position_slider=} {self.line_position_slider2=} {self.line_position_slider3=} {self.line_position_slider4=}')
+        self.g = Game((8, 63, self.minimapX, self.minimapY)) #
+        self.character.setup(
+            left=self.line_position_slider.get()/2,
+            right=self.line_position_slider2.get()/2,
+            top=self.line_position_slider3.get()/2,
+            btm=self.line_position_slider4.get()/2,
+            classtype=self.classtype,
+            runesolver=self.runesolver,
+            g=self.g,
+            rotation=self.rotation,
+        )
 
         # background_image = Image.open("bumblebee.gif")
         # background_image = background_image.resize((window_width, window_height),  Image.Resampling.LANCZOS)
@@ -1712,8 +1727,10 @@ class TkinterBot(customtkinter.CTk):
         self.right=self.line_position_slider2.get()/2
         self.top=self.line_position_slider3.get()/2
         self.btm=self.line_position_slider4.get()/2
-        self.g=Game((6,83,self.minimapX,self.minimapY))
-        self.character.setup(left=self.left,right=self.right,top=self.top,btm=self.btm,classtype=self.classtype,runesolver=self.runesolver,g=self.g)
+        # self.g=Game((6,83,self.minimapX,self.minimapY))
+        self.character.setup(left=self.left,right=self.right,top=self.top,btm=self.btm)
+        # self.character.setup(left=self.left,right=self.right,top=self.top,btm=self.btm,classtype=self.classtype,runesolver=self.runesolver,g=self.g)
+
         # print(f'thread3 joining. ')
         # self.thread3.join()
         # print(f'thread3 joined. (reload function)')
@@ -2275,6 +2292,7 @@ class TkinterBot(customtkinter.CTk):
         # self.config.set('main', 'initial_line_position4', str(self.btm))
         self.config.set('main', 'profile', str(self.profile))
         self.config.set('main', 'preset', str(self.preset))
+        self.config.set('main', 'rotation', str(self.rotation))
         # self.config.set('main', 'portaldisabled', str(self.portaldisabled))
         self.config2.set('telegram', 'token', str(self.TOKEN))
         self.config2.set('telegram', 'chat_id', str(self.chat_id))
