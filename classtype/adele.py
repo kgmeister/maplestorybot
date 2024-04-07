@@ -12,7 +12,7 @@ from initinterception import sleep
 
 
 
-class Zero(Action):
+class Adele(Action):
 
     def __init__(self):
         super().__init__()
