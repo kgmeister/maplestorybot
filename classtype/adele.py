@@ -631,11 +631,13 @@ class Adele(Action):
     async def leftright(self,x,y):
         if self.goleft:
             if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
-                await random.choice([self.upjumpattack])()
-                time.sleep(.2)
                 if y > self.top-self.offsety and y <= self.top+self.offsety:
                     self.goright=True
                     self.goleft=False
+                    await random.choice([self.gorightattack, self.gorightattackk])()
+                else:
+                    await random.choice([self.upjumpattack])()
+                    time.sleep(.2)
                 print(f'testing: heightdiff={y-self.top}')
             else:
                 await random.choice([self.goleftattack, self.goleftattackk])()
