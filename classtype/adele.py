@@ -34,12 +34,16 @@ class Adele(Action):
         self.checkrune=True
         self.solverune=True
         self.now=0        
-        self.rotation_list = ['default', 'leftright', 'leftrightlong']
+        self.rotation_list = ['default', 'leftright', 'leftrightlong', 'leftrightdownlong', 'leftrightuplong',
+            'moonbridge',]
         self.rotation='default'
         self.rotation_mapping = {
             'default': self.clockwise,
             'leftright': self.leftright,
             'leftrightlong': self.leftrightlong,
+            'leftrightdownlong': self.leftrightdownlong,
+            'leftrightuplong': self.leftrightuplong,
+            'moonbridge': self.moonbridge,
         }
 
     def define(self):
@@ -120,6 +124,25 @@ class Adele(Action):
         await self.ropeconnectp(31,101)
         await self.ropeconnectr(31,101)
         await sleep(.555)
+        print(f'press ropeconnect twice. ')
+        await self.ropeconnectp(31,101)
+        await self.ropeconnectr(31,101)
+        print(f'attack.  ')
+        await self.attackp()
+        await self.attackr()
+        await self.attackp()
+        await self.attackr()
+        await sleep(.1)
+
+    async def goupattack2(self): # adele upjump
+        print(f'goupattack2')
+        await sleep(.1)
+        await self.jumpp()
+        await self.jumpr()
+        print(f'press ropeconnect once. ')
+        await self.ropeconnectp(31,101)
+        await self.ropeconnectr(31,101)
+        await sleep(.888)
         print(f'press ropeconnect twice. ')
         await self.ropeconnectp(31,101)
         await self.ropeconnectr(31,101)
@@ -230,6 +253,68 @@ class Adele(Action):
         await self.attackp()
         await self.attackr()
         await sleep(.1)
+    
+    # adele customization
+
+    async def goleftattadele(self):
+        print(f'goleftattadele')
+        await self.leftp()
+        await self.jumpp()
+        await self.jumpr()    
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.fp()
+        await self.fr()
+        await self.leftr()
+
+    async def goleftattadele2(self):
+        print(f'goleftattadele2')
+        await self.leftp()
+        await self.jumpp()
+        await self.jumpr()    
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.fp()
+        await self.fr()
+        await self.attackp()
+        await self.attackr()
+        await self.fp()
+        await self.fr()
+        await self.leftr()
+
+    async def gorightattadele(self):
+        print(f'gorightattadele')
+        await self.rightp()
+        await self.jumpp()
+        await self.jumpr()    
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.fp()
+        await self.fr()
+        await self.rightr()
+
+    async def gorightattadele2(self):
+        print(f'gorightattadele2')
+        await self.rightp()
+        await self.jumpp()
+        await self.jumpr()    
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.fp()
+        await self.fr()
+        await self.attackp()
+        await self.attackr()
+        await self.fp()
+        await self.fr()
+        await self.rightr()
 
     async def stormwing(self,x,y,goleft,goright):
         if goright:
@@ -628,7 +713,103 @@ class Adele(Action):
 
 
             
-    async def leftright(self,x,y):
+    async def moonbridge(self,x,y):
+        print(f'{x=} {y=} l={self.left} r={self.right} t={self.top} b={self.btm} ox={self.offsetx} oy={self.offsety}')
+        if self.goleft:
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if y > self.top-self.offsety and y <= self.top+self.offsety:
+                    self.goright=True
+                    self.goleft=False
+                    await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+                elif y <= self.top-self.offsety:
+                    await random.choice([self.godownattack])()
+                else:
+                    await random.choice([self.goupattack2])()
+                    time.sleep(.2)
+                print(f'testing: heightdiff={y-self.top}')
+            elif x < self.left:
+                await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+            else:
+                await random.choice([self.goleftattack, self.goleftattackk, self.goleftattadele, self.goleftattadele2])()
+        elif self.goright:
+            if x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                if y > self.btm-self.offsety and y <= self.btm+self.offsety:
+                    self.goleft=True
+                    self.goright=False
+                else:
+                    if x>=160.5 and x<=162.5:
+                        await random.choice([self.leftwalk])()
+                    await random.choice([self.godownattack])()
+                    time.sleep(.2)
+            elif x > self.right:
+                await random.choice([self.goleftattack, self.goleftattackk, self.goleftattadele, self.goleftattadele2])()
+            else:
+                await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+        else:
+            print(f'exception coordinates .. please fix asap .. {x=} {y=}')
+        await self.post_perform_action(x,y)
+
+    async def leftrightuplong(self,x,y):
+        print(f'{x=} {y=} l={self.left} r={self.right} t={self.top} b={self.btm} ox={self.offsetx} oy={self.offsety}')
+        if self.goleft:
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if y > self.top-self.offsety and y <= self.top+self.offsety:
+                    self.goright=True
+                    self.goleft=False
+                    await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+                elif y <= self.top-self.offsety:
+                    await random.choice([self.godownattack])()
+                else:
+                    await random.choice([self.goupattack2])()
+                    time.sleep(.2)
+                print(f'testing: heightdiff={y-self.top}')
+            else:
+                await random.choice([self.goleftattack, self.goleftattackk, self.goleftattadele, self.goleftattadele2])()
+        elif self.goright:
+            if x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                if y > self.btm-self.offsety and y <= self.btm+self.offsety:
+                    self.goleft=True
+                    self.goright=False
+                else:
+                    if x>=160.5 and x<=162.5:
+                        await random.choice([self.leftwalk])()
+                    await random.choice([self.godownattack])()
+                    time.sleep(.2)
+            else:
+                await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+        else:
+            print(f'exception coordinates .. please fix asap .. {x=} {y=}')
+        await self.post_perform_action(x,y)
+
+    async def leftrightdownlong(self,x,y):
+        if self.goleft:
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if y > self.top-self.offsety and y <= self.top+self.offsety:
+                    self.goright=True
+                    self.goleft=False
+                    await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+                else:
+                    await random.choice([self.upjumpattack])()
+                    time.sleep(.2)
+                print(f'testing: heightdiff={y-self.top}')
+            else:
+                await random.choice([self.goleftattack, self.goleftattackk, self.goleftattadele, self.goleftattadele2])()
+        elif self.goright:
+            if x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                if y > self.btm-self.offsety and y <= self.btm+self.offsety:
+                    self.goleft=True
+                    self.goright=False
+                else:
+                    await random.choice([self.godownattack])()
+                    time.sleep(.6)
+            else:
+                await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+        else:
+            print(f'exception coordinates .. please fix asap .. {x=} {y=}')
+        await self.post_perform_action(x,y)
+            
+    async def leftrightlong(self,x,y):
+        # print(f'{x=} {y=} l={self.left} t={self.top} r={self.right} b={self.btm}')
         if self.goleft:
             if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
                 if y > self.top-self.offsety and y <= self.top+self.offsety:
@@ -651,11 +832,12 @@ class Adele(Action):
                 await random.choice([self.gorightattack, self.gorightattackk])()
         else:
             print(f'exception coordinates .. please fix asap .. {x=} {y=}')
+        # time.sleep(2)
         await self.post_perform_action(x,y)
 
 
 
-    async def leftrightlong(self,x,y):
+    async def leftright(self,x,y):
         if self.goleft:
             if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
                 await random.choice([self.upjumpattack])()

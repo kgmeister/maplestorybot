@@ -36,10 +36,10 @@ from configparser import ConfigParser
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-# from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybind, goleftattack, gorightattack, goleftattackk, gorightattackk, \
-#     goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
-#     stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
-#     goattackleft, goattackkleft, goattackright, goattackkright
+from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybind, goleftattack, gorightattack, goleftattackk, gorightattackk, \
+    goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
+    stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
+    goattackleft, goattackkleft, goattackright, goattackkright
 from classtype.action import Action
 from classtype.teleport import Teleport
 from classtype.flashjump import Flashjump
@@ -1191,7 +1191,7 @@ class TkinterBot(customtkinter.CTk):
             print(f'{width=} {height=}')
             # saved_window.geometry(f'400x100+{width-100}+{height-200}')
             saved_window.geometry(f'{width-300}+{height-200}')
-        buttonsave = customtkinter.CTkButton(frameleft, text="save preset", command=save, width=100)
+        buttonsave = customtkinter.CTkButton(frameleft, text="save all", command=save, width=100)
         buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
         ## ------------------------------------------------------------------------------------------------------------- ##
         # def on_select_rotation(event): # tag UI placement order
@@ -1456,7 +1456,7 @@ class TkinterBot(customtkinter.CTk):
                 self.rotation = comboboxrotation.get()
                 self.character.set_rotation(self.rotation)                
             rotation_list = self.character.get_rotation_list()
-            comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=120)
+            comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=140)
             comboboxrotation.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
             comboboxrotation.set(rotation_list[rotation_list.index(self.rotation)])
             # self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
