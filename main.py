@@ -41,8 +41,6 @@ from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybi
     stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
     goattackleft, goattackkleft, goattackright, goattackkright
 from classtype.action import Action
-from classtype.teleport import Teleport
-from classtype.flashjump import Flashjump
 # from runesolver import runechecker, gotorune, enablerune, disablerune, gotopoloportal, set_hwnd
 from runesolver import RuneSolver
 
