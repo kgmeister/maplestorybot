@@ -20,15 +20,14 @@ Bumblebee Bot 是专为2D MMORPG 游戏《楓之谷》定制的脚本。
 - Polo portal / Especia portal currently doesn't work on DMT day as the banner is blocking the top timer used to differentiate portal type. Users are suggested to turn portal feature off in settings tab. 
 - When launcing on multiple PCs, cannot use the same telegram bot, must create a new tg bot for each PC. 
 
-# Guide:
-- this project uses python 3.12
-- you can edit the code and run in cmd (administrator) using: python main.py
-- join the discord server if you encounter any issue. (will update this section after stable. ) 
-- run the following command to compile code into .exe file, then rename main.exe in dist folder to chrome.exe:
-    - pyinstaller --clean --onefile --add-binary "./gdi_capture/gdi_capture.dll;." --icon=icon.ico main.py
-- run the following command to disable console output:
-    - pyinstaller --clean --noconsole --onefile --add-binary "./gdi_capture/gdi_capture.dll;." --icon=icon.ico main.py
-- more in discord. 
+# Quick Installation:
+1. install python 3.12 (https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe)
+2. install interception (https://github.com/oblitum/Interception)
+3. create a new folder somewhere (preferably desktop)
+4. run cmd (administrator) --> `cd C:\Users\myusername\Desktop\myfoldername`
+5. `git clone https://github.com/agumonlyt/Bumblebee`
+6. `pip install -r requirements.txt`
+7. `python main.py`
 
 # Discord Link: 
 https://discord.gg/dbsKm2jE27
