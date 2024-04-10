@@ -12,7 +12,7 @@
 
 
 import random
-from classtype.action import Action
+from action import Action
 from classtype.nightlord import Nightlord
 from classtype.soulmaster import Soulmaster
 from classtype.zero import Zero

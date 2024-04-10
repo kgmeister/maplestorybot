@@ -40,7 +40,7 @@ from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybi
     goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
     stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
     goattackleft, goattackkleft, goattackright, goattackkright
-from classtype.action import Action
+from action import Action
 # from runesolver import runechecker, gotorune, enablerune, disablerune, gotopoloportal, set_hwnd
 from runesolver import RuneSolver
 
@@ -2066,8 +2066,9 @@ class TkinterBot(customtkinter.CTk):
         # refreshkeybind()
         # self.character.change_ac_type(Teleport()) if self.classtype=='teleport' else self.character.change_ac_type(Flashjump())
         self.character.change_ac_type(self.classtype)
-        self.rotation='default'   
+        self.rotation='default'
         rotation_list = self.character.get_rotation_list()
+        self.comboboxrotation.configure(values=rotation_list)
         self.comboboxrotation.set(rotation_list[rotation_list.index(self.rotation)])
 
     def rebind(self):

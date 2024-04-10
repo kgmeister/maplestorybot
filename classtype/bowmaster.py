@@ -2,7 +2,7 @@ import random
 import time
 from time import perf_counter
 # from configparser import ConfigParser
-from classtype.action import Action
+from action import Action
 from initinterception import sleep
 
 
