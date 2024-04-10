@@ -26,8 +26,9 @@ Bumblebee Bot 是专为2D MMORPG 游戏《楓之谷》定制的脚本。
 3. create a new folder somewhere (preferably desktop)
 4. run cmd (administrator) --> `cd C:\Users\myusername\Desktop\myfoldername`
 5. `git clone https://github.com/agumonlyt/Bumblebee`
-6. `pip install -r requirements.txt`
-7. `python main.py`
+6. `cd Bumblebee`
+7. `pip install -r requirements.txt`
+8. `python main.py`
 
 # Discord Link: 
 https://discord.gg/dbsKm2jE27
