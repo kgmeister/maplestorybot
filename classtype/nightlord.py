@@ -16,11 +16,37 @@ class Nightlord(Action):
     def __init__(self):
         super().__init__()
         self.offsety=5
-        self.offsetx=15
+        self.offsetx=15  
+        self.rotation_list = ['default']
+        self.rotation='default'
+        self.rotation_mapping = {
+            'default': self.clockwise,
+        }
 
     def define(self):
         pass
-    
+
+    def setup(self,runesolver,g,rotation):
+        if runesolver is not None:
+            self.runesolver=runesolver
+        if rotation is not None:
+            self.rotation=rotation
+        if g is not None:
+            self.g=g
+        
+    async def perform_next_attack(self, x, y):
+        # await self.limen1_7(x,y)
+        # await self.clockwise(x,y)
+        print(f'{self.rotation=}')
+        await self.rotation_mapping[self.rotation](x,y)
+        
+    def get_rotation_list(self):
+        return self.rotation_list
+        
+    def set_rotation(self, rotation):
+        self.rotation = rotation
+        print(f'{self.rotation=}')
+
     # basic 4x direction movement (goleft, goright, gooup, godown)
     async def goleftattack(self):
         print(f'goleftattack')
@@ -176,3 +202,49 @@ class Nightlord(Action):
                 goright=True
                 goleft=False
         return goleft,goright
+
+        
+    async def clockwise(self,x,y):
+        if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x > self.left+self.offsetx:
+                if x < self.left+self.offsetx+5:
+                    await random.choice([self.leftwalk])()
+                else:
+                    await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x < self.left-self.offsetx:
+                if x > self.left-self.offsetx-5:
+                    await random.choice([self.rightwalk])()
+                else:
+                    await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+        elif y <= self.top+self.offsety and y > self.top-self.offsety:
+            if x < self.right-self.offsetx:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x > self.right+self.offsetx:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+        elif y > self.top and not (y > self.btm-self.offsety and y <= self.btm+self.offsety):
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if self.replaceropeconnect:
+                    await random.choice([self.goupattack_v3])()
+                else:
+                    await random.choice([self.goupattack])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                await random.choice([self.godownattack])()
+            else:
+                if x < ((self.right-self.left)/2):
+                    if self.replaceropeconnect:
+                        await random.choice([self.goupattack_v3])()
+                    else:
+                        await random.choice([self.goupattack])()
+                elif x >= ((self.right-self.left)/2):
+                    await random.choice([self.godownattack])()
+        else:
+            await random.choice([self.godownattack])()
+
+        await self.post_perform_action(x,y)

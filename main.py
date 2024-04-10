@@ -1453,12 +1453,12 @@ class TkinterBot(customtkinter.CTk):
             self.reload()
             print(f'reloaded after UI initiated. {self.classtype}')
             def on_select_rotation(event): # tag UI placement order # can only initializd after reload() # todo: organize code nicer
-                self.rotation = comboboxrotation.get()
-                self.character.set_rotation(self.rotation)                
+                self.rotation = self.comboboxrotation.get()
+                self.character.set_rotation(self.rotation)
             rotation_list = self.character.get_rotation_list()
-            comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=140)
-            comboboxrotation.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
-            comboboxrotation.set(rotation_list[rotation_list.index(self.rotation)])
+            self.comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=140)
+            self.comboboxrotation.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
+            self.comboboxrotation.set(rotation_list[rotation_list.index(self.rotation)])
             # self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
             # self.frame3.pack(padx=0, pady=0)
             # self.label_currentleft = tk.Label(self.frame3, text=f"current left: {self.line_position_slider.get()}")
@@ -2068,6 +2068,9 @@ class TkinterBot(customtkinter.CTk):
         # refreshkeybind()
         # self.character.change_ac_type(Teleport()) if self.classtype=='teleport' else self.character.change_ac_type(Flashjump())
         self.character.change_ac_type(self.classtype)
+        self.rotation='default'   
+        rotation_list = self.character.get_rotation_list()
+        self.comboboxrotation.set(rotation_list[rotation_list.index(self.rotation)])
 
     def rebind(self):
         self.entrytoken.delete(0,tk.END)

@@ -1,5 +1,6 @@
 import random
 import time
+from time import perf_counter
 from configparser import ConfigParser
 # from initinterception import interception, move_to, move_relative, left_click, keydown, keyup, sleep
 from initinterception import keydown, keyup, sleep
@@ -48,7 +49,29 @@ class Action:
         self.rotation='default'
         self.rotation_mapping = {
             'default': self.clockwise,
-        }
+        }  
+        self.rotation='default'
+
+    def setup(self,runesolver,g,rotation):
+        if runesolver is not None:
+            self.runesolver=runesolver
+        if rotation is not None:
+            self.rotation=rotation
+        if g is not None:
+            self.g=g
+        
+    async def perform_next_attack(self, x, y):
+        # await self.limen1_7(x,y)
+        # await self.clockwise(x,y)
+        print(f'{self.rotation=}')
+        await self.rotation_mapping[self.rotation](x,y)
+        
+    def get_rotation_list(self):
+        return self.rotation_list
+        
+    def set_rotation(self, rotation):
+        self.rotation = rotation
+        print(f'{self.rotation=}')
     
     def refreshkeybind(self):
         self.config.read('settings.ini')
@@ -58,20 +81,6 @@ class Action:
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
         
-    def setup(self,runesolver,g,rotation):
-        if runesolver is not None:
-            self.runesolver=runesolver
-        if g is not None:
-            self.g=g
-        if rotation is not None:
-            self.rotation=rotation
-        
-    def get_rotation_list(self):
-        return self.rotation_list
-
-    def set_rotation(self, rotation):
-        self.rotation = rotation
-
     async def leftp(self,x=31,y=101):
         keydown('left')
         r = random.randint(x, y)
@@ -726,7 +735,7 @@ class Action:
 
     
 
-    async def clockwise(self,x,y):
+    async def default(self,x,y):
         if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):
             if x > self.left+self.offsetx:
                 if x < self.left+self.offsetx+5:
@@ -856,5 +865,6 @@ class Action:
     async def testnpc(self):
         await self.npcp()
         await self.npcr()
+
 
 

@@ -13,12 +13,11 @@
 
 import random
 from classtype.action import Action
-from classtype.flashjump import Flashjump
-from classtype.teleport import Teleport
 from classtype.nightlord import Nightlord
 from classtype.soulmaster import Soulmaster
 from classtype.zero import Zero
 from classtype.adele import Adele
+from classtype.bowmaster import Bowmaster
 
 
 
@@ -39,12 +38,11 @@ class Character:
         # self.ac = Action()
         self.ac = None
         self.classtype = {
-            'teleport': Teleport,
-            'flashjump': Flashjump,
             'nightlord': Nightlord,
             'soulmaster': Soulmaster,
             'zero': Zero,
             'adele': Adele,
+            'bowmaster': Bowmaster,
         }
 
     def setup(self,left,right,top,btm,classtype=None,runesolver=None,g=None,rotation=None):

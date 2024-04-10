@@ -33,15 +33,36 @@ class Zero(Action):
         self.runetimer=0
         self.checkrune=True
         self.solverune=True
-        self.now=0
+        self.now=0  
+        self.rotation_list = ['default']
+        self.rotation='default'
+        self.rotation_mapping = {
+            'default': self.clockwise,
+        }
 
     def define(self):
         pass
 
-    def setup(self,runesolver,g):
+    def setup(self,runesolver,g,rotation):
         if runesolver is not None:
             self.runesolver=runesolver
-        self.g=g
+        if rotation is not None:
+            self.rotation=rotation
+        if g is not None:
+            self.g=g
+        
+    async def perform_next_attack(self, x, y):
+        # await self.limen1_7(x,y)
+        # await self.clockwise(x,y)
+        print(f'{self.rotation=}')
+        await self.rotation_mapping[self.rotation](x,y)
+        
+    def get_rotation_list(self):
+        return self.rotation_list
+        
+    def set_rotation(self, rotation):
+        self.rotation = rotation
+        print(f'{self.rotation=}')
     
     # basic 4x direction movement (goleft, goright, gooup, godown)
     async def goleftattack(self):
@@ -370,9 +391,6 @@ class Zero(Action):
         #     await self.rightp(distance*388,distance*444) # calculate sleep time according to distance. 
         #     await self.rightr()
 
-    async def perform_next_attack(self, x, y):
-        # await self.limen1_7(x,y)
-        await self.clockwise(x,y)
 
     async def limen1_7(self,x,y):    
         if y > 34.5 and y <= 47.5:
