@@ -45,6 +45,7 @@ Part of the code taken from:
 - https://github.com/kennyhml/pyinterception
 
 # Bot Showcase:
+- soul master custom rotation at limen 1-7
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/8Vmf2rM_Iyo/0.jpg)](https://www.youtube.com/watch?v=8Vmf2rM_Iyo)
 
