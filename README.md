@@ -43,3 +43,8 @@ We do not encourage botting. This project is only for research purpose.
 Part of the code taken from:
 - https://github.com/qlvbrknp/maple-bot
 - https://github.com/kennyhml/pyinterception
+
+# Bot Showcase:
+https://www.youtube.com/watch?v=8Vmf2rM_Iyo
+
+more videos coming soon. join discord for more showcasing. 
