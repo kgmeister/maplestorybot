@@ -10,7 +10,7 @@ Bumblebee Bot 是专为2D MMORPG 游戏《楓之谷》定制的脚本。
 （Translated）Bumblebee Bot은 2D MMORPG 게임 '메이플스토리'를 위해 맞춤으로 개발된 외부 도구입니다. 이 도구는 '메이플스토리' 동남아 서버(MapleStorySEA)에서 내장된 거짓탐지기를 작동시키지 않습니다(테스트 완료). 그러나 다른 지역의 '메이플스토리'나 사설 서버에서는 테스트되지 않았습니다. 이 도구는 오픈 소스이며 무료로 사용할 수 있습니다.
 
 # Updates:
-- 12th April 2024: Added script recording method. Join discord to read on how to use. With this feature update, all major features have been implemented. Feel free to use this bot. Feel free to ask questions in the discord to learn how to use / how to design your own custom rotation, etc. Next update will be some QoL, bug fixing, code cleaning, redesigning ui, and more. 
+- 12th April 2024: Added script recording method. Join discord to read on how to use. With this feature update, all major features have been implemented. Feel free to play with the bot. Feel free to ask questions in the discord to learn how to use / how to design your own custom rotation, etc. Next update will be some QoL, bug fixing, code cleaning, redesigning ui, and more. 
 
 ![BUMBLEBEEBOT!](assets/bumblebeebot2.png)
 - 10th April 2024: Can now select map preset (left) and action function (right). 
