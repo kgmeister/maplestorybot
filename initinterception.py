@@ -135,6 +135,7 @@ def _get_keycode(key: str) -> int:
     except KeyError:
         raise exceptions.UnknownKeyError(key)
 
+
 # extract from theinterception inputs.py
 # key press down function
 def keydown(key):

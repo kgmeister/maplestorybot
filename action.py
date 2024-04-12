@@ -81,6 +81,22 @@ class Action:
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
         
+    async def escp(self,x=31,y=101):
+        keydown('esc')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def escr(self,x=31,y=101):
+        keyup('esc')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+    
+    async def escpr(self,x=31,y=101):
+        await self.escp()
+        await self.escr()
+
     async def leftp(self,x=31,y=101):
         keydown('left')
         r = random.randint(x, y)
@@ -530,14 +546,14 @@ class Action:
         await self.attackr()
         await self.downr()
         
-    async def leftwalk(self):
+    async def leftwalk(self,x=222,y=333):
         print(f'leftwalk')
-        await self.leftp(222,333)
+        await self.leftp(x,y)
         await self.leftr()
 
-    async def rightwalk(self):
+    async def rightwalk(self,x=222,y=333):
         print(f'rightwalk')
-        await self.rightp(222,333)
+        await self.rightp(x,y)
         await self.rightr()
         
     async def downjump(self):

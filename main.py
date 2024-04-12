@@ -17,7 +17,7 @@ from math import log10, floor
 from time import perf_counter
 import numpy as np
 import threading
-from pynput import keyboard
+from pynput import keyboard, mouse
 from pynput.keyboard import Listener as KeyListener  # type: ignore[import]
 from pynput.mouse import Listener as MouseListener  # type: ignore[import]
 from PIL import ImageGrab
@@ -45,7 +45,7 @@ from action import Action
 from runesolver import RuneSolver
 
 from initinterception import interception, move_to, move_relative, left_click, mouse_position, mousedown, mouseup, hold_mouse, custommoveto, initiate_move, \
-    auto_capture_devices2
+    auto_capture_devices2, keydown, keyup
 
 # from humancursor import SystemCursor
 from helper import Helper
@@ -85,6 +85,7 @@ class TkinterBot(customtkinter.CTk):
         self.classtype = self.config.get('keybind', 'classtype')
         self.profile = self.config.get('main', 'profile')
         self.preset = self.config.get('main', 'preset')
+        self.script = self.config.get('main', 'script')
         self.rotation = self.config.get('main', 'rotation')
         self.portaldisabled = self.config.getboolean('main', 'portaldisabled')
 
@@ -141,6 +142,8 @@ class TkinterBot(customtkinter.CTk):
         self.loop4 = asyncio.new_event_loop()
         self.loop5 = asyncio.new_event_loop()
         self.loop6 = asyncio.new_event_loop()
+        self.loop7 = asyncio.new_event_loop()
+        self.loop8 = asyncio.new_event_loop()
         self.thread1 = threading.Thread(target=self.run_thread1)
         self.thread2 = threading.Thread(target=self.run_thread2)
         self.thread3 = threading.Thread(target=self.run_thread3)
@@ -162,6 +165,8 @@ class TkinterBot(customtkinter.CTk):
         self.setup_tab()
         print(f'setup_tab1')
         self.setup_tab1()
+        print(f'setup_tab2')
+        self.setup_tab2()
         print(f'setup_tab3')
         self.setup_tab3()
         print(f'setup_tab4')
@@ -304,6 +309,16 @@ class TkinterBot(customtkinter.CTk):
     def run_thread6(self):
         asyncio.set_event_loop(self.loop6)
         self.loop6.run_until_complete(self.async_function6()) # just a button loop
+    
+    def run_thread7(self):
+        asyncio.set_event_loop(self.loop7)
+        self.loop7.run_until_complete(self.async_function7()) # script recording
+        print(f'run_thread7 ended. ')
+    
+    def run_thread8(self):
+        asyncio.set_event_loop(self.loop8)
+        self.loop8.run_until_complete(self.async_function8()) # script playback
+        print(f'run_thread8 ended. ')
 
     def start_threads(self):
         # Start both threads
@@ -571,6 +586,13 @@ class TkinterBot(customtkinter.CTk):
                 await initiate_move()
                 self.triggermousetest=False
 
+    async def async_function7(self): # script recording thread (keyboard listener)
+        self.realrecord()
+        print(f'async_function7 complete')
+
+    async def async_function8(self): # script playback thread
+        await self.playback()
+        print(f'async_function8 complete')
 
     # def find_maplestory_windows(self, hwnd, lParam):
     #     title = win32gui.GetWindowText(hwnd)
@@ -1767,6 +1789,447 @@ class TkinterBot(customtkinter.CTk):
         selected_tab = self.notebook.index(self.notebook.select())
         print("Selected Tab:", selected_tab)
 
+    def setup_tab2(self):
+        framerecord = customtkinter.CTkFrame(self.tab2, fg_color='#81b253')
+        framerecord.pack(padx=1, pady=1)
+        def new():
+            script_name = simpledialog.askstring("New Script", "Enter the name for the new script:")
+            # dialog = customtkinter.CTkInputDialog(title="New Script",text="Enter the name for the new script:")
+            # script_name = dialog.get_input()
+            if script_name:
+                script_name=script_name+'.json'
+                json_file_names.append(script_name)
+                comboboxpreset.set(json_file_names[len(json_file_names)-1])
+                comboboxpreset.configure(values=json_file_names)
+                self.scripttemp = comboboxpreset.get()
+            length=0
+            signature=''
+            self.labelscript.configure(text=f'script duration: {length}')
+            self.labelscript2.configure(text=f'script signature: {signature}')
+        buttonnew = customtkinter.CTkButton(framerecord, text="new script", command=new)
+        buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
+        buttonnew.pack(padx=(1,1),pady=(1,1))
+        def on_select(event):
+            self.scripttemp = comboboxpreset.get()
+            print(f'{self.script=} {self.scripttemp=}')
+            try:
+                with open(f'point/{self.scripttemp}', 'r') as jsonfile:
+                    data = json.load(jsonfile)
+                    print(f'{data=}')
+                    self.pointx=data[0]
+                    self.pointy=data[1]
+                    labelpointa.configure(text=f'({self.pointx}, {self.pointy})')            
+                length=0
+                signature=''
+                with open(f'script/{self.scripttemp}', 'r') as jsonfile:
+                    data = json.load(jsonfile)            
+                    for index, action in enumerate(data):
+                        if action['type']=='keyUp':
+                            signature+=action['button']
+                    length=round(data[-1]['time'],4)
+                self.labelscript.configure(text=f'script duration: {length}')
+                self.labelscript2.configure(text=f'script signature: {signature}')
+            except Exception as e:
+                self.labelscript.configure(text=f'script duration: ')
+                self.labelscript2.configure(text=f'script signature: ')
+        folder_path = "script"
+        file_list = os.listdir(folder_path)
+        json_file_names = [file for file in file_list if file.endswith(".json")]
+        # json_file_names = [os.path.splitext(file)[0] for file in json_files]
+        comboboxpreset = customtkinter.CTkComboBox(framerecord, values=json_file_names, state="readonly",command=on_select,justify='center')
+        # comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NW)
+        comboboxpreset.pack(padx=(1,1), pady=(1,1))
+        comboboxpreset.set(json_file_names[json_file_names.index(self.script)])
+        def clock():
+            if self.recordstatus:
+                return
+            else:
+                # hour2=time.strftime('%H')
+                # hour=time.strftime('%I')
+                # minute=time.strftime('%M')
+                # second=time.strftime('%S')
+                # day=time.strftime('%A')
+                # am_pm=time.strftime('%p')
+                # time_label.configure(text=hour+':'+minute+':'+second)
+                elapsed = perf_counter()-self.time
+                time_label.configure(text="{:.4f}s".format(elapsed))
+                time_label.after(1000,clock)
+        def record():
+            if self.recordstatus:
+                self.recordstatus=not self.recordstatus
+                self.record_button.configure(fg_color='#ff9966', text='Stop', text_color='black',state='disabled')
+                self.time=perf_counter()
+                clock()
+                self.thread7 = threading.Thread(target=self.run_thread7)
+                self.thread7.start()
+            else:
+                pass
+                # self.recordstatus=not self.recordstatus
+                # record_button.configure(fg_color='#55eecc', text='Record',state='normal')
+                # for value in self.input_events:
+                #     print(f'{value=}')
+                # self.thread7.join()
+        self.scripttemp=self.script
+        self.recordstatus=True
+        self.input_events=[]
+        self.realrecordstopsignal=False
+        self.record_button = customtkinter.CTkButton(framerecord, text="Record",fg_color='#55eecc',text_color='black',command=record, font=('Helvetica', 12))
+        self.record_button.pack(padx=1, pady=1)
+        time_label = customtkinter.CTkLabel(framerecord, text='0.0000s', font=('Helvetica', 12), text_color='black')
+        time_label.pack(padx=1,pady=1)
+        def save():
+            self.script=self.scripttemp
+            with open(f'script/{self.script}', 'w') as json_file:
+                json.dump(self.input_events, json_file, indent=4)
+            pointA = (self.pointx,self.pointy)
+            with open(f'point/{self.script}', 'w') as json_file:
+                json.dump(pointA, json_file, indent=4)
+            saved_window = customtkinter.CTkToplevel(framerecord, fg_color='#abcdef')
+            saved_window.title('chrome')
+            saved_window.resizable(False,False)#width,height
+            def close():
+                saved_window.destroy()
+                saved_window.update()
+            label=customtkinter.CTkLabel(saved_window,text=f'saved script: {self.script}. ', text_color='#123321')
+            label.pack(padx=10,pady=(10,1), fill='none', expand=True)
+            button=customtkinter.CTkButton(saved_window,text='ok',command=close)
+            button.pack(padx=10,pady=10, fill='none', expand=True)
+            saved_window.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
+            saved_window.wm_iconbitmap()
+            saved_window.iconphoto(False, saved_window.iconpath)
+            saved_window.after(200,lambda: saved_window.iconphoto(False, saved_window.iconpath))
+            width=int(self.winfo_screenwidth()/2)
+            height=int(self.winfo_screenheight()/2)
+            saved_window.geometry(f'{width-300}+{height-200}')
+        buttonsave = customtkinter.CTkButton(framerecord, text="save all", command=save)
+        # buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
+        buttonsave.pack(padx=(1,1),pady=(1,1))
+        framescript = customtkinter.CTkFrame(self.tab2, fg_color='#81b253')
+        framescript.pack(padx=1, pady=1)
+        length=0
+        signature=''
+        with open(f'script/{self.script}', 'r') as jsonfile:
+            data = json.load(jsonfile)            
+            for index, action in enumerate(data):
+                if action['type']=='keyUp':
+                    signature+=action['button']
+            length=round(data[-1]['time'],4)
+        self.labelscript=customtkinter.CTkLabel(framescript,text=f'script duration: {length}', text_color="#010101",wraplength=550,justify='left')
+        self.labelscript.pack(padx=1,pady=1)
+        self.labelscript2=customtkinter.CTkLabel(framescript,text=f'script signature: {signature}', text_color="#010101",wraplength=550,justify='left')
+        self.labelscript2.pack(padx=1,pady=1)
+        def setpointa():
+            g_variable = self.g.get_player_location()
+            self.pointx, self.pointy = (None, None) if g_variable is None else g_variable
+            labelpointa.configure(text=f'({self.pointx}, {self.pointy})')
+        buttonsetpointa = customtkinter.CTkButton(framescript, text="set point A", command=setpointa)
+        buttonsetpointa.pack(padx=1, pady=1)
+        labelpointa=customtkinter.CTkLabel(framescript,text=f'', text_color="#010101",wraplength=550,justify='left')
+        labelpointa.pack(padx=1,pady=1)
+        with open(f'point/{self.script}', 'r') as jsonfile:
+            data = json.load(jsonfile)
+            print(f'{data=}')
+            self.pointx=data[0]
+            self.pointy=data[1]
+            labelpointa.configure(text=f'({self.pointx}, {self.pointy})')
+        framesonic = customtkinter.CTkFrame(self.tab2, fg_color='#81b253')
+        framesonic.pack(padx=1, pady=1)
+        def stop():
+            self.scriptstopsignal=True
+            self.thread8.join() 
+            buttonplayback.configure(state='normal')
+            buttonpause.configure(state='disabled')
+            buttonstop.configure(state='disabled')       
+        self.scriptstopsignal=False
+        imageknuckles = customtkinter.CTkImage(Image.open("assets/knuckles1.png"),size=(140,140))
+        buttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ea511f', text_color='black',image=imageknuckles,state='disabled')
+        # buttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ff1400', text_color='black',image=imageknuckles)
+        buttonstop.pack(padx=(1,1),pady=(1,1))
+        def pause():
+            self.scriptpausesignal=not self.scriptpausesignal
+            buttonstop.configure(state='normal') if self.scriptpausesignal else buttonstop.configure(state='disabled')
+        self.scriptpausesignal=False
+        imagetails = customtkinter.CTkImage(Image.open("assets/tails1.png"),size=(140,140))
+        buttonpause = customtkinter.CTkButton(framesonic, text="", command=pause, fg_color='#f1bf1f', text_color='black',image=imagetails,state='disabled')
+        # buttonpause = customtkinter.CTkButton(framesonic, text="", command=pause, fg_color='#f1b000', text_color='black',image=imagetails)
+        buttonpause.pack(padx=(1,1),pady=(1,1))
+        def playback():
+            self.thread8 = threading.Thread(target=self.run_thread8)
+            self.thread8.start()
+            buttonplayback.configure(state='disabled')
+            buttonpause.configure(state='normal')
+            buttonstop.configure(state='disabled')
+        imagesonic = customtkinter.CTkImage(Image.open("assets/sonic1.png"),size=(140,140))
+        buttonplayback = customtkinter.CTkButton(framesonic, text="", command=playback, fg_color='#0d7adf', text_color='black',image=imagesonic)
+        buttonplayback.pack(padx=(1,1),pady=(1,1))
+
+
+    def realrecord(self):
+        self.unreleased_keys=[]
+        self.input_events=[]
+        def on_press(key):
+            if key in self.unreleased_keys:
+                return
+            else:
+                self.unreleased_keys.append(key)
+            try:
+                record_event('keyDown', elapsed_time(), key.char)
+            except AttributeError:
+                record_event('keyDown', elapsed_time(), key)
+        def on_release(key):
+            try:
+                self.unreleased_keys.remove(key)
+            except ValueError:
+                print('ERROR: {} not in unreleased_keys'.format(key))
+            try:
+                record_event('keyUp', elapsed_time(), key.char)
+            except AttributeError:
+                record_event('keyUp', elapsed_time(), key)
+            if key == keyboard.Key.esc:
+                # Stop keyboard listener                
+                self.recordstatus=not self.recordstatus
+                self.record_button.configure(fg_color='#55eecc', text='Record',state='normal')
+                signature=''
+                for value in self.input_events:
+                    print(f'{value=}')
+                    if value['type']=='keyUp':
+                        if 'Key' in value['button']:
+                            signature+=value['button'].replace('Key','')
+                        else:
+                            signature+='.'+value['button']
+                length=round(self.input_events[-1]['time'],4)
+                self.labelscript.configure(text=f'script duration: {length}')
+                self.labelscript2.configure(text=f'script signature: {signature}')
+                new_array_temp=[]
+                for index, action in enumerate(self.input_events):
+                    button = action['button']
+                    key = self.convertKey(button)
+                    if key is not None:
+                        self.input_events[index]['button'] = key
+                        # print(f'{key=} {index=}')
+                        if key == 'esc':
+                            pass
+                        else:
+                            new_array_temp.append(action)
+                self.input_events=new_array_temp
+                # for index, action in enumerate(self.input_events):
+                #     print(f"{action['button']}")                
+                raise keyboard.Listener.StopException
+        def record_event(event_type, event_time, button, pos=None):
+            self.input_events.append({
+                'time': event_time,
+                'type': event_type,
+                'button': str(button),
+                'pos': pos
+            })            
+        def elapsed_time():
+            return perf_counter() - self.start_time
+        with keyboard.Listener(
+            on_press=on_press,
+            on_release=on_release) as listener:
+            self.start_time = perf_counter()
+            listener.join()
+            print(f'finish after raise1')
+        print(f'finish after raise2')
+
+    async def playback(self):
+        print(f'starting script {self.script} in 1 ..')
+        time.sleep(1)
+        with open(f'script/{self.script}', 'r') as jsonfile:
+            data = json.load(jsonfile)
+            while True:
+                time.sleep(1) # testing 
+                for index, action in enumerate(data):
+                    print(f'running: {index=} {action=}')
+                    if self.scriptpausesignal:                        
+                        print(f'script is paused .. ')
+                        while self.scriptpausesignal:
+                            if self.scriptstopsignal:
+                                return
+                            # do nothing
+                            time.sleep(1)
+                            if self.stop_event.is_set():
+                                return
+                        print(f'script resumed ..')
+
+                    # if perf_counter()-nowtime>60000:
+                        # checkrune=True
+                    # if index%50==0 and checkrune==True:
+                    #     self.runesolver.runechecker(self.g)
+                    # if allowed:
+                        # pass
+                    # else:
+                        # if changechannel:
+                            # await change_channel2(g)
+                            # time.sleep(2)
+                            # while still_in_zakum_map2(g):
+                                # await adjustportal2(g,spot=21,distx=10.5,docorrection=True)
+                                # await upp()
+                                # await upr()
+                                # time.sleep(1)
+                            # time.sleep(1)
+                            # print(f'checking red dot ..')
+                            # await red_dot()
+                            # print(f'checking red dot finished ..')
+                            # time.sleep(1)
+                            # changechannel = False
+                        # elif liedetector:
+                        #     myvariable = True
+                        #     t = time.localtime()
+                        #     currenttime = time.strftime("%H:%M:%S", t)
+                        #     print(f'oskillsigtermpos2 {currenttime}')            
+                        #     # os.kill(os.getpid(), signal.SIGTERM)
+                        # else:
+                            # await self.runesolver.gotorune(self.g)
+                            # await random.choice([rightjumpjumpattack, leftjumpjumpattack])()
+                            # time.sleep(1.5)
+                            # rune = runechecker(g)
+                            # print(f'here shows previous rune solver success or missed. True means still got rune. False means rune is solved. {rune = }')
+                            # nowtime = perf_counter()
+                            # checkrune=rune
+                        # allowed = True
+                        # reset = True
+                        # unlock()
+                        # pass
+                    # with lock:
+                    # for i in range(1):
+                        # if self.myvariable:
+                            # send5('00')
+                            # while (myvariable):
+                                # time.sleep(2)
+                                # print('playactions == blocked: (new feature: sleeping(2))')
+                                # os.system("pause")
+                                # r = random.randint(500,1500)
+                                # r /= 1000
+                                # sleep(r)
+                                # print('playactions == released: (new feature: sleeping(2))')
+                                # print('playactions == released: (new feature: sleeping(2))', r)
+                                # if stop_event.is_set():
+                                    # sendnclose()
+                                    # global stop_flag
+                                    # stop_flag = True
+                                    # return
+                            # pass
+                        # else:
+                        #     pass
+                    if action['type'] == 'keyDown':
+                        if action['button'] == 'f9':
+                            print('is_f9_bruh')   
+                            # await adjustportallimen2(g, spot=12.5, distx=103.5, docorrection=False, test=False)  #
+                            await self.adjustcharacter(self.pointx,self.pointy)
+                        if action['button'] == 'f10':
+                            print('is_f10_bruh')
+                            # await self.adjustcharacter()
+                        key = action['button']
+                        print(f'press {key=}')
+                        keydown(key)
+                        # presskey(key)
+                    elif action['type'] == 'keyUp':
+                        key = action['button']
+                        print(f'release {key=}')
+                        keyup(key)
+                        # await sleep(1.)
+                        # releasekey(key)
+                    try:
+                        next_action = data[index + 1]
+                    except IndexError:
+                        # this was the last action in the list
+                        break
+                    elapsed_time = next_action['time'] - action['time']
+                    # if elapsed_time is negative, that means our actions are not ordered correctly. throw an error
+                    if elapsed_time < 0:
+                        raise Exception('Unexpected action ordering.')
+                    elapsed_time = round(elapsed_time, -int(floor(log10(abs(elapsed_time)))) + (2))
+                    # if next_action['type'] == 'keyUp' or action['button'] == '06' or next_action['button'] == '06':
+                    if next_action['type'] == 'keyUp':
+                        pass
+                    else:
+                        if elapsed_time < 0.001:
+                            elapsed_time = 0.001
+                        elif elapsed_time < 0.011:
+                            r = random.randint(1, 10)
+                            r /= 1000
+                            elapsed_time = r
+                        elif elapsed_time < 0.031:
+                            r = random.randint(11, 31)
+                            r /= 1000
+                            elapsed_time = r
+                        elif elapsed_time < 0.131:
+                            r = random.randint(31, 131)
+                            r /= 1000
+                            elapsed_time = r
+                        else:
+                            # e1 = elapsed_time - 0.01
+                            # e2 = elapsed_time + 0.01
+                            # e1 = round(e1, -int(floor(log10(abs(e1)))) + (2))
+                            # e2 = round(e2, -int(floor(log10(abs(e2)))) + (2))
+                            r = random.randint(0, 11)
+                            if r % 2 == 0:
+                                r /= 1000
+                                elapsed_time += r
+                            else:
+                                r /= 1000
+                                elapsed_time -= r
+                    print(f'sleep={elapsed_time=}')
+                    await sleep(elapsed_time)
+
+    def convertKey(self,button=None):
+        PYNPUT_SPECIAL_CASE_MAP = {
+            'alt_l': 'altleft',
+            'alt_r': 'altright',
+            'alt_gr': 'altright',
+            'caps_lock': 'capslock',
+            'ctrl_l': 'ctrlleft',
+            'ctrl_r': 'ctrlright',
+            'page_down': 'pagedown',
+            'page_up': 'pageup',
+            'shift_l': 'shiftleft',
+            'shift_r': 'shiftright',
+            'num_lock': 'numlock',
+            'print_screen': 'printscreen',
+            'scroll_lock': 'scrolllock',
+        }
+        # example: 'Key.F9' should return 'F9', 'w' should return as 'w'
+        cleaned_key = button.replace('Key.', '')
+        if cleaned_key in PYNPUT_SPECIAL_CASE_MAP:
+            return PYNPUT_SPECIAL_CASE_MAP[cleaned_key]
+        return cleaned_key
+
+    async def adjustcharacter(self,a=10,b=10):
+        while True:
+            if self.scriptpausesignal:
+                return
+            g_variable = self.g.get_player_location()
+            x, y = (None, None) if g_variable is None else g_variable
+            if x == None or y == None:
+                xynotfound+=1
+                if xynotfound > 50:
+                    t = time.localtime()
+                    currenttime = time.strftime("%H:%M:%S", t)
+                    print(f'something is wrong .. character not found .. exiting .. {currenttime}')
+                    return
+                print(f'x==None, pass ..')
+                time.sleep(.1)      
+            else:
+                if x >=a-2 and x<=a+2:
+                    pass
+                    if y>=b-2 and y<=b+2:
+                        return
+                    else:                        
+                        if y > b:
+                            await self.character.ac.goupattack()
+                        elif y < b:
+                            await self.character.ac.godownattack()
+                else:
+                    if x > a+30:
+                        await self.character.ac.goleftattack()
+                    elif x < a-30:
+                        await self.character.ac.gorightattack()
+                    elif x > a:
+                        await self.character.ac.leftwalk(int((abs(x-a)*40)-30),int((abs(x-a)*40)))
+                    elif x < a:
+                        await self.character.ac.rightwalk(int((abs(x-a)*40)-30),int((abs(x-a)*40)))
+
     def setup_tab3(self):
         # welcome to the ultimate tab3.. 
         # self.framedesign = tk.Frame(self.tab3, bg='#a132f3', bd=0)
@@ -2277,6 +2740,7 @@ class TkinterBot(customtkinter.CTk):
         print("Closing the window")
         #
         self.pause=True
+        self.scriptpausesignal=True
         # # Add your code here to run before closing the window
         # # config.add_section('main')
         # self.config.set('main', 'key1', 'value1')
@@ -2294,6 +2758,7 @@ class TkinterBot(customtkinter.CTk):
         # self.config.set('main', 'initial_line_position4', str(self.btm))
         self.config.set('main', 'profile', str(self.profile))
         self.config.set('main', 'preset', str(self.preset))
+        self.config.set('main', 'script', str(self.script))
         self.config.set('main', 'rotation', str(self.rotation))
         # self.config.set('main', 'portaldisabled', str(self.portaldisabled))
         self.config2.set('telegram', 'token', str(self.TOKEN))
@@ -2331,6 +2796,10 @@ class TkinterBot(customtkinter.CTk):
         print(f'thread3 joined. ')
         self.thread6.join()
         print(f'thread6 joined. ')
+        # self.thread7.join()
+        # print(f'thread7 joined. ')
+        # self.thread8.join()
+        # print(f'thread8 joined. ')
 
 
 

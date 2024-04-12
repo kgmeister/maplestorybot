@@ -24,6 +24,12 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from runesolver import RuneSolver
 from action import Action
+from initinterception import keydown, keyup, sleep
+
+
+
+
+
 
 # These ctypes structures are for Win32 INPUT, MOUSEINPUT, KEYBDINPUT, and HARDWAREINPUT structures,
 # used by SendInput and documented here: http://msdn.microsoft.com/en-us/library/windows/desktop/ms646270(v=vs.85).aspx
@@ -69,20 +75,11 @@ class INPUT(ctypes.Structure):
     ]
 # End of the SendInput win32 data structures.
 
-
-
-def sleep(dur):
-    now = perf_counter()
-    end = now + dur
-    while perf_counter() < end:
-        pass
-
-
-
-
-
-
-
+# def sleep(dur):
+#     now = perf_counter()
+#     end = now + dur
+#     while perf_counter() < end:
+#         pass
 
 def _mouseMoveDrag(moveOrDrag, x, y, xOffset, yOffset, duration, tween, button=None):    
     def getPointOnLine(x1, y1, x2, y2, n):
@@ -146,27 +143,6 @@ def _mouseMoveDrag(moveOrDrag, x, y, xOffset, yOffset, duration, tween, button=N
         ctypes.windll.user32.mouse_event(0x0004, ctypes.c_long(convertedX), ctypes.c_long(convertedY), 0, 0)
         # time.sleep(.5)
         # pyautogui.mouseDown(tweenX,tweenY)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class P(namedtuple("P", ["x", "y"])):
     """Simple, immutable, 2D point/vector class, including some basic
     arithmetic functions.
@@ -210,7 +186,6 @@ class P(namedtuple("P", ["x", "y"])):
 
     def __neg__(self):
         return P(abs(self.x), abs(self.y))
-
 class MyMouse(unittest.TestCase):
 
     TWEENS = [
@@ -319,10 +294,6 @@ class MyMouse(unittest.TestCase):
                 destination,
                 "%s tween move failed. mousepos set to %s instead of %s" % (tweenName, mousepos, destination),
             )
-
-
-
-
 class Aclass():
 
     def __init__(self,g=0) -> None:
@@ -337,7 +308,6 @@ class Aclass():
 
     def printg(self):
         print(f'{self.g=}')
-
 class Bclass():
 
     def __init__(self,g=0) -> None:
@@ -352,9 +322,6 @@ class Bclass():
 
     def printg(self):
         print(f'{self.g=}')
-
-
-
 class mytkinter(customtkinter.CTk):
 
     def __init__(self) -> None:
@@ -645,48 +612,57 @@ async def main():
     # bclass.setg(8.81)
     # aclass.printg()
 
-    class MyClass2:
-        def __init__(self) -> None:
-            # self.class1 = MyClass()
-            # self.class1.set_values(10, "hello")
-            pass
-        def set_values(self, arg1=None, arg2=None):
-            self.arg1 = arg1
-            self.arg2 = arg2
-        def setclass1(self, l,r,t,b,classtype,arg1=None, arg2=None):
-            self.l=l
-            self.r=r
-            self.t=t
-            self.b=b
-            self.class1=MyClass()
-            self.class1.set_values(arg1,arg2)
-        def printclass1(self):
-            print(self.class1.arg1, self.class1.arg2)  # Output: None world
-    class MyClass:
-        def __init__(self) -> None:
-            self.arg1=None
-            self.arg2=None
-        def set_values(self, arg1, arg2):
-            if arg1 is not None:
-                self.arg1 = arg1
-            if arg2 is not None:
-                self.arg2 = arg2
-    # obj = MyClass()
-    obj2 = MyClass2()
-    # obj2.set_values(10, "hello")
+    # class MyClass2:
+    #     def __init__(self) -> None:
+    #         # self.class1 = MyClass()
+    #         # self.class1.set_values(10, "hello")
+    #         pass
+    #     def set_values(self, arg1=None, arg2=None):
+    #         self.arg1 = arg1
+    #         self.arg2 = arg2
+    #     def setclass1(self, l,r,t,b,classtype,arg1=None, arg2=None):
+    #         self.l=l
+    #         self.r=r
+    #         self.t=t
+    #         self.b=b
+    #         self.class1=MyClass()
+    #         self.class1.set_values(arg1,arg2)
+    #     def printclass1(self):
+    #         print(self.class1.arg1, self.class1.arg2)  # Output: None world
+    # class MyClass:
+    #     def __init__(self) -> None:
+    #         self.arg1=None
+    #         self.arg2=None
+    #     def set_values(self, arg1, arg2):
+    #         if arg1 is not None:
+    #             self.arg1 = arg1
+    #         if arg2 is not None:
+    #             self.arg2 = arg2
+    # # obj = MyClass()
+    # obj2 = MyClass2()
+    # # obj2.set_values(10, "hello")
+    # # obj2.printclass1()
+    # # obj2.setclass1(arg1=None,arg2='hhh')
+    # obj2.setclass1(l=0,r=1,t=2,b=3,classtype='meow',arg2='hhh')
     # obj2.printclass1()
-    # obj2.setclass1(arg1=None,arg2='hhh')
-    obj2.setclass1(l=0,r=1,t=2,b=3,classtype='meow',arg2='hhh')
-    obj2.printclass1()
-    obj2.setclass1(l=0,r=1,t=2,b=3,classtype='woof',arg1=11)
-    obj2.printclass1()
-    # obj.set_values(10, "hello")
-    # print(obj.arg1, obj.arg2)  # Output: 10 hello
-    # obj.set_values(20, None)
-    # print(obj.arg1, obj.arg2)  # Output: 20 None
-    # obj.set_values(None, "world")
-    # print(obj.arg1, obj.arg2)  # Output: None world
+    # obj2.setclass1(l=0,r=1,t=2,b=3,classtype='woof',arg1=11)
+    # obj2.printclass1()
+    # # obj.set_values(10, "hello")
+    # # print(obj.arg1, obj.arg2)  # Output: 10 hello
+    # # obj.set_values(20, None)
+    # # print(obj.arg1, obj.arg2)  # Output: 20 None
+    # # obj.set_values(None, "world")
+    # # print(obj.arg1, obj.arg2)  # Output: None world
 
+
+    for i in range(10):
+        print(f'keydown shift')
+        keydown('altleft')
+        await sleep(.1)
+        print(f'keyup shift')
+        keyup('altleft')
+        await sleep(.1)
+        
 
 
 # Run the event loop
