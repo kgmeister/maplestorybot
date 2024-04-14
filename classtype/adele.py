@@ -35,7 +35,7 @@ class Adele(Action):
         self.solverune=True
         self.now=0        
         self.rotation_list = ['default', 'leftright', 'leftrightlong', 'leftrightdownlong', 'leftrightuplong',
-            'moonbridge',]
+            'moonbridge','arcana_lp']
         self.rotation='default'
         self.rotation_mapping = {
             'default': self.clockwise,
@@ -44,6 +44,7 @@ class Adele(Action):
             'leftrightdownlong': self.leftrightdownlong,
             'leftrightuplong': self.leftrightuplong,
             'moonbridge': self.moonbridge,
+            'arcana_lp': self.arcana_lp,
         }
 
     def define(self):
@@ -775,6 +776,36 @@ class Adele(Action):
                         await random.choice([self.leftwalk])()
                     await random.choice([self.godownattack])()
                     time.sleep(.2)
+            else:
+                await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+        else:
+            print(f'exception coordinates .. please fix asap .. {x=} {y=}')
+        await self.post_perform_action(x,y)
+        
+    async def arcana_lp(self,x,y):
+        print(f'{self.right=} {self.offsetx=}')
+        if self.goleft:
+            if x >= self.left-self.offsetx and x <= self.left+self.offsetx:
+                if y > self.top-self.offsety and y <= self.top+self.offsety:
+                    self.goright=True
+                    self.goleft=False
+                    await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
+                else:
+                    await random.choice([self.upjumpattack])()
+                    time.sleep(.2)
+                print(f'testing: heightdiff={y-self.top}')
+            else:
+                await random.choice([self.goleftattack, self.goleftattackk, self.goleftattadele, self.goleftattadele2])()
+        elif self.goright:
+            if x >=93.5 and x<= 95.5:
+                await random.choice([self.rightwalk])()
+            elif x >= self.right-self.offsetx and x <= self.right+self.offsetx:
+                if y > self.btm-self.offsety and y <= self.btm+self.offsety:
+                    self.goleft=True
+                    self.goright=False
+                else:
+                    await random.choice([self.godownattack])()
+                    time.sleep(.6)            
             else:
                 await random.choice([self.gorightattack, self.gorightattackk, self.gorightattadele, self.gorightattadele2])()
         else:

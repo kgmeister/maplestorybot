@@ -514,7 +514,8 @@ class RuneSolver:
         # runepos = (x+341, y+143, x+917, y+371) # 1280x720
         # runepos = (x+381, y+143, x+957, y+371) # 1366x768
         # runepos = (x+631, y+143, x+1207, y+371) # 1920x1080 # if this coordinate not work, lemme know!
-        screenshot = ImageGrab.grab(runepos)
+        print(x,y,w,h)
+        screenshot = ImageGrab.grab(runepos,all_screens=True)
         # screenshot.show()
         # time.sleep(5)
         img = np.array(screenshot)
