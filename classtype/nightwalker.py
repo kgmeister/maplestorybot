@@ -12,7 +12,7 @@ from initinterception import sleep
 
 
 
-class Adele(Action):
+class Nightwalker(Action):
 
     def __init__(self):
         super().__init__()
@@ -35,7 +35,7 @@ class Adele(Action):
         self.solverune=True
         self.now=0        
         self.rotation_list = ['default', 'leftright', 'leftrightlong', 'leftrightdownlong', 'leftrightuplong',
-            'moonbridge','arcana_lp']
+            'moonbridge','arcana_lp','nightwalkertest']
         self.rotation='default'
         self.rotation_mapping = {
             'default': self.clockwise,
@@ -45,6 +45,7 @@ class Adele(Action):
             'leftrightuplong': self.leftrightuplong,
             'moonbridge': self.moonbridge,
             'arcana_lp': self.arcana_lp,
+            'nightwalkertest': self.nightwalkertest,
         }
 
     def define(self):
@@ -124,7 +125,7 @@ class Adele(Action):
         print(f'press ropeconnect once. ')
         await self.ropeconnectp(31,101)
         await self.ropeconnectr(31,101)
-        await sleep(.555)
+        await sleep(.777)
         print(f'press ropeconnect twice. ')
         await self.ropeconnectp(31,101)
         await self.ropeconnectr(31,101)
@@ -663,6 +664,34 @@ class Adele(Action):
 
 
 
+
+
+    async def nightwalkertest(self,x,y):
+        if self.goleft:
+            if x > self.left + self.offsetx:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x < self.left - self.offsetx:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x >= self.left-self.offsetx and x <= self.left + self.offsetx:
+                if y > self.top:
+                    await random.choice([self.goupattack])()
+                elif y <= self.top:
+                    self.goright=True
+                    self.goleft=False
+        elif self.goright:
+            if x < self.right-self.offsetx:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            elif x > self.right+self.offsetx:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+            elif x >= self.right-self.offsetx and x <= self.right + self.offsetx:
+                if y < self.btm-self.offsety:
+                    await random.choice([self.godownattack])()
+                elif y >= self.btm-self.offsety and y <= self.btm+self.offsety:
+                    self.goleft=True
+                    self.goright=False
+        await self.post_perform_action(x,y)
+                
+            
 
 
     async def clockwise(self,x,y):

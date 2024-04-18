@@ -56,6 +56,8 @@ class Game:
             else:
                 # Crop the image to show only the mini-map.
                 img_cropped = img[self.left:self.right, self.top:self.bottom]
+                # for img in img_cropped:
+                #     print(f'{img=}')
                 # img_cropped = img[self.top:self.bottom, self.left:self.right]
                 height, width = img_cropped.shape[0], img_cropped.shape[1]
                 # Reshape the image from 3-d to 2-d by row-major order.
@@ -65,9 +67,11 @@ class Game:
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
                 for c in color:
+                    # print(f'{c=}')
                     sum_x, sum_y, count = 0, 0, 0
                     # Find all index(s) of np.ndarray matching a specified BGRA tuple.
                     matches = np.where(np.all((img_reshaped == c), axis=1))[0]
+                    # print(f'{matches=}')
                     for idx in matches:
                         # Calculate the original (x, y) position of each matching index.
                         sum_x += idx % width

@@ -442,18 +442,19 @@ class TkinterBot(customtkinter.CTk):
             g_variable = self.g.get_player_location()
             x, y = (None, None) if g_variable is None else g_variable
             if x == None or y == None:
-                xynotfound+=1
-                if xynotfound > 70:
-                    t = time.localtime()
-                    currenttime = time.strftime("%H:%M:%S", t)
-                    print(f'something is wrong .. character not found .. exiting .. {currenttime}')
-                    # stop_flag = True
-                    # randompicker_thread.join()
-                    self.pause=True
-                    # return
-                print(f'x==None, pass ..')
-                time.sleep(.1)
-                pass
+                await self.character.perform_next_attack(x,y)
+                # xynotfound+=1
+                # if xynotfound > 70:
+                #     t = time.localtime()
+                #     currenttime = time.strftime("%H:%M:%S", t)
+                #     print(f'something is wrong .. character not found .. exiting .. {currenttime}')
+                #     # stop_flag = True
+                #     # randompicker_thread.join()
+                #     self.pause=True
+                #     # return
+                # print(f'x==None, pass ..')
+                # time.sleep(.1)
+                # pass
             else: # 111.5 27.5
                 xynotfound=0
                 await self.character.perform_next_attack(x,y)

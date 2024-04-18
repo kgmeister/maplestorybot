@@ -18,6 +18,8 @@ from classtype.soulmaster import Soulmaster
 from classtype.zero import Zero
 from classtype.adele import Adele
 from classtype.bowmaster import Bowmaster
+from classtype.nightwalker import Nightwalker
+from classtype.shadower import Shadower
 
 
 
@@ -43,6 +45,8 @@ class Character:
             'zero': Zero,
             'adele': Adele,
             'bowmaster': Bowmaster,
+            'nightwalker': Nightwalker,
+            'shadower': Shadower,
         }
 
     def setup(self,left,right,top,btm,classtype=None,runesolver=None,g=None,rotation=None):

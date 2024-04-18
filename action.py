@@ -145,6 +145,10 @@ class Action:
         r /= 1000
         await sleep(r)
 
+    async def downpr(self,x=31,y=101):
+        await self.downp()
+        await self.downr()
+
     async def jumpp(self,x=31,y=101):
         keydown(self.jump)
         r = random.randint(x, y)
@@ -156,6 +160,10 @@ class Action:
         r = random.randint(x, y)
         r /= 1000
         await sleep(r)
+
+    async def jumppr(self,x=31,y=101):
+        await self.jumpp()
+        await self.jumpr()
 
     ## additional patch for extra key buttons. 
 

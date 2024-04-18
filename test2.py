@@ -22,9 +22,11 @@ import os
 import gc
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from game import Game
 from runesolver import RuneSolver
 from action import Action
 from initinterception import keydown, keyup, sleep
+
 
 
 
@@ -654,15 +656,17 @@ async def main():
     # # obj.set_values(None, "world")
     # # print(obj.arg1, obj.arg2)  # Output: None world
 
-
-    for i in range(10):
-        print(f'keydown shift')
-        keydown('altleft')
-        await sleep(.1)
-        print(f'keyup shift')
-        keyup('altleft')
-        await sleep(.1)
+    # for i in range(10):
+    #     print(f'keydown shift')
+    #     keydown('altleft')
+    #     await sleep(.1)
+    #     print(f'keyup shift')
+    #     keyup('altleft')
+    #     await sleep(.1)
         
+    g = Game((8, 63, 200, 140)) #
+    x = g.get_player_location()
+    print(x)
 
 
 # Run the event loop
