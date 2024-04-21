@@ -55,7 +55,7 @@ class Shadower(Action):
     async def perform_next_attack(self, x, y):
         # await self.limen1_7(x,y)
         # await self.clockwise(x,y)
-        print(f'{self.rotation=}')
+        # print(f'{self.rotation=}')
         await self.rotation_mapping[self.rotation](x,y)
         
     def get_rotation_list(self):
@@ -429,12 +429,16 @@ class Shadower(Action):
             await self.runesolver.gotorune(self.g)
 
 
-    async def downlongpr(self):
+    async def jumpkeeppr(self,x=2222,y=4444):
+        print(f'jumpkeeppr')
+        await self.jumpp(x,y)
+        await self.jumpr()
+
+    async def downlongpr(self,x=1222,y=1272):
         print(f'downlongpr')
-        await self.downp(888,1222)
+        await self.downp(x,y)
         await self.downr()
 
-    async def mapril(self,x,y):
-        
-        await random.choice([self.jumppr, self.downpr])()
-        time.sleep(.5)
+    async def mapril(self,x,y):        
+        await random.choice([self.jumpkeeppr, self.downlongpr])()
+        # time.sleep(.1)

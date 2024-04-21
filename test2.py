@@ -18,6 +18,8 @@ import tkinter as tk
 import customtkinter
 import threading
 from PIL import Image, ImageTk
+from datetime import datetime
+from datetime import time as dtime    
 import os
 import gc
 from telegram import Update
@@ -664,9 +666,38 @@ async def main():
     #     keyup('altleft')
     #     await sleep(.1)
         
-    g = Game((8, 63, 200, 140)) #
-    x = g.get_player_location()
-    print(x)
+    # g = Game((8, 63, 200, 140)) #
+    # x = g.get_player_location()
+    # print(x)
+    
+    # current_time = datetime.now().time()    
+    # one_am = dtime(1, 54, 0)  #
+    # cur_am = dtime(1, 55, 0)  #
+    # six_am = dtime(6, 30, 30)  # Creating a time object for 6 AM
+    # print(current_time.hour-one_am.hour)
+    # print(current_time.minute-one_am.minute)
+    # print(current_time.second-one_am.second)
+    # print(current_time.microsecond-one_am.microsecond)
+    # print(cur_am>=one_am and cur_am<=six_am)
+
+    def myfunc1():
+        return (True, False)
+    def myfunc2():
+        return True, False
+    def myfunc3():
+        return [True, False]
+    now=perf_counter()
+    a=myfunc1()
+    now2=perf_counter()
+    b=myfunc2()
+    now3=perf_counter()
+    c=myfunc3()
+    now4=perf_counter()
+    print(f'n2={now2-now:.10f} n3={now3-now2:.10f} n4={now4-now3:.10f}')
+    print(f'{a=} {b=} {c=}')
+    print(f'{type(a)=} {type(b)=} {type(c)=}')
+    
+
 
 
 # Run the event loop

@@ -405,8 +405,8 @@ class TkinterBot(customtkinter.CTk):
         self.thread4.start() # all the detector goes here
         self.thread5 = threading.Thread(target=self.run_thread5)
         self.thread5.start() # gma detector goes here
-        # self.thread9 = threading.Thread(target=self.run_thread9)
-        # self.thread9.start() # rock detector
+        self.thread9 = threading.Thread(target=self.run_thread9)
+        self.thread9.start() # rock detector
         # left1=self.line_position_slider.get()
         # right1=self.line_position_slider2.get()
         # top1=self.line_position_slider3.get()
@@ -437,10 +437,21 @@ class TkinterBot(customtkinter.CTk):
         xynotfound=0
         await initiate_move()
         # self.g.init_maple_windows()
-        now=perf_counter()
+        rockcounter=0        
+        now=perf_counter()        
+        fourth=False
+        thirdtimer0=now
+        thirdtimer=now
+        third=False
+        secondtimer0=now
+        secondtimer=now
+        second=False
         while True:
             if self.pause:
-                # await self.character.ac.jumpr() # release all key # by right
+                self.rocklockcounter=0
+                self.rocklockcounter2=0                
+                await self.character.ac.jumpr() # release all key # by right
+                await self.character.ac.downr() # release all key # by right
                 print(f'script is paused .. click resume to resume. ')
                 while self.pause:
                     # do nothing
@@ -448,26 +459,77 @@ class TkinterBot(customtkinter.CTk):
                     if self.stop_event.is_set():
                         self.thread4.join()
                         self.thread5.join()
+                        self.thread9.join()
                         return
                 print(f'script resumed ..')
+                fourth=third=second=False
+                thirdtimer0=perf_counter()
+                secondtimer0=perf_counter()
             #
             # time.sleep(.411) # when testing ..
-            time.sleep(.011) # when real botting ..
+            # time.sleep(.011) # when real botting ..
             # time.sleep(.001) # when idk maybe you gone insane ..
-            g_variable = self.g.get_player_location()
-            x, y = (None, None) if g_variable is None else g_variable
+            # g_variable = self.g.get_player_location()
+            # x, y = (None, None) if g_variable is None else g_variable
+            x, y = (None, None)
             if x == None or y == None:
-                xynotfound+=1
-                if xynotfound > 70:
-                    t = time.localtime()
-                    currenttime = time.strftime("%H:%M:%S", t)
-                    print(f'something is wrong .. character not found .. exiting .. {currenttime}')
-                    self.pause=True
-                print(f'x==None, pass ..')
-                time.sleep(.1)
-            else: #
+                # rockloc = self.g.rock_checker()
+                # if rockloc is not None:
+                #     pass
+                # print(f'main: {(perf_counter()-now):.10f}')
+                if self.rockduck:
+                    self.rockduck=False
+                    # print(f'rock on 2nd incoming, should release jump and duck instead. {(perf_counter()-now):.10f} {rockcounter=}')
+                    # print(f'duck')
+                    await self.character.ac.downp(3,11)
+                    while not self.rockduck and not self.rockduck2:
+                        if self.fourth or self.pause:
+                            break
+                    await self.character.ac.downr(3,11)
+                    # print(f'stand')
+                elif self.rockduck2:
+                    self.rockduck2=False
+                    # print(f'rock on 3rd row incoming, should jump. {(perf_counter()-now):.10f}')
+                    await self.character.ac.jumpp(151,181)
+                    await self.character.ac.jumpr(3,11)
+                now=perf_counter()
+                if not fourth:        
+                    thirdtimer = now-thirdtimer0                
+                    if thirdtimer >= 47:
+                        fourth=True
+                    elif thirdtimer >= 30:
+                        third=True
+                        second=False
+                    elif thirdtimer >= 15:
+                        second=True
+                elif fourth:
+                    print('fourth')
+                    self.rockduck=False
+                    self.rockduck2=False
+                    await self.character.ac.downr(3,11)
+                    while perf_counter()-now < 11:
+                        await self.character.ac.jumpp(101,171)
+                        await self.character.ac.jumpr(3,151)
+                    print('fourth  end')
+                    fourth = False
+                    self.resumebutton()
+
+                # xynotfound+=1
+                # if xynotfound > 70:
+                #     t = time.localtime()
+                #     currenttime = time.strftime("%H:%M:%S", t)
+                #     print(f'something is wrong .. character not found .. exiting .. {currenttime}')
+                #     # stop_flag = True
+                #     # randompicker_thread.join()
+                #     self.pause=True
+                #     # return
+                # print(f'x==None, pass ..')
+                # time.sleep(.1)
+                # pass
+            else: # 111.5 27.5
                 xynotfound=0
                 await self.character.perform_next_attack(x,y)
+                # print(f'character_next_move')
                 
                 # self.now = perf_counter()
                 # randommtimer = self.now - randommtimer0
