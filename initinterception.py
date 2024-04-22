@@ -139,15 +139,28 @@ def _get_keycode(key: str) -> int:
 # extract from theinterception inputs.py
 # key press down function
 def keydown(key):
+    # print(f'{KEYBOARD_MAPPING=}')
     keycode = _get_keycode(key)
+    # print(f'{keycode}')
     stroke = KeyStroke(keycode, KeyState.KEY_DOWN, 0)
+    # print(f'{stroke=}')
     interception.send_key(stroke)
+    # print(f'total_result: {interception.send_key(stroke)}')
 
 # key release function
 def keyup(key):
     keycode = _get_keycode(key)
+    # print(f'{keycode}')
     stroke = KeyStroke(keycode, KeyState.KEY_UP, 0)
+    # stroke = KeyStroke(0, 0, 0)
+    # print(f'{stroke}')
     interception.send_key(stroke)
+    # print(f'total_result: {interception.send_key(stroke)}')
+
+def keyupall():
+    stroke = KeyStroke(0, 0, 0)
+    interception.send_key(stroke)
+
 
 def _get_button_states(button: str, *, down: bool) -> int:
     try:

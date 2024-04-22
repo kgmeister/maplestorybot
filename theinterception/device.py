@@ -13,9 +13,13 @@ def device_io_call(decorated):
     def decorator(device: Device, *args, **kwargs):
         command, inbuffer, outbuffer = decorated(device, *args, **kwargs)
         return device._device_io_control(command, inbuffer, outbuffer)
-
     return decorator
 
+def device_io_call_test(decorated):
+    def decorator(device: Device, *args, **kwargs):
+        command, inbuffer, outbuffer = decorated(device, *args, **kwargs)
+        return device._device_io_control(command, inbuffer, outbuffer)
+    return decorator
 
 @dataclass
 class DeviceIOResult:
@@ -112,7 +116,16 @@ class Device:
 
     @device_io_call
     def _send(self, stroke: Stroke):
+        # for index, value in enumerate(self._c_recv_buffer):
+        #     print(f'{index}: {value}')
+        # print(f'{self._c_recv_buffer=} {stroke.raw_data=}  {len(self._c_recv_buffer)=} {0x222080}')
+        # stroke.parse_raw(self._c_recv_buffer)
+        # for v in self._c_recv_buffer:
+        #     print(f'{v}', end=' ')
+        # print(f'')
         memmove(self._c_recv_buffer, stroke.raw_data, len(self._c_recv_buffer))
+        # for index, value in enumerate(self._c_recv_buffer):
+        #     print(f'{index}: {value}')
         return 0x222080, self._c_recv_buffer, 0
 
     @device_io_call
@@ -122,14 +135,17 @@ class Device:
 
     def _device_io_control(self, command, inbuffer, outbuffer) -> DeviceIOResult:
         res = k32.DeviceIoControl(
-            self.handle,
-            command,
-            inbuffer,
-            len(bytes(inbuffer)) if inbuffer else 0,
-            outbuffer,
-            len(bytes(outbuffer)) if outbuffer else 0,
-            self._bytes_returned,
-            0,
+            self.handle, # hDevice - A handle to the device on which the operation is to be performed. This handle is typically obtained by opening the device using functions like CreateFile.
+            command, # dwIoControolCode - The control code for the operation. This code determines the specific operation to be performed.
+            inbuffer, # lpInBuffer - A pointer to the input buffer containing data to be sent to the device.
+            len(bytes(inbuffer)) if inbuffer else 0, # nInBufferSize -  The size, in bytes, of the input buffer.
+            outbuffer, # lpOutBuffer - A pointer to the output buffer that receives the data returned by the device.
+            len(bytes(outbuffer)) if outbuffer else 0, # nOutBufferSize - The size, in bytes, of the output buffer.
+            self._bytes_returned, # lpBytesReturned - A pointer to a variable that receives the size, in bytes, of the data returned by the device.
+            0, # lpOverlapped - An optional pointer to an OVERLAPPED structure for asynchronous operations.
         )
+        # for v in inbuffer:
+        #     print(f'{v}', end=' ')
+        # print(f'')
 
         return DeviceIOResult(res, outbuffer if outbuffer else None)

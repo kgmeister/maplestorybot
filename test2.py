@@ -680,23 +680,41 @@ async def main():
     # print(current_time.microsecond-one_am.microsecond)
     # print(cur_am>=one_am and cur_am<=six_am)
 
-    def myfunc1():
-        return (True, False)
-    def myfunc2():
-        return True, False
-    def myfunc3():
-        return [True, False]
-    now=perf_counter()
-    a=myfunc1()
-    now2=perf_counter()
-    b=myfunc2()
-    now3=perf_counter()
-    c=myfunc3()
-    now4=perf_counter()
-    print(f'n2={now2-now:.10f} n3={now3-now2:.10f} n4={now4-now3:.10f}')
-    print(f'{a=} {b=} {c=}')
-    print(f'{type(a)=} {type(b)=} {type(c)=}')
+    # def myfunc1():
+    #     return (True, False)
+    # def myfunc2():
+    #     return True, False
+    # def myfunc3():
+    #     return [True, False]
+    # now=perf_counter()
+    # a=myfunc1()
+    # now2=perf_counter()
+    # b=myfunc2()
+    # now3=perf_counter()
+    # c=myfunc3()
+    # now4=perf_counter()
+    # print(f'n2={now2-now:.10f} n3={now3-now2:.10f} n4={now4-now3:.10f}')
+    # print(f'{a=} {b=} {c=}')
+    # print(f'{type(a)=} {type(b)=} {type(c)=}')
     
+    # while True:
+    #     for i in range(10):
+    #         keydown('a')
+    #     keyup('b')
+    #     print(f'end. ')
+    #     time.sleep(1)
+
+    file_path = r'C:\Windows\system32\drivers\keyboard.sys'
+    try:
+        with open(file_path, 'rb') as file:
+            content = file.read()
+            print(content)
+    except FileNotFoundError:
+        print("keyboard.sys file not found.")
+    except PermissionError:
+        print("Permission denied. Make sure you have appropriate permissions to read the file.")
+    except Exception as e:
+        print("An error occurred:", e)
 
 
 

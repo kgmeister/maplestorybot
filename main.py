@@ -46,7 +46,7 @@ from action import Action
 from runesolver import RuneSolver
 
 from initinterception import interception, move_to, move_relative, left_click, mouse_position, mousedown, mouseup, hold_mouse, custommoveto, initiate_move, \
-    auto_capture_devices2, keydown, keyup
+    auto_capture_devices2, keydown, keyup, keyupall
 
 # from humancursor import SystemCursor
 from helper import Helper
@@ -440,7 +440,7 @@ class TkinterBot(customtkinter.CTk):
         now=perf_counter()
         while True:
             if self.pause:
-                # await self.character.ac.jumpr() # release all key # by right
+                keyupall()
                 print(f'script is paused .. click resume to resume. ')
                 while self.pause:
                     # do nothing
@@ -451,8 +451,8 @@ class TkinterBot(customtkinter.CTk):
                         return
                 print(f'script resumed ..')
             #
-            # time.sleep(.411) # when testing ..
-            time.sleep(.011) # when real botting ..
+            time.sleep(.411) # when testing ..
+            # time.sleep(.011) # when real botting ..
             # time.sleep(.001) # when idk maybe you gone insane ..
             g_variable = self.g.get_player_location()
             x, y = (None, None) if g_variable is None else g_variable
@@ -2033,6 +2033,7 @@ class TkinterBot(customtkinter.CTk):
         def playback():
             self.thread8 = threading.Thread(target=self.run_thread8)
             self.thread8.start()
+            self.scriptpausesignal=False
             buttonplayback.configure(state='disabled')
             buttonpause.configure(state='normal')
             buttonstop.configure(state='disabled')
@@ -2118,7 +2119,8 @@ class TkinterBot(customtkinter.CTk):
                 time.sleep(1) # testing 
                 for index, action in enumerate(data):
                     print(f'running: {index=} {action=}')
-                    if self.scriptpausesignal:                        
+                    if self.scriptpausesignal:
+                        keyupall()
                         print(f'script is paused .. ')
                         while self.scriptpausesignal:
                             if self.scriptstopsignal:
@@ -2275,6 +2277,7 @@ class TkinterBot(customtkinter.CTk):
     async def adjustcharacter(self,a=10,b=10):
         while True:
             if self.scriptpausesignal:
+                keyupall()
                 return
             g_variable = self.g.get_player_location()
             x, y = (None, None) if g_variable is None else g_variable
