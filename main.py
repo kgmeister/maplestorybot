@@ -674,6 +674,9 @@ class TkinterBot(customtkinter.CTk):
             elif w-x == 1382 or w-x == 1296 or w-x == 1040 or w-x == 816:
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
+            elif w-x == 1384 or w-x == 1298 or w-x == 1042 or w-x == 818:
+                self.maplehwnd=windowhwnd
+                self.runesolver.set_maplehwnd(self.maplehwnd)
 
     def init_maple_windows_old(self):
         # win32gui.EnumWindows(self.find_maplestory_windows, 0)
@@ -1879,10 +1882,10 @@ class TkinterBot(customtkinter.CTk):
                 comboboxpreset.set(json_file_names[len(json_file_names)-1])
                 comboboxpreset.configure(values=json_file_names)
                 self.scripttemp = comboboxpreset.get()
-            length=0
-            signature=''
-            self.labelscript.configure(text=f'script duration: {length}')
-            self.labelscript2.configure(text=f'script signature: {signature}')
+                length=0
+                signature=''
+                self.labelscript.configure(text=f'script duration: {length}')
+                self.labelscript2.configure(text=f'script signature: {signature}')                
         buttonnew = customtkinter.CTkButton(framerecord, text="new script", command=new)
         buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
         buttonnew.pack(padx=(1,1),pady=(1,1))
