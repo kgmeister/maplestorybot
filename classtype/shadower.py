@@ -275,6 +275,30 @@ class Shadower(Action):
                 goleft=False
         return goleft,goright
 
+    # shadower test write
+    
+    async def testupjump(self):
+        print(f'testupjump')
+        await self.jumpp()
+        await self.jumpr()
+        await self.upp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.upr()
+
+    async def mesoexplosionp(self):
+        await self.fp() # just change to whatever key your meso explosion is        
+
+    async def mesoexplosionp(self):
+        await self.fr() # if it doesn't exist, just write one in action.py
+        
+    async def testmesoexplosion(self):
+        print(f'testmesoexplosion')
+        await self.attackp()
+        await self.attackr()
+        await self.mesoexplosionp() # or you can just use self.fp()
+        await self.mesoexplosionr() # or you can just use self.fr()
+
     # soul master actions patch for limen 1-7
     
     async def rightupjump(self):

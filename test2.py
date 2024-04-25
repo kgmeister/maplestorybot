@@ -666,9 +666,11 @@ async def main():
     #     keyup('altleft')
     #     await sleep(.1)
         
-    # g = Game((8, 63, 200, 140)) #
-    # x = g.get_player_location()
-    # print(x)
+    g = Game((8, 63, 200, 140)) #
+    while True:
+        x = g.get_player_location()
+        print(x)
+        time.sleep(1)
     
     # current_time = datetime.now().time()    
     # one_am = dtime(1, 54, 0)  #
@@ -704,17 +706,17 @@ async def main():
     #     print(f'end. ')
     #     time.sleep(1)
 
-    file_path = r'C:\Windows\system32\drivers\keyboard.sys'
-    try:
-        with open(file_path, 'rb') as file:
-            content = file.read()
-            print(content)
-    except FileNotFoundError:
-        print("keyboard.sys file not found.")
-    except PermissionError:
-        print("Permission denied. Make sure you have appropriate permissions to read the file.")
-    except Exception as e:
-        print("An error occurred:", e)
+    # file_path = r'C:\Windows\system32\drivers\keyboard.sys'
+    # try:
+    #     with open(file_path, 'rb') as file:
+    #         content = file.read()
+    #         print(content)
+    # except FileNotFoundError:
+    #     print("keyboard.sys file not found.")
+    # except PermissionError:
+    #     print("Permission denied. Make sure you have appropriate permissions to read the file.")
+    # except Exception as e:
+    #     print("An error occurred:", e)
 
 
 

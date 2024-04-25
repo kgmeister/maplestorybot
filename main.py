@@ -5,6 +5,7 @@ import os
 import random
 import cv2
 import time
+from math import log10, floor
 from time import perf_counter
 import numpy as np
 import threading
@@ -201,6 +202,7 @@ class TkinterBot(customtkinter.CTk):
     
     def run_thread8(self):
         asyncio.set_event_loop(self.loop8)
+        self.loop8.run_until_complete(self.async_function8()) # script playback
 
     def run_thread9(self):
         asyncio.set_event_loop(self.loop9)
