@@ -55,21 +55,21 @@ class Character:
         self.top=top
         self.btm=btm
         self.ac=self.classtype[classtype]() if classtype is not None else self.ac
-        print(f'{self.ac=} {classtype=}')
+        # print(f'{self.ac=} {classtype=}')
         self.ac.left=left
         self.ac.right=right
         self.ac.top=top
         self.ac.btm=btm
         self.ac.setup(runesolver,g,rotation)
-        print(f'setup complete. {left=} {right=} {top=} {btm=}')
-        print(f'{self.ac.left=} {self.ac.right=} {self.ac.top=} {self.ac.btm=}')
+        # print(f'setup complete. {left=} {right=} {top=} {btm=}')
+        # print(f'{self.ac.left=} {self.ac.right=} {self.ac.top=} {self.ac.btm=}')
 
     def change_ac_type(self, classtype):
         if classtype in self.classtype:
             self.ac = self.classtype[classtype]()
             self.offsetx=self.ac.offsetx
             self.offsety=self.ac.offsety
-            print(f'{self.offsetx=} {self.offsety=} {self.classtype=}')
+            # print(f'{self.offsetx=} {self.offsety=} {self.classtype=}')
             self.ac.refreshkeybind()
 
     def refreshkeybind(self):

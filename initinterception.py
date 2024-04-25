@@ -90,7 +90,7 @@ def auto_capture_devices2(*, keyboard: bool = True, mouse: bool = True, verbose:
     for device in ("keyboard", "mouse"):
         if (device == "keyboard" and not keyboard) or (device == "mouse" and not mouse):
             continue
-        print(f"Trying {device} device numbers...")
+        # print(f"Trying {device} device numbers...")
         stroke: Stroke
         if device == "mouse":
             listener, stroke, nums = mouse_listener, _TEST_MOUSE_STROKE, range(10, 20)
@@ -101,12 +101,12 @@ def auto_capture_devices2(*, keyboard: bool = True, mouse: bool = True, verbose:
             interception.send(num, stroke)
             time.sleep(random.uniform(0.1, 0.3))
             if listener.is_alive():
-                print(f"No success on {device} {num}...")
+                # print(f"No success on {device} {num}...")
                 continue
-            print(f"Success on {device} {num}!")
+            # print(f"Success on {device} {num}!")
             set_devices(**{device: num})
             break
-    print("Devices set.")    
+    # print("Devices set.")    
 
 def set_devices(keyboard: Optional[int] = None, mouse: Optional[int] = None) -> None:
     """Sets the devices on the current context. Keyboard devices should be from 0 to 10

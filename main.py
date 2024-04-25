@@ -1,19 +1,10 @@
-# import socket
-# import pyautogui
-# import signal
 import win32gui
-# import win32api
-# import win32con
-from io import BytesIO
 import requests
 import json
 import os
-import sys
-# import uuid
 import random
 import cv2
 import time
-from math import log10, floor
 from time import perf_counter
 import numpy as np
 import threading
@@ -26,7 +17,6 @@ from datetime import datetime
 from game import Game
 import asyncio
 import tkinter as tk
-from tkinter import messagebox
 from tkinter import ttk
 from tkinter import simpledialog
 from tkinter import *
@@ -37,25 +27,15 @@ from configparser import ConfigParser
 from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr, refreshkeybind, goleftattack, gorightattack, goleftattackk, gorightattackk, \
-    goupattack, upjumpattack, godownattack, rightjumpjumpattack, \
-    stormwingrotation, castlewallrotation, bountyhuntrotation, send2, send3, goupattackv3, goupattackv2, \
-    goattackleft, goattackkleft, goattackright, goattackkright
+from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr
 from action import Action
-# from runesolver import runechecker, gotorune, enablerune, disablerune, gotopoloportal, set_hwnd
 from runesolver import RuneSolver
-
-from initinterception import interception, move_to, move_relative, left_click, mouse_position, mousedown, mouseup, hold_mouse, custommoveto, initiate_move, \
-    auto_capture_devices2, keydown, keyup, keyupall
-
-# from humancursor import SystemCursor
+from initinterception import  move_relative, left_click, initiate_move, auto_capture_devices2, keydown, keyup, keyupall
 from helper import Helper
 from character import Character
 
-
 customtkinter.set_appearance_mode('dark')
 customtkinter.set_default_color_theme('dark-blue')
-
 
 class TkinterBot(customtkinter.CTk):
     
@@ -73,7 +53,6 @@ class TkinterBot(customtkinter.CTk):
         self.initial_line_position3 = float(self.config.get('main', 'initial_line_position3'))
         self.initial_line_position4 = float(self.config.get('main', 'initial_line_position4'))
         self.ipaddress = self.config.get('main', 'ipaddress')
-        # self.flashjump = self.config.getboolean('main', 'flashjump')
         self.g = Game((8, 63, self.minimapX, self.minimapY)) 
         self.TOKEN = self.config2.get('telegram', 'TOKEN')
         self.chat_id = self.config2.get('telegram', 'chat_id')
@@ -91,17 +70,8 @@ class TkinterBot(customtkinter.CTk):
         self.portaldisabled = self.config.getboolean('main', 'portaldisabled')
 
         self.runesolver = RuneSolver()
-        # self.ac = Action()        
-        # if self.flashjump:
-        # if self.classtype=='teleport':
-        #     self.ac = Flashjump()
-        # else:        
-        #     self.ac = Teleport()
-        # self.ac=Teleport() if self.classtype=='teleport' else Flashjump()
         self.ac=None
-        # self.hc = SystemCursor()
         self.he = Helper()
-        # self.character = None
         self.character = Character()
 
         self.application = None
@@ -149,7 +119,6 @@ class TkinterBot(customtkinter.CTk):
         self.loop8 = asyncio.new_event_loop()
         self.loop9 = asyncio.new_event_loop()
         self.thread1 = threading.Thread(target=self.run_thread1)
-        self.thread2 = threading.Thread(target=self.run_thread2)
         self.thread3 = threading.Thread(target=self.run_thread3)
         self.thread6 = threading.Thread(target=self.run_thread6)
 
@@ -165,82 +134,16 @@ class TkinterBot(customtkinter.CTk):
         window_x = self.screen_width - window_width
         window_y = 0
         self.geometry(f"{window_width}x{window_height}+{window_x-10}+{window_y}")
-        print(f'setup_tab')
         self.setup_tab()
-        print(f'setup_tab1')
         self.setup_tab1()
-        print(f'setup_tab2')
         self.setup_tab2()
-        print(f'setup_tab3')
         self.setup_tab3()
-        print(f'setup_tab4')
         self.setup_tab4()
-        print(f'setup_tab6')
         self.setup_tab6()
-        print(f'setup_tabs_done')
-        # self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.tkinter_started=True
-        # self.root.mainloop()
-        
-    def init_tkinter2(self):
-        # self.root = tk.Tk()
-        self.root = customtkinter.CTk()
-        self.root.title("chrome")
-        # photo=PhotoImage(file='icon.ico')
-        # self.root.iconphoto(False,photo)
-        self.root.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
-        self.root.wm_iconbitmap()
-        self.root.iconphoto(False, self.root.iconpath)
-        # self.root.iconbitmap(default="icon.ico")
-        self.screen_width = self.root.winfo_screenwidth()
-        self.screen_height = self.root.winfo_screenheight()
-        window_width = 600
-        window_height = 800
-        window_x = self.screen_width - window_width
-        window_y = 0
-        self.root.geometry(f"{window_width}x{window_height}+{window_x-10}+{window_y}")
-        # self.root.grid_rowconfigure(0, weight=1) # not sure bout this
-        # self.root.grid_columnconfigure(0, weight=1) # not sure bout this
-        # self.root.resizable(False,False)
-        # # background_image = tk.PhotoImage(file="bumblebee.gif")
-        # background_image = Image.open("bumblebee.gif")
-        # background_image = background_image.resize((window_width, window_height),  Image.Resampling.LANCZOS)
-        # background_photo = ImageTk.PhotoImage(background_image)
-        # background_label = tk.Label(root, image=background_photo)
-        # background_label.place(relwidth=1, relheight=1)
-        # background_label.image = background_photo
-        print(f'setup_tab')
-        self.setup_tab()
-        print(f'setup_tab1')
-        self.setup_tab1()
-        # print(f'setup_tab2')
-        # self.setup_tab2()
-        print(f'setup_tab3')
-        self.setup_tab3()
-        print(f'setup_tab4')
-        self.setup_tab4()
-        # print(f'setup_tab5')
-        # self.setup_tab5()
-        print(f'setup_tab6')
-        self.setup_tab6()
-        print(f'setup_tabs_done')
-        # self.root.rowconfigure(0, weight=1) # not sure bout this
-        # self.root.columnconfigure(0, weight=1) # not sure bout this
-        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
-        # self.threads = []
-        # self.stop_event = threading.Event()
-        # self.thread = threading.Thread(target=self.start_the_main, args=(self.stop_event,))
-        # self.thread.start()
-        # self.threads.append((self.thread, self.stop_event))
-        # self.thread2 = threading.Thread(target=self.start_the_main2, args=(self.stop_event,))
-        # self.thread2.start()
-        # self.threads.append((self.thread, self.stop_event), (self.thread2, self.stop_event))
-        self.tkinter_started=True
-        self.root.mainloop()
-        
 
-    async def async_function(self, thread_name, iterations):
+    async def async_function(self):
         try:
             self.application = Application.builder().token(self.TOKEN).build()
             # self.application.add_handler(CommandHandler('start', self.start_command))
@@ -260,55 +163,33 @@ class TkinterBot(customtkinter.CTk):
             # for i in range(iterations):
                 # print(f"{thread_name} - Iteration i")
                 await asyncio.sleep(1)  # Simulating asynchronous work
-            print(f'finished telegram_run1')
+            # print(f'finished telegram_run1')
             await self.application.updater.stop()
             await self.application.stop()
             await self.application.shutdown()
-            print(f'finished telegram_run2')
+            # print(f'finished telegram_run2')
         except Exception as e:
             print(f'telegram {e=}')
             self.acc_not_bind = True
             self.telegram_started = True
         finally:
-            print(f'exiting telegram thread ..')
-            
-    async def async_function2(self, thread_name, iterations):
-        while not self.telegram_started:
-            time.sleep(1)
-        self.init_tkinter()
-        try:
-            # self.init_tkinter()
             pass
-        except Exception as e:
-            print(f'init_tkinter {e=}')
-            return
-        # for i in range(iterations):
-        #     print(f"{thread_name} - Iteration {i}")
-        #     await asyncio.sleep(1)  # Simulating asynchronous work
 
     def run_thread1(self):
         asyncio.set_event_loop(self.loop1)
-        self.loop1.run_until_complete(self.async_function("Thread 1", 5)) # telegram thread
-
-    def run_thread2(self):
-        asyncio.set_event_loop(self.loop2)
-        self.loop2.run_until_complete(self.async_function2("Thread 2", 5)) # tkinter init thread
+        self.loop1.run_until_complete(self.async_function()) # telegram thread
 
     def run_thread3(self):
         asyncio.set_event_loop(self.loop3)
-        self.loop3.run_until_complete(self.async_function3("Thread 3", 5)) # main thread
+        self.loop3.run_until_complete(self.async_function3()) # main thread
 
     def run_thread4(self):
-        print(f'run_thread4 started')
         asyncio.set_event_loop(self.loop4)
         self.loop4.run_until_complete(self.async_function4()) # checker thread
-        print(f'run_thread4 endeded')
 
     def run_thread5(self):
-        print(f'run_thread5 started')
         asyncio.set_event_loop(self.loop5)
         self.loop5.run_until_complete(self.async_function5()) # gma thread
-        print(f'run_thread5 endeded')
     
     def run_thread6(self):
         asyncio.set_event_loop(self.loop6)
@@ -317,133 +198,36 @@ class TkinterBot(customtkinter.CTk):
     def run_thread7(self):
         asyncio.set_event_loop(self.loop7)
         self.loop7.run_until_complete(self.async_function7()) # script recording
-        print(f'run_thread7 ended. ')
     
     def run_thread8(self):
         asyncio.set_event_loop(self.loop8)
-        self.loop8.run_until_complete(self.async_function8()) # script playback
-        print(f'run_thread8 ended. ')
 
     def run_thread9(self):
         asyncio.set_event_loop(self.loop9)
-        self.loop9.run_until_complete(self.async_function9()) # script playback
-        print(f'run_thread9 ended. ')
+        self.loop9.run_until_complete(self.async_function9()) # 
 
     def start_threads(self):
-        # Start both threads
         self.thread1.start()
-        # self.thread2.start()
         self.thread3.start()
         self.thread6.start()
 
-    def wait_for_threads(self):
-        # Wait for both threads to finish
-        self.thread1.join()
-        print(f'thread1 joined. ')
-        # self.thread2.join()
-        # print(f'thread2 joined. ')
-        self.thread3.join()
-        print(f'thread3 joined. ')
-        self.thread6.join()
-        print(f'thread6 joined. ')
-
-    async def async_function3(self, thread_name, iterations):
-        print(f'bot has started ..')
+    async def async_function3(self):
         while not self.tkinter_started:
             time.sleep(1.01)
-        # while True: # testing purpose
-        #     if self.pause:
-        #         print(f'script is paused .. click resume to resume. ')
-        #         while self.pause:
-        #             # do nothing
-        #             time.sleep(1)
-        #             if self.stop_event.is_set():
-        #                 # self.thread4.join()
-        #                 return
-        #         print(f'script resumed ..')
-        #     # # whitedot = self.g.white_dot_checker()
-        #     hwnd = win32gui.FindWindow(None, "MapleStory")
-        #     position = win32gui.GetWindowRect(hwnd)
-        #     x, y, w, h = position
-        #     # # print(f'{x=} {y=} {w=} {h=}') # 8 left right 5 up down 29 title bar | minus left 8 | minus top 34
-        #     # # print(f'{x=} {y=} {w=} {h=}') # 8 left right 1 up 8 down 30 title bar | minus left 8 | minus top 31
-        #     # # # x+222, y+410 
-        #     # # # move_to(x+self.position5[0],y+self.position5[1])
-        #     # move_to(x+self.portaldialogueX,y+self.portaldialogueY)
-        #     # move_relative(100)
-        #     # time.sleep(.5)
-        #     targetx=500
-        #     targety=600
-        #     # with hold_mouse('left'):
-        #     #     for i in range(10):
-        #     #         print(f'{i=}')
-        #     #         move_relative(20,0)
-        #     #         move_relative(0,20)
-        #     #         time.sleep(.5)
-        #     # await custommoveto(targetx,targety)
-        #     # left_click()
-        #     # time.sleep(2.411) # when testing ..
-        #     x,y=mouse_position()
-        #     print(f'{x=} {y=}')
-        #     move_relative(50,10)
-        #     time.sleep(2)
-        #     #
-        #     # await rightjumpjumpattack()
-        #     # time.sleep(1.011) # when testing ..                 
-        #     #
-        #     # # huntingmapcheckerlocations = self.g.hunting_map_timer_checker() # check if is hidden street bounty hunt
-        #     # huntingmapcheckerlocations = self.g.hunting_map2_checker()
-        #     # # huntingmapcheckerlocations = self.g.gma_detector() # 
-        #     # # huntingmapcheckerlocations = self.seperate_gma_detector() # 
-        #     # if huntingmapcheckerlocations is not None:
-        #     #     print(f'{huntingmapcheckerlocations=}')
-        #     #
-
-        #     #
-        #     time.sleep(1.011) # when testing ..
         self.thread4 = threading.Thread(target=self.run_thread4)
         self.thread4.start() # all the detector goes here
         self.thread5 = threading.Thread(target=self.run_thread5)
         self.thread5.start() # gma detector goes here
-        # self.thread9 = threading.Thread(target=self.run_thread9)
-        # self.thread9.start() # rock detector
-        # left1=self.line_position_slider.get()
-        # right1=self.line_position_slider2.get()
-        # top1=self.line_position_slider3.get()
-        # btm1=self.line_position_slider4.get()
-        # self.left=self.line_position_slider.get()/2+0
-        # self.right=self.line_position_slider2.get()/2+0
-        # self.top=self.line_position_slider3.get()/2-2
-        # self.btm=self.line_position_slider4.get()/2-2
-        # self.g = Game((8, 63, self.minimapX, self.minimapY))
-        # self.character = Character()
-        # self.character.setup(self.left,self.right,self.top,self.btm,self.classtype,self.runesolver,self.g)
         self.ac=self.character.ac
-        randomlist = ['z', 'x', 'c', 'space', '2', '3', '0', 'f9', 'w', 'e', 'r', 't', 's', 'd', 'f', 'v']
-        offsetx=10
-        offsety=10
-        randommtimer0=0
-        randommtimer=0
-        replaceropeconnecttimer0=0
-        replaceropeconnecttimer=0
-        runonce=True
         self.polocheckertimer0=0
-        polocheckertimer=0
-        runetimer0=0
-        runetimer=0
-        checkrune=True
-        solverune=False
         self.now=0
         xynotfound=0
         await initiate_move()
-        # self.g.init_maple_windows()
-        now=perf_counter()
         while True:
             if self.pause:
                 keyupall()
                 print(f'script is paused .. click resume to resume. ')
                 while self.pause:
-                    # do nothing
                     time.sleep(1)
                     if self.stop_event.is_set():
                         self.thread4.join()
@@ -469,51 +253,6 @@ class TkinterBot(customtkinter.CTk):
                 xynotfound=0
                 await self.character.perform_next_attack(x,y)
                 
-                # self.now = perf_counter()
-                # randommtimer = self.now - randommtimer0
-                # if randommtimer > 15:
-                #     randommtimer0 = self.now
-                #     p = random.randint(0, len(randomlist)-1)
-                #     code = random.choice(randomlist)
-                #     if code is not None:
-                #         print(f'randomiser {code=}')
-                #         await send2(code)
-                #         await send3(code)
-                # if self.replaceropeconnect==True:
-                #     if runonce:
-                #         replaceropeconnecttimer0=self.now
-                #         runonce=False
-                #     replaceropeconnecttimer = self.now - replaceropeconnecttimer0
-                #     if replaceropeconnecttimer > 90:
-                #         self.replaceropeconnect=False
-                #         runonce=True
-                # polocheckertimer = self.now - self.polocheckertimer0
-                # if polocheckertimer > 90:
-                #     self.pausepolochecker=False
-                # runetimer = self.now - runetimer0
-                # # if runetimer > 600: # change to 600 when haste
-                # if runetimer > 900: # change to 600 when haste
-                #     # checkrune = True
-                #     checkrune = False
-                # if checkrune:
-                #     solverune = self.runesolver.runechecker(self.g)
-                # # print(f'{x=} {y=} {statuetimer=} {fountaintimer=}, {runetimer=}, {cctimer=}')
-                # print(f'{x=} {y=} {runetimer=} {solverune=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
-                # # print(f'{x=}, {y=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
-
-                # if solverune:
-                #     await self.runesolver.gotorune(self.g)
-                # elif self.polochecker:
-                #     if self.whitedotoccur:
-                #         if not await self.polocheckerfunc(self.gotoportal):
-                #             self.replaceropeconnect=True
-                #         self.whitedotoccur=False
-                #     else:
-                #         await self.polocheckerfunc(self.gotoportal)
-                # else:
-                #     pass
-            
-            # print(f'{x=}, {y=} | {left=}, {top=}, {right=}, {btm=} | {left1=}, {top1=}, {right1=}, {btm1=}')
 
     async def async_function9(self):
         now=perf_counter()
@@ -564,7 +303,6 @@ class TkinterBot(customtkinter.CTk):
                 time.sleep(1)
                 if self.stop_event.is_set():
                     return
-            # print(f'new checking cycle ..')
             diedcheckerlocations = self.g.died_checker()
             if diedcheckerlocations is not None:
                 print(f'{diedcheckerlocations=}')
@@ -572,8 +310,6 @@ class TkinterBot(customtkinter.CTk):
                 position = win32gui.GetWindowRect(self.maplehwnd)
                 x, y, w, h = position
                 print(f'moving to x, y')
-                # await custommoveto(x+self.position6[0],y+self.position6[1])
-                # self.hc.move_to((x+self.position6[0],y+self.position6[1]))
                 await self.he.move_to(x+self.position6[0],y+self.position6[1])
                 time.sleep(.1)
                 print(f'clicking x, y')
@@ -594,18 +330,6 @@ class TkinterBot(customtkinter.CTk):
                     self.whitedotoccur=True
                     self.polochecker=True
                     self.gotoportal=False
-                    # if not await self.polocheckerfunc(False):
-                    #     self.replaceropeconnect=True
-                    # position = win32gui.GetWindowRect(self.maplehwnd)
-                    # x, y, w, h = position
-                    # print(f'moving to x, y')
-                    # await custommoveto(x+self.portaldialogueX,y+self.wolfdialogueY)
-                    # time.sleep(.1)
-                    # print(f'clicking x, y')
-                    # left_click()
-                    # print(f'done clicking')
-                    # move_relative(10,0)
-                    # time.sleep(.1)
             elif whitedotlocations is None:
                 whitedotcounter=0
             
@@ -618,15 +342,13 @@ class TkinterBot(customtkinter.CTk):
                 if self.stop_event.is_set():
                     return
             if self.chathwnd:
-                pass
-                # gmacheckerlocations = self.seperate_gma_detector()
-                # if gmacheckerlocations:
-                #     print(f'got GM')
-                # else:
-                #     print(f'no GM')
+                gmacheckerlocations = self.seperate_gma_detector()
+                if gmacheckerlocations:
+                    print(f'got GM')
+                else:
+                    print(f'no GM')
             else:
                 pass
-                # print(f'async_function5: chat window not found. ')
 
             time.sleep(5)
 
@@ -634,7 +356,6 @@ class TkinterBot(customtkinter.CTk):
         while True:
             time.sleep(1)
             if self.stop_event.is_set():
-                print(f'async_function6 return. ')
                 return
             if self.triggermousetest:
                 await initiate_move()
@@ -642,16 +363,9 @@ class TkinterBot(customtkinter.CTk):
 
     async def async_function7(self): # script recording thread (keyboard listener)
         self.realrecord()
-        print(f'async_function7 complete')
 
     async def async_function8(self): # script playback thread
         await self.playback()
-        print(f'async_function8 complete')
-
-    # def find_maplestory_windows(self, hwnd, lParam):
-    #     title = win32gui.GetWindowText(hwnd)
-    #     if 'MapleStory' in title:
-    #         print(f"Window Title: {title}, Handle: {hwnd}")
 
     def init_maple_windows(self):
         windows=[]
@@ -659,18 +373,11 @@ class TkinterBot(customtkinter.CTk):
         winlist = pygetwindow.getWindowsWithTitle('MapleStory')
         for w in winlist:
             windows.append(w._hWnd)
-        print(f'{winlist=} {windows}')
         for windowhwnd in windows:
             position = win32gui.GetWindowRect(windowhwnd)
             x, y, w, h = position
-            print(f'{windowhwnd=} {w-x=}')
             if w-x == 410:
                 self.chathwnd=windowhwnd
-                print(f'{x=} {y=} {w=} {h=} {windowhwnd=}')
-            # elif w-x == 816:
-            # elif w-x == 1040:
-            # elif w-x == 1296:
-            # elif w-x == 1382: # 1366x768
             elif w-x == 1382 or w-x == 1296 or w-x == 1040 or w-x == 816:
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
@@ -679,12 +386,9 @@ class TkinterBot(customtkinter.CTk):
                 self.runesolver.set_maplehwnd(self.maplehwnd)
 
     def init_maple_windows_old(self):
-        # win32gui.EnumWindows(self.find_maplestory_windows, 0)
-        # hwnd = win32gui.FindWindow(None, "MapleStory")
         hwnd = 0
         windows=[]
         while True:
-            print(f'{hwnd}')
             hwnd = win32gui.FindWindowEx(0,hwnd,None, "MapleStory")
             if hwnd == 0:
                 break
@@ -697,20 +401,11 @@ class TkinterBot(customtkinter.CTk):
             else:
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
-                print(f'{self.maplehwnd}')
-            print(f'{x} {y} {w} {h}')
-            # screenshot = ImageGrab.grab(position)
-            # screenshot = np.array(screenshot)
-            # img = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
-        #     cv2.imshow(f'{windowhwnd}', img)
-        #     cv2.waitKey(0)
-        # cv2.destroyAllWindows()
 
     def rebindchathwnd(self):
         hwnd = 0
         windows=[]
         while True:
-            print(f'{hwnd}')
             hwnd = win32gui.FindWindowEx(0,hwnd,None, "MapleStory")
             if hwnd == 0:
                 break
@@ -729,23 +424,14 @@ class TkinterBot(customtkinter.CTk):
             print(f'seperate_gma_detector: chat window not found. ')
             return
         try:
-            # print(f'{self.chathwnd=}')
             position = win32gui.GetWindowRect(self.chathwnd)
             x, y, w, h = position
-            # print(f'{x} {y} {w} {h}')
             chatposition = (x,y+385,w-15,h-25)
             screenshot = ImageGrab.grab(chatposition)
             screenshot = np.array(screenshot)
             img = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
-            # cv2.imshow('img', img)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
             height, width = img.shape[0], img.shape[1]
-            # print(f'{img=}')
-            # img_reshaped = np.reshape(img, ((width * height), 4), order="C")
             img_reshaped = np.reshape(img, ((width * height), 3), order="C")
-            # print(f'{img_reshaped=}')
-            # print(f'{img_reshaped[:,0]=}')
             locations = []
             sum_x, sum_y, count = 0, 0, 0
             matches = np.where(
@@ -753,13 +439,10 @@ class TkinterBot(customtkinter.CTk):
                 (img_reshaped[:,1] >= 201) & (img_reshaped[:,1] <= 225) &
                 (img_reshaped[:,2] >= 201) & (img_reshaped[:,2] <= 225) 
                 )[0]
-            # print(f'{matches=}')
             for idx in matches:
-                # Calculate the original (x, y) position of each matching index.
                 sum_x += idx % width
                 sum_y += idx // width
                 count += 1
-                # print(f'{idx % width=} {idx // width=} {width=} {img_reshaped[idx]} {count=}')
             if count > 0:
                 x_pos = sum_x / count
                 y_pos = sum_y / count
@@ -776,21 +459,13 @@ class TkinterBot(customtkinter.CTk):
             portaltype = await self.runesolver.checkportaltype(self.g)
         if portaltype == 'b':
             print(f'dobountyhuntrotation')
-            # do bountyhunt rotation for maybe 30sec
             for i in range(6):
                 if not self.pause:
-                    # await bountyhuntrotation()
                     await self.character.bountyhuntrotation()
             while True:
                 huntingmaptimerchecker = self.g.hunting_map_timer_checker()
                 if huntingmaptimerchecker is not None:
-                    # do bountyhunt rotation
                     print(f'stillinportal')
-                    # if not self.pause:
-                    #     # await bountyhuntrotation()
-                    #     await self.character.bountyhuntrotation()
-                    # else:
-                    #     time.sleep(1)
                     if await self.pausewrapper(self.character.bountyhuntrotation): return
                 else:
                     print(f'notinportal')
@@ -801,7 +476,6 @@ class TkinterBot(customtkinter.CTk):
                     time.sleep(2.5)
                     await rightr()
                     break
-            # press npc button 5 times to exit
             await leftp()
             time.sleep(.5)
             await leftr()
@@ -812,16 +486,12 @@ class TkinterBot(customtkinter.CTk):
             time.sleep(2.)
         elif portaltype == 'g':
             print(f'doguardingrotation')
-            # do guardingthecastlewall rotation
-            for i in range(10):
-                # await castlewallrotation()                
+            for i in range(10):            
                 await self.character.castlewallrotation()
             while True:
                 huntingmaptimerchecker = self.g.hunting_map_timer_checker()
                 if huntingmaptimerchecker is not None:
-                    # do guardingthecastlewall rotation
                     print(f'stillinportal')
-                    # await castlewallrotation()   
                     await self.character.castlewallrotation()
                 else:
                     print(f'notinportal')
@@ -832,7 +502,6 @@ class TkinterBot(customtkinter.CTk):
                     time.sleep(1.5)
                     await rightr()
                     break
-            # press npc button 5 times to exit
             await leftp()
             time.sleep(.8)
             await leftr()
@@ -842,16 +511,11 @@ class TkinterBot(customtkinter.CTk):
                 await sleep(.1)
         elif portaltype == 'd':
             print(f'dostormwingrotation')
-            # do stormwing rotation
-            # for i in range(7):
-                # await stormwingrotation()
             await self.stormwing(100)
             while True:
                 huntingmaptimerchecker = self.g.hunting_map_timer_checker()
                 if huntingmaptimerchecker is not None:
-                    # do stormwing rotation
                     print(f'stillinportal')
-                    # await stormwingrotation()
                     await self.stormwing(10)
                     pass
                 else:
@@ -863,7 +527,6 @@ class TkinterBot(customtkinter.CTk):
                     time.sleep(1.5)
                     await rightr()
                     break
-            # press npc button 5 times to exit
             await leftp()
             time.sleep(.8)
             await leftr()
@@ -873,27 +536,12 @@ class TkinterBot(customtkinter.CTk):
                 time.sleep(.1)
         elif portaltype == 'e':
             print(f'doespeciaspam')
-            # do especia spam
             for i in range(5):
-            #     await npcp()
-            #     await npcr()
-            #     r = random.randint(500,1000)
-            #     r /= 1000
-            #     await sleep(r)
                 await self.especia()
-            # check if timer still there
-            # if timer no longer there, press npc x4 to get out. 
             for count in range(100): # for testing
-            # while True:
                 huntingmaptimerchecker = self.g.especia_dot_checker()
                 if huntingmaptimerchecker is not None:
-                    # do especia spam
                     print(f'stillinportal, {count=}')
-                    # await npcp()
-                    # await npcr()
-                    # r = random.randint(500,1000)
-                    # r /= 1000
-                    # await sleep(r)
                     await self.especia()
                     pass
                 else:
@@ -903,19 +551,15 @@ class TkinterBot(customtkinter.CTk):
                         time.sleep(1)
                     time.sleep(1.5)
                     break
-            # press npc button 5 times to exit
             for i in range(7):
                 await npcp()
                 await npcr()
                 time.sleep(.1)
         elif portaltype == 'r':
             print(f'fritoportalendchat')
-            # hwnd = win32gui.FindWindow(None, "MapleStory")
             position = win32gui.GetWindowRect(self.maplehwnd)
             x, y, w, h = position
             time.sleep(.1)
-            # await custommoveto(x+self.portaldialogueX,y+self.portaldialogueY)
-            # self.hc.move_to((x+self.portaldialogueX,y+self.portaldialogueY))
             await self.he.move_to(x+self.portaldialogueX,y+self.portaldialogueY)
             time.sleep(.1)
             left_click()
@@ -924,13 +568,9 @@ class TkinterBot(customtkinter.CTk):
             truefalse=False
         elif portaltype == 'f':
             print(f'clickendchat')
-            # click end chat cause flamewolf
-            # hwnd = win32gui.FindWindow(None, "MapleStory")
             position = win32gui.GetWindowRect(self.maplehwnd)
             x, y, w, h = position
             time.sleep(.1)
-            # await custommoveto(x+self.portaldialogueX,y+self.wolfdialogueY)
-            # self.hc.move_to((x+self.portaldialogueX,y+self.wolfdialogueY))
             await self.he.move_to(x+self.portaldialogueX,y+self.wolfdialogueY)
             time.sleep(.1)
             left_click()
@@ -938,8 +578,7 @@ class TkinterBot(customtkinter.CTk):
             self.polocheckertimer0 = self.now
             truefalse=False
         else:
-            print(f'enterportalfailedorerror')
-            # means enter portal failed, or error, back to training. 
+            print(f'enterportalfailedorerror') # means enter portal failed, or error, back to training. 
         self.polochecker=False
         return truefalse
     
@@ -951,15 +590,14 @@ class TkinterBot(customtkinter.CTk):
             if self.stop_event.is_set():
                 # self.thread4.join()
                 return True
-
     
     async def status_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         message_type: str = update.message.chat.type
         text: str = update.message.text
-        print(f'{update.message=}')
-        print(f'{self.chat_id=}')
-        print(f'{type(self.chat_id)=}')
-        print(f'{type(update.message.chat.id)=}')
+        # print(f'{update.message=}')
+        # print(f'{self.chat_id=}')
+        # print(f'{type(self.chat_id)=}')
+        # print(f'{type(update.message.chat.id)=}')
         if str(update.message.chat.id) == self.chat_id:
             print(f'Access User ({update.message.chat.id}) in {message_type}: "{text}"')
             pass
@@ -999,18 +637,15 @@ class TkinterBot(customtkinter.CTk):
             if self.pause:
                 print(f'script is paused .. click resume to resume. ')
                 while self.pause:
-                    # do nothing
                     time.sleep(1)
                     if self.stop_event.is_set():
-                        # self.thread4.join()
                         return
                 print(f'script resumed ..')
 
     async def stormwing(self, count):
         goleft=False
-        goright=True
-        ## 1.8 165.2 (top=24.5?) (btm=62.5) (right=138.5?)
-        top=29.0
+        goright=True        
+        top=29.0 ## 1.8 165.2 (top=24.5?) (btm=62.5) (right=138.5?)
         left=35.0 # 18.0 # 27.0
         right=130 # 125.0 # 135.0 140.0 132.5
         btm=58.0 # 54.5
@@ -1018,9 +653,7 @@ class TkinterBot(customtkinter.CTk):
             huntingmaptimerchecker = self.g.hunting_map_timer_checker()
             if huntingmaptimerchecker is None:
                 return
-            # time.sleep(.4) # running test
             time.sleep(.3) # running real
-            # time.sleep(.2) # running real
             g_variable = self.g.get_player_location()
             x, y = (None, None) if g_variable is None else g_variable
             if x == None or y == None:
@@ -1029,8 +662,6 @@ class TkinterBot(customtkinter.CTk):
                     t = time.localtime()
                     currenttime = time.strftime("%H:%M:%S", t)
                     print(f'something is wrong .. character not found .. exiting .. {currenttime}')
-                    # stop_flag = True
-                    # randompicker_thread.join()
                     return
                 print(f'x==None, pass ..')
                 time.sleep(.1)
@@ -1039,54 +670,11 @@ class TkinterBot(customtkinter.CTk):
                 xynotfound=0
                 print(f'{x=} {y=} {goleft=} {goright=}')
                 goleft,goright = await self.character.stormwing(x,y,goleft,goright)
-                # # time.sleep(.1)
-                # if goright:
-                #     if x > right:
-                #         if y < btm:
-                #             await godownattack()
-                #             time.sleep(.3)
-                #             await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
-                #             time.sleep(.1)
-                #         elif y > top:
-                #             await upjumpattack()
-                #             time.sleep(.3)
-                #         goright=False
-                #         goleft=True
-                #     else:
-                #         await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
-                #         time.sleep(.3)
-                #     if x < left: # only if x < left
-                #         if y < btm:
-                #             await godownattack()
-                #             time.sleep(.3)
-                # elif goleft:
-                #     if x < left: # only if x < left
-                #         if y > top:
-                #             time.sleep(.1)
-                #             await upjumpattack()
-                #             time.sleep(.3)
-                #         elif y < top:
-                #             await godownattack()
-                #             time.sleep(.3)
-                #             await random.choice([self.ac.gorightattack,self.ac.goattackright,self.ac.gorightattackk,self.ac.goattackkright])()
-                #             time.sleep(.3)
-                #         goright=True
-                #         goleft=False
-                #     else:
-                #         await random.choice([self.ac.goleftattack,self.ac.goattackleft,self.ac.goleftattackk,self.ac.goattackkleft])()
-                #         time.sleep(.3)
-                #     if x > right: # only if x > right
-                #         if y < btm:
-                #             await godownattack()
-                #             time.sleep(.3)
-
 
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         message_type: str = update.message.chat.type
         text: str = update.message.text
         print(f'{update.message}')
-        # global chat_id
-        # print(f'{chat_id =}')
         if update.message.chat.id == 5630992696:
             print(f'Access User ({update.message.chat.id}) in {message_type}: "{text}"')
             pass
@@ -1097,59 +685,13 @@ class TkinterBot(customtkinter.CTk):
             print(f'Denied User ({update.message.chat.id}) in {message_type}: "{text}"')
             return
         print(f'User ({update.message.chat.id}) in {message_type}: "{text}"')
-        # if message_type == 'group':
-        #     if BOT_USERNAME in text:
-        #         new_text: str = text.replace(BOT_USERNAME, '').strip()
-        #         response: str = handle_response(new_text)
-        #     else:
-        #         return
-        # else:
-        #     response: str = handle_response(text)    
         await update.message.reply_text('Hello! Thanks for chatting with me! I am a banana!')
 
     async def error(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         print(f'Update {update} caused error {context.error}')
 
-
-        # # very cool title bar
-        # root.overrideredirect(True)  # Remove the title bar
-        # # Create a frame for a custom title bar
-        # title_bar = tk.Frame(root, bg="blue", height=30, relief="raised", bd=0)
-        # title_bar.pack(fill="x")
-        # # Create a custom font for title text
-        # title_font = ("Helvetica", 14)
-        # # Set the width and height of the button
-        # button_width = 15
-        # button_height = 3
-        # # Choose a brighter green color
-        # button_color = "lime"
-        # # Create a button with the custom font, width, height, and color
-        # button = tk.Button(title_bar, text="Click me!", command=on_button_click, font=title_font, width=button_width, height=button_height, bg=button_color)
-        # button.pack(side="left", padx=10)
-        # # Close button
-        # close_button = tk.Button(title_bar, text="X", command=root.destroy, font=title_font, width=2, height=1, bg="red", relief="flat")
-        # close_button.pack(side="right", padx=10)
-        # # Make the window draggable
-        # def start_drag(event):
-        #     root.x = event.x
-        #     root.y = event.y
-        # def drag(event):
-        #     deltax = event.x - root.x
-        #     deltay = event.y - root.y
-        #     x = root.winfo_x() + deltax
-        #     y = root.winfo_y() + deltay
-        #     root.geometry(f"+{x}+{y}")
-        # title_bar.bind("<ButtonPress-1>", start_drag)
-        # title_bar.bind("<B1-Motion>", drag)
-
     def setup_tab(self):
-        # self.mytab = customtkinter.CTkTabview(self.root,width=600,height=800,corner_radius=5, fg_color="#123456")
-        # self.mytab = customtkinter.CTkTabview(self.root,width=600,height=800,corner_radius=5)
         self.mytab = customtkinter.CTkTabview(self,width=600,height=800,corner_radius=5)
-            # segmented_button_fg_color="#1a4b6c", segmented_button_selected_color="#45ab65", , fg_color="#123456", 
-            # segmented_button_selected_hover_color="#fc31ab", segmented_button_unselected_color="#1b5fcf", 
-            # segmented_button_unselected_hover_color="#0abf45",text_color="#4cff4f",
-            # state='normal',command=None)
         self.mytab.pack(padx=(1,1),pady=(1,1))
         self.tab1 = self.mytab.add("Rotation")
         self.tab2 = self.mytab.add("Script")
@@ -1158,82 +700,29 @@ class TkinterBot(customtkinter.CTk):
         self.tab5 = self.mytab.add("Autoclicker")
         self.tab6 = self.mytab.add("Settings")
 
-        # self.notebook = ttk.Notebook(self.root)
-        # # Create tabs (frames) to be added to the Notebook
-        # self.tab1 = ttk.Frame(self.notebook)
-        # self.tab2 = ttk.Frame(self.notebook)
-        # self.tab3 = ttk.Frame(self.notebook)
-        # self.tab4 = ttk.Frame(self.notebook)
-        # self.tab5 = ttk.Frame(self.notebook)
-        # self.tab6 = ttk.Frame(self.notebook)
-        # # Add tabs to the Notebook
-        # self.notebook.add(self.tab1, text="Rotation")
-        # self.notebook.add(self.tab2, text="Tab 2")
-        # self.notebook.add(self.tab3, text="Design")
-        # self.notebook.add(self.tab4, text="Telegram")
-        # self.notebook.add(self.tab5, text="Tab 5")
-        # self.notebook.add(self.tab6, text="Settings")
-        # # Bind the tab change event
-        # self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_change)
-        # # Pack the Notebook widget
-        # self.notebook.pack(expand=1, fill="both")
-        # # Add content to each tab
-        # label1 = tk.Label(self.tab1, text="Main Rotation")
-        # label1.pack(padx=10, pady=10)
-        # label2 = tk.Label(self.tab2, text="Script Recording Method (Coming Soon .. )")
-        # label2.pack(padx=10, pady=10)
-        # label3 = tk.Label(self.tab3, text="Rotation Design")
-        # label3.pack(padx=10, pady=10)
-        # label4 = tk.Label(self.tab4, text="Telegram Setup")
-        # label4.pack(padx=10, pady=10)
-        # label5 = tk.Label(self.tab5, text="Autoclicker (Monster Life)")
-        # label5.pack(padx=10, pady=10)
-        # label6 = tk.Label(self.tab6, text="Settings")
-        # label6.pack(padx=10, pady=10)
-
     def setup_tab1(self):
-        # framebase = tk.Frame(self.tab1, bg='#3f5b79', bd=0)
         framebase = customtkinter.CTkFrame(self.tab1)
-        # framebase.pack(padx=0, pady=0, fill='both', expand=True)
         framebase.pack(padx=0, pady=(0,2), fill='x', expand=False)
         framebase.columnconfigure(0,weight=1)
         framebase.columnconfigure(1,weight=1)
         framebase.columnconfigure(2,weight=1)
-        # framebase.grid_columnconfigure(0,weight=1)
-        # framebase.grid_columnconfigure(1,weight=1)
-        # framebase.grid_columnconfigure(2,weight=1)
-        # framebase.grid_propagate(False)
-        # frameleft = tk.Frame(framebase, bg='#9eaa15', bd=0, width=170, height=110)
         frameleft = customtkinter.CTkFrame(framebase, width=195, height=120, fg_color='transparent')
         frameleft.grid_propagate(0)
-        # frameleft.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
         frameleft.grid(row=0,column=0,padx=(1,1),pady=(1,1))
-        # framecenter = tk.Frame(framebase, bg='#1eaaf5', bd=0, width=170, height=110)
         framecenter = customtkinter.CTkFrame(framebase, width=195, height=120)
         framecenter.grid_propagate(0)
         framecenter.grid_rowconfigure(0,weight=1)
         framecenter.grid_columnconfigure(0,weight=1)
-        # framecenter.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
         framecenter.grid(row=0,column=1,padx=(1,1),pady=(1,1))
-        # frameright = tk.Frame(framebase, bg='#3e3aa4', bd=0, width=170, height=110)
         frameright = customtkinter.CTkFrame(framebase, width=195, height=120, fg_color='transparent')
         frameright.grid_propagate(0)
-        # frameright.grid_rowconfigure(0,weight=1)
-        # frameright.grid_rowconfigure(1,weight=1)
         frameright.grid_columnconfigure(0,weight=1)
-        # frameright.pack(padx=(1,1),pady=(1,1), fill='both', expand=True, side='left')
         frameright.grid(row=0,column=2,padx=(1,1),pady=(1,1))
         self.button = customtkinter.CTkButton(framecenter, text="Resume", command=self.resumebutton, fg_color='tomato', font=('Helvetica', 16), text_color='black',hover=False)
-        # self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, width=8, height=4, bg='tomato', font=('Helvetica', 16))
-        # self.button = tk.Button(framecenter, text="Resume", command=self.resumebutton, bg='tomato')
-        # self.button.pack(pady=(1,1), fill='both', expand=True)
-        # self.button.pack(pady=(1,1))
         self.button.grid(row=0,column=0,pady=(1,1), sticky=tk.N+tk.S+tk.E+tk.W)
         self.presettemp=self.preset
         def on_select(event):
-            # self.preset = comboboxpreset.get()
             self.presettemp = comboboxpreset.get()
-            print(f'{self.preset=} {self.presettemp=}')
         folder_path = "preset"
         file_list = os.listdir(folder_path)
         json_files = [file for file in file_list if file.endswith(".json")]
@@ -1259,9 +748,7 @@ class TkinterBot(customtkinter.CTk):
         buttonnew = customtkinter.CTkButton(frameleft, text="new preset", command=new, width=100)
         buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)        
         def save():
-            print(f'{self.preset=} {self.presettemp=}')
             self.preset=self.presettemp
-            print(f'{self.preset=} {self.presettemp=}')
             self.button_adjustminimap()
             allpresets=[]
             allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
@@ -1269,10 +756,9 @@ class TkinterBot(customtkinter.CTk):
             with open(f'preset/{self.preset}.json', 'w') as json_file:
                 json.dump(allpresets, json_file, indent=4)
             self.canvasimageholdertemp.save(f'image/{self.preset}.png')
-            print(f'saved preset. ')
             saved_window = customtkinter.CTkToplevel(frameleft, fg_color='#abcdef')
             saved_window.title('chrome')
-            saved_window.resizable(False,False)#width,height
+            saved_window.resizable(False,False) # width,height
             def close():
                 saved_window.destroy()
                 saved_window.update()
@@ -1288,110 +774,9 @@ class TkinterBot(customtkinter.CTk):
             saved_window.after(200,lambda: saved_window.iconphoto(False, saved_window.iconpath))
             width=int(self.winfo_screenwidth()/2)
             height=int(self.winfo_screenheight()/2)
-            print(f'{width=} {height=}')
-            # saved_window.geometry(f'400x100+{width-100}+{height-200}')
             saved_window.geometry(f'{width-300}+{height-200}')
         buttonsave = customtkinter.CTkButton(frameleft, text="save all", command=save, width=100)
         buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
-        ## ------------------------------------------------------------------------------------------------------------- ##
-        # def on_select_rotation(event): # tag UI placement order
-        #     rotation = comboboxrotation.get()
-        #     self.character.set_rotation(rotation)
-        # # folder_path = "preset"
-        # # file_list = os.listdir(folder_path)
-        # # json_files = [file for file in file_list if file.endswith(".json")]
-        # # json_file_names = [os.path.splitext(file)[0] for file in json_files]
-        # rotation_list = self.character.get_rotation_list()
-        # # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=17)
-        # # comboboxpreset = ttk.Combobox(frameright, values=json_file_names, state="readonly", width=10)
-        # # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne', fill='both', expand=True)
-        # # comboboxpreset.pack(padx=1, pady=1, side='top', anchor='ne')
-        # # comboboxpreset.bind("<<ComboboxSelected>>", on_select)
-        # comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=120)
-        # comboboxrotation.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
-        # comboboxrotation.set(json_file_names[json_file_names.index(self.preset)])
-        # buttonchange = customtkinter.CTkButton(frameright, text="change rotation", command=self.reload, width=100)
-        # buttonchange.grid(row=1,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
-        # def new():
-        #     profile_name = simpledialog.askstring("New Profile", "Enter the name for the new profile:")
-        #     if profile_name:
-        #         json_file_names.append(profile_name)
-        #         comboboxpreset.set(json_file_names[len(json_file_names)-1])
-        #         comboboxpreset.configure(values=json_file_names)
-        #         self.widthentry.delete(0,tk.END)
-        #         self.widthentry.insert(0,200)
-        #         self.heightentry.delete(0,tk.END)
-        #         self.heightentry.insert(0,150)
-        #         self.button_adjustminimap_fake()
-        #         # self.update_four_lines(50,350,50,150)
-        #         self.update_four_lines(180,220,60,90)
-        # buttonnew = customtkinter.CTkButton(frameright, text="new preset", command=new, width=100)
-        # buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)        
-        # def save():
-        #     allpresets=[]
-        #     allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
-        #     ,self.line_position_slider3.get(),self.line_position_slider4.get()])
-        #     with open(f'preset/{self.preset}.json', 'w') as json_file:
-        #         json.dump(allpresets, json_file, indent=4)
-        #     self.canvasimageholdertemp.save(f'image/{self.preset}.png')
-        #     print(f'saved preset. ')
-        #     saved_window = customtkinter.CTkToplevel(frameright, fg_color='#abcdef')
-        #     saved_window.title('chrome')
-        #     saved_window.resizable(False,False)#width,height
-        #     def close():
-        #         saved_window.destroy()
-        #         saved_window.update()
-        #     label=customtkinter.CTkLabel(saved_window,text=f'saved. {self.preset}: {allpresets}', text_color='#123321')
-        #     label.pack(padx=1,pady=(10,1), fill='none', expand=True)
-        #     button=customtkinter.CTkButton(saved_window,text='ok',command=close)
-        #     button.pack(padx=1,pady=1, fill='none', expand=True)
-        #     # saved_window.focus()
-        #     saved_window.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
-        #     saved_window.wm_iconbitmap()
-        #     saved_window.iconphoto(False, saved_window.iconpath)
-        #     # saved_window.after(1000,lambda: saved_window.iconbitmap(os.path.join("icon.ico")))
-        #     saved_window.after(200,lambda: saved_window.iconphoto(False, saved_window.iconpath))
-        #     width=int(self.root.winfo_screenwidth()/2)
-        #     height=int(self.root.winfo_screenheight()/2)
-        #     print(f'{width=} {height=}')
-        #     saved_window.geometry(f'400x100+{width-100}+{height-200}')
-        # buttonsave = customtkinter.CTkButton(frameright, text="save preset", command=save, width=100)
-        # buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NE)
-
-        # self.button.grid(row=0,column=1,padx=(1,1),pady=(10,20))
-        # label1 = tk.Label(frame3, text="x:", fg="black", bg='#ffbb29')
-        # label1.pack(padx=(0,0), pady=0)
-        # label1.grid(row=0, column=0, padx=(5,0), pady=0)
-        # label2 = tk.Label(frame2, text="x:", fg="black", bg='#ffbb29')
-        # label2.grid(row=0, column=2, padx=(5,0), pady=0)
-        # frame = tk.Frame(self.tab1, bg='', bd=0)
-        # frame = tk.Frame(root, bg='#ffbb29')
-        # frame = tk.Frame(self.tab1)
-        # frame.pack(padx=0, pady=0)
-        # # # label1 = tk.Label(frame, text="x:", fg="black", bg='#ffbb29')
-        # # # label1.grid(row=0, column=0, padx=(5,0), pady=0, sticky=tk.E)
-        # # entry1 = tk.Entry(frame, width=10, fg='Gray')
-        # # entry1.insert(0, 'Enter x...')
-        # # entry1.bind("<FocusIn>", entry_focus_in)
-        # # entry1.bind("<FocusOut>", entry_focus_out)
-        # # entry1.grid(row=0, column=0, padx=(0,1), pady=(0,1))
-        # # # label2 = tk.Label(frame, text="y:", fg="black", bg='#ffbb29')
-        # # # label2.grid(row=1, column=0, padx=(5,0), pady=0, sticky=tk.E)
-        # # entry2 = tk.Entry(frame, width=10, fg='Gray')
-        # # entry2.insert(0, 'Enter y...')
-        # # entry2.bind("<FocusIn>", entry2_focus_in)
-        # # entry2.bind("<FocusOut>", entry2_focus_out)
-        # # entry2.grid(row=0, column=1, padx=(1,0), pady=(0,1))
-        # self.entry1 = Spinbox(frame, from_=100, to=400, font=("Helvetica", 16), width=5, increment=10)
-        # self.entry1.delete(0,tk.END)
-        # self.entry1.insert(0,self.minimapX)
-        # self.entry1.grid(row=0,column=0, padx=(0,0), pady=(0,0))
-        # self.entry2 = Spinbox(frame, from_=100, to=300, font=("Helvetica", 16), width=5, increment=10)
-        # self.entry2.delete(0,tk.END)
-        # self.entry2.insert(0,self.minimapY)
-        # self.entry2.grid(row=0,column=1, padx=(0,0), pady=(0,0))
-        # self.button2 = customtkinter.CTkButton(frame, text="adjust minimap", command=self.button_adjustminimap)
-        # self.button2.grid(row=0, column=2, padx=(1,0), pady=(0,1))
         
         def minus():
             try:
@@ -1460,20 +845,10 @@ class TkinterBot(customtkinter.CTk):
         button2 = customtkinter.CTkButton(buttonframe, text="adjust", command=self.button_adjustminimap,height=30, width=110)
         button2.grid(row=0, column=0, padx=(0,0), pady=(0,0))
         
-        # self.widthentry.delete(0,tk.END)
-        # self.widthentry.insert(0,self.minimapX)
-        # self.heightentry.delete(0,tk.END)
-        # self.heightentry.insert(0,self.minimapY)
-
-        # self.frame2 = tk.Frame(self.tab1, bg='orange', bd=0)
-        # self.frame2 = tk.Frame(self.tab1, bg='', bd=0)
         self.frame2 = customtkinter.CTkFrame(self.tab1)
         self.frame2.pack(padx=0, pady=0)
-        # self.frame2.grid_rowconfigure((1,2),weight=0)
-        # self.frame2.grid_columnconfigure((1,2),weight=0)
         image_path = "minimap.png"  # Replace with the actual path to your image
         img = PhotoImage(file=image_path)
-        # self.canvas = tk.Canvas(self.frame2, width=self.minimapX-8, height=self.minimapY-63, bg='#fabb29')
         self.canvas = customtkinter.CTkCanvas(self.frame2, width=self.minimapX-8, height=self.minimapY-63)
         self.canvas.grid(row=0, column=0, rowspan=1, padx=0, pady=(0,0))
         self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
@@ -1490,7 +865,6 @@ class TkinterBot(customtkinter.CTk):
             self.canvasimageholdertemp = img_cropped
             self.canvas_width=(self.minimapX-8)*2
             self.canvas_height=(self.minimapY-63)*2
-            # initial_line_position = self.canvas_width / 2
         else:
             hwnd = gdi_capture.find_window_from_executable_name("MapleStory.exe")
             top, left, bottom, right = 8, 63, self.minimapX, self.minimapY
@@ -1500,8 +874,6 @@ class TkinterBot(customtkinter.CTk):
                 height, width = img_cropped.shape[:2]
                 width = width*2
                 height = height*2
-                # width = (right-left)*2
-                # height = (bottom-top)*2
                 img_cropped = cv2.resize(img_cropped, (width, height))
                 img_cropped = Image.fromarray(img_cropped)
                 tk_image = ImageTk.PhotoImage(img_cropped)
@@ -1512,46 +884,25 @@ class TkinterBot(customtkinter.CTk):
                 canvasimageholdertemp = img_cropped
                 self.canvas_width=width
                 self.canvas_height=height
-                # canvas_width=minimapX-8
-                # canvas_height=minimapY-63
-        
 
-
-        # def tempunused(self):
         if True:
-            print(f'{height=} {self.minimapY=} {self.initial_line_position=} {self.canvas_height=}')
-            print(f'setuptab1: {self.initial_line_position} {self.initial_line_position2} {self.initial_line_position3} {self.initial_line_position4}')
-            # self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, self.minimapY-63, fill="red", width=2)    
             self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, height, fill="red", width=2)    
-            # # slider_label = tk.Label(frame, text="left threshold:", bg='#ffbb29')
-            # # slider_label.grid(row=3, column=1, pady=5, padx=5)
-            # self.line_position_slider = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position)
             self.line_position_slider = customtkinter.CTkSlider(self.frame2,from_=2,to=self.canvas_width,orientation='horizontal',number_of_steps=self.canvas_width-2, width=self.canvas_width, command=self.update_line_position)
-            # self.line_position_slider.set(self.initial_line_position)
             self.line_position_slider.grid(row=1, column=0, pady=0, padx=0, sticky='we')
             
             self.vertical_line2 = self.canvas.create_line(self.initial_line_position2, 0, self.initial_line_position2, height, fill="yellow", width=2)    
-            # slider_label2 = tk.Label(frame, text="right threshold:", bg='#ffbb29')
-            # slider_label2.grid(row=4, column=1, pady=5, padx=5)
-            # self.line_position_slider2 = tk.Scale(self.frame2, from_=2, to=self.canvas_width, orient=tk.HORIZONTAL, length=self.canvas_width, resolution=1, command=self.update_line_position2)
             self.line_position_slider2 = customtkinter.CTkSlider(self.frame2,from_=2,to=self.canvas_width,orientation='horizontal',number_of_steps=self.canvas_width-2, width=self.canvas_width, command=self.update_line_position2)
-            # self.line_position_slider2.set(self.initial_line_position2)
             self.line_position_slider2.grid(row=2, column=0, pady=(0,2), padx=0, sticky='we')
 
             self.vertical_line3 = self.canvas.create_line(self.canvas_width, self.initial_line_position3, 2, self.initial_line_position3, fill="lime", width=2)
-            # self.line_position_slider3 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position3)
             self.line_position_slider3 = customtkinter.CTkSlider(self.frame2,to=2,from_=self.canvas_height,orientation='vertical',number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3, command=self.update_line_position3)
-            # self.line_position_slider3.set(self.initial_line_position3)
             self.line_position_slider3.grid(row=0, column=1, rowspan=3, pady=(0,0), padx=(2,1), sticky='ns')
 
             self.vertical_line4 = self.canvas.create_line(self.canvas_width, self.initial_line_position4, 2, self.initial_line_position4, fill="lightblue", width=2)
-            # self.line_position_slider4 = tk.Scale(self.frame2, from_=2, to=self.canvas_height, orient=tk.VERTICAL, length=self.canvas_height*2, resolution=1, command=self.update_line_position4)
             self.line_position_slider4 = customtkinter.CTkSlider(self.frame2,to=2,from_=self.canvas_height,orientation='vertical',number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3, command=self.update_line_position4)
-            # self.line_position_slider4.set(self.initial_line_position4)
             self.line_position_slider4.grid(row=0, column=2, rowspan=3, pady=(0,0), padx=(0,0), sticky='ns')
             
             self.reload()
-            print(f'reloaded after UI initiated. {self.classtype}')
             def on_select_rotation(event): # tag UI placement order # can only initializd after reload() # todo: organize code nicer
                 self.rotation = self.comboboxrotation.get()
                 self.character.set_rotation(self.rotation)
@@ -1559,23 +910,9 @@ class TkinterBot(customtkinter.CTk):
             self.comboboxrotation = customtkinter.CTkComboBox(frameright, values=rotation_list, state="readonly",command=on_select_rotation,justify='left', width=140)
             self.comboboxrotation.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NE)
             self.comboboxrotation.set(rotation_list[rotation_list.index(self.rotation)])
-            # self.frame3 = tk.Frame(self.tab1, bg='', bd=0)
-            # self.frame3.pack(padx=0, pady=0)
-            # self.label_currentleft = tk.Label(self.frame3, text=f"current left: {self.line_position_slider.get()}")
-            # self.label_currentleft.grid(row=0, column=0, pady=0, padx=5)  
-            # self.label_currenttop = tk.Label(self.frame3, text=f"current top: {self.line_position_slider3.get()}")
-            # self.label_currenttop.grid(row=0, column=1, pady=0, padx=5)  
-            # self.label_currentright = tk.Label(self.frame3, text=f"current right: {self.line_position_slider2.get()}")
-            # self.label_currentright.grid(row=1, column=0, pady=0, padx=5)  
-            # self.label_currentbtm = tk.Label(self.frame3, text=f"current btm: {self.line_position_slider4.get()}")
-            # self.label_currentbtm.grid(row=1, column=1, pady=0, padx=5)  
-            # self.button3 = tk.Button(self.frame3, text="  Confirm New Threshold  ", command=self.reset, bg='yellow', font=('Helvetica', 8))
-            # self.button3.grid(row=2, column=0, columnspan=2, pady=(10,10), padx=(20,20))
 
             self.frame4 = customtkinter.CTkFrame(self.tab1, height=50, width=100)
-            # self.frame4 = tk.Frame(self.tab1, bg='yellow', bd=0, height=50, width=100)
             self.frame4.pack(padx=0, pady=0, side='bottom', fill='x')
-            # self.button4 = tk.Button(self.frame4, text="Test Mouse", command=self.testmouse, font=('Helvetica', 8))
             button4 = customtkinter.CTkButton(self.frame4, text="Test Mouse", command=self.testmouse, font=('Helvetica', 12))
             button4.grid(row=0, column=0, pady=(0,0), padx=(1,1))
             button5 = customtkinter.CTkButton(self.frame4, text="Rebind Mouse", command=self.rebindmouse, font=('Helvetica', 12))
@@ -1689,42 +1026,28 @@ class TkinterBot(customtkinter.CTk):
                 
                 self.canvas_width=width
                 self.canvas_height=height
-                # canvas_width=minimapX-8
-                # canvas_height=minimapY-63
                 initial_line_position = self.canvas_width / 2
 
-        print(f'adjustbutton: {self.canvas_width=} {self.canvas_height=}')
-        # self.vertical_line = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="red", width=2)
         self.vertical_line = self.canvas.create_line(self.initial_line_position, 0, self.initial_line_position, height, fill="red", width=2)    
         self.line_position_slider.configure(to=self.canvas_width, width=self.canvas_width)
         self.update_line_position(self.line_position_slider.get())
         
-        # self.vertical_line2 = self.canvas.create_line(initial_line_position, 2, initial_line_position, self.canvas_height, fill="yellow", width=2)
         self.vertical_line2 = self.canvas.create_line(self.initial_line_position2, 0, self.initial_line_position2, height, fill="yellow", width=2)    
         self.line_position_slider2.configure(to=self.canvas_width, width=self.canvas_width)
         self.update_line_position2(self.line_position_slider2.get())
         
-        # self.vertical_line3 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lime", width=2)
         self.vertical_line3 = self.canvas.create_line(self.canvas_width, self.initial_line_position3, 2, self.initial_line_position3, fill="lime", width=2)
         self.line_position_slider3.configure(from_=self.canvas_height, height=self.canvas_height*1.2)
         self.update_line_position3(self.line_position_slider3.get())
 
-        # self.vertical_line4 = self.canvas.create_line(2, initial_line_position, self.canvas_height, initial_line_position, fill="lightblue", width=2)
         self.vertical_line4 = self.canvas.create_line(self.canvas_width, self.initial_line_position4, 2, self.initial_line_position4, fill="lightblue", width=2)
         self.line_position_slider4.configure(from_=self.canvas_height, height=self.canvas_height*1.2)
         self.update_line_position4(self.line_position_slider4.get())
         
-        # self.update_line_position(allpresets[2])
-        # self.update_line_position2(allpresets[3])
-        # self.update_line_position3(allpresets[4])
-        # self.update_line_position4(allpresets[5])
         self.line_position_slider.set(self.line_position_slider.get())
         self.line_position_slider2.set(self.line_position_slider2.get())
         self.line_position_slider3.set(self.line_position_slider3.get())
         self.line_position_slider4.set(self.line_position_slider4.get())
-        # button_adjustminimap
-        # print(f'{self.rotation=}')
-        print(f'{self.line_position_slider=} {self.line_position_slider2=} {self.line_position_slider3=} {self.line_position_slider4=}')
         self.g = Game((8, 63, self.minimapX, self.minimapY)) #
         self.character.setup(
             left=self.line_position_slider.get()/2,
@@ -1736,16 +1059,6 @@ class TkinterBot(customtkinter.CTk):
             g=self.g,
             rotation=self.rotation,
         )
-
-        # background_image = Image.open("bumblebee.gif")
-        # background_image = background_image.resize((window_width, window_height),  Image.Resampling.LANCZOS)
-        # background_photo = ImageTk.PhotoImage(background_image)
-        # background_label = tk.Label(root, image=background_photo)
-        # background_label.place(relwidth=1, relheight=1)
-        # background_label.image = background_photo
-        # root.configure(bg='orange')
-        # frame2.config(bg='', bd=0)
-        # self.root.resizable(False,False)
 
     def update_four_lines(self,line1,line2,line3,line4):        
         self.line_position_slider.set(line1)
@@ -1759,48 +1072,33 @@ class TkinterBot(customtkinter.CTk):
 
     def update_line_position(self, value):
         self.canvas.coords(self.vertical_line, float(value), 0, float(value), self.canvas_height)
-        # print(value)
     
     def update_line_position2(self, value):
         self.canvas.coords(self.vertical_line2, float(value), 0, float(value), self.canvas_height)
-        # print(value)
 
     def update_line_position3(self, value):
         self.canvas.coords(self.vertical_line3, 0, float(value), self.canvas_width, float(value))
-        # print(value)
     
     def update_line_position4(self, value):
         self.canvas.coords(self.vertical_line4, 0, float(value), self.canvas_width, float(value))
-        # print(value)
 
     def reload(self):
         self.pause=True
-        # self.stop_event.set()
-        # time.sleep(.1)
-        print(f'reload: {self.preset=} {self.presettemp=}')
         self.preset=self.presettemp
-        print(f'reload: {self.preset=} {self.presettemp=}')
         try:
             allpresets=[]
             with open(f'preset/{self.preset}.json', 'r') as json_file:
                 arrays = json.load(json_file)
-                print(f'{arrays=}')
             for array in arrays:
                 for item in array:
-                    print(f'{item=} {type(item)}')
                     allpresets.append(item)
-            # allpresets.append(self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
-            # ,self.line_position_slider3.get(),self.line_position_slider4.get())
-            print(f'{allpresets=}')
             self.minimapX=allpresets[0]
             self.minimapY=allpresets[1]
             self.widthentry.delete(0,tk.END)
             self.widthentry.insert(0,self.minimapX)
             self.heightentry.delete(0,tk.END)
             self.heightentry.insert(0,self.minimapY)
-            print(f'reload1: {self.canvas_width=} {self.canvas_height=}')
             self.button_adjustminimap(setimage=True)
-            print(f'reload2: {self.canvas_width=} {self.canvas_height=}')
             self.update_line_position(allpresets[2])
             self.update_line_position2(allpresets[3])
             self.update_line_position3(allpresets[4])
@@ -1810,72 +1108,22 @@ class TkinterBot(customtkinter.CTk):
             self.line_position_slider3.set(allpresets[4])
             self.line_position_slider4.set(allpresets[5])
   
-
-            # self.line_position_slider.configure(to=self.canvas_width,number_of_steps=self.canvas_width-2, width=self.canvas_width)
-            # self.line_position_slider2.configure(to=self.canvas_width,number_of_steps=self.canvas_width-2, width=self.canvas_width)
-            # self.line_position_slider3.configure(from_=self.canvas_height,number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3)
-            # self.line_position_slider4.configure(from_=self.canvas_height,number_of_steps=self.canvas_height-2, height=self.canvas_height*1.3)
-            
-            # self.label_currentleft.config(text=f"current left: {self.line_position_slider.get()}")
-            # self.label_currenttop.config(text=f"current left: {self.line_position_slider3.get()}")
-            # self.label_currentright.config(text=f"current left: {self.line_position_slider2.get()}")
-            # self.label_currentbtm.config(text=f"current left: {self.line_position_slider4.get()}")
-            print(f'done reload. ')
         except Exception as e:
             print(f'reading json: {e=}')
         self.left=self.line_position_slider.get()/2
         self.right=self.line_position_slider2.get()/2
         self.top=self.line_position_slider3.get()/2
         self.btm=self.line_position_slider4.get()/2
-        # self.g=Game((6,83,self.minimapX,self.minimapY))
         self.character.setup(left=self.left,right=self.right,top=self.top,btm=self.btm)
-        # self.character.setup(left=self.left,right=self.right,top=self.top,btm=self.btm,classtype=self.classtype,runesolver=self.runesolver,g=self.g)
-
-        # print(f'thread3 joining. ')
-        # self.thread3.join()
-        # print(f'thread3 joined. (reload function)')
-        # self.thread3 = threading.Thread(target=self.run_thread3)
-        # self.stop_event.clear()
-        # self.thread3.start()
-        # print(f'thread3 started. ')
-
-    def reset(self):
-        # global pause
-        # pause=True
-        self.pause=True
-        # for _, stop_event in self.threads:
-        #     stop_event.set()
-        self.stop_event.set()
-        time.sleep(.1)
-        # for thread, _ in self.threads:
-        #     thread.join()
-        # stop_event = threading.Event()
-        # thread = threading.Thread(target=self.start_the_main, args=(stop_event,))
-        # thread.start()
-        # self.threads.append((thread, stop_event))
-        self.label_currentleft.config(text=f"current left: {self.line_position_slider.get()}")
-        self.label_currentright.config(text=f"current right: {self.line_position_slider2.get()}")
-        self.label_currenttop.config(text=f"current top: {self.line_position_slider3.get()}")
-        self.label_currentbtm.config(text=f"current btm: {self.line_position_slider4.get()}")
-        print(f'thread3 joining. ')
-        self.thread3.join()
-        print(f'thread3 joined. ')
-        self.thread3 = threading.Thread(target=self.run_thread3)
-        self.stop_event.clear()
-        self.thread3.start()
-        print(f'thread3 started. ')
             
     def on_tab_change(self, event):
         selected_tab = self.notebook.index(self.notebook.select())
-        print("Selected Tab:", selected_tab)
 
     def setup_tab2(self):
         framerecord = customtkinter.CTkFrame(self.tab2, fg_color='#81b253')
         framerecord.pack(padx=1, pady=1)
         def new():
             script_name = simpledialog.askstring("New Script", "Enter the name for the new script:")
-            # dialog = customtkinter.CTkInputDialog(title="New Script",text="Enter the name for the new script:")
-            # script_name = dialog.get_input()
             if script_name:
                 script_name=script_name+'.json'
                 json_file_names.append(script_name)
@@ -1883,54 +1131,42 @@ class TkinterBot(customtkinter.CTk):
                 comboboxpreset.configure(values=json_file_names)
                 self.scripttemp = comboboxpreset.get()
                 length=0
-                signature=''
+                self.signature=''
                 self.labelscript.configure(text=f'script duration: {length}')
-                self.labelscript2.configure(text=f'script signature: {signature}')                
+                labelpointa.configure(text=f'(None, None)')
         buttonnew = customtkinter.CTkButton(framerecord, text="new script", command=new)
         buttonnew.grid(row=2,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
         buttonnew.pack(padx=(1,1),pady=(1,1))
         def on_select(event):
             self.scripttemp = comboboxpreset.get()
-            print(f'{self.script=} {self.scripttemp=}')
+            self.script = comboboxpreset.get()
             try:
                 with open(f'point/{self.scripttemp}', 'r') as jsonfile:
                     data = json.load(jsonfile)
-                    print(f'{data=}')
                     self.pointx=data[0]
                     self.pointy=data[1]
-                    labelpointa.configure(text=f'({self.pointx}, {self.pointy})')            
+                    labelpointa.configure(text=f'({self.pointx}, {self.pointy})')
                 length=0
-                signature=''
+                self.signature=''
                 with open(f'script/{self.scripttemp}', 'r') as jsonfile:
                     data = json.load(jsonfile)            
                     for index, action in enumerate(data):
                         if action['type']=='keyUp':
-                            signature+=action['button']
+                            self.signature+=action['button']
                     length=round(data[-1]['time'],4)
                 self.labelscript.configure(text=f'script duration: {length}')
-                self.labelscript2.configure(text=f'script signature: {signature}')
             except Exception as e:
                 self.labelscript.configure(text=f'script duration: ')
-                self.labelscript2.configure(text=f'script signature: ')
         folder_path = "script"
         file_list = os.listdir(folder_path)
         json_file_names = [file for file in file_list if file.endswith(".json")]
-        # json_file_names = [os.path.splitext(file)[0] for file in json_files]
         comboboxpreset = customtkinter.CTkComboBox(framerecord, values=json_file_names, state="readonly",command=on_select,justify='center')
-        # comboboxpreset.grid(row=0,column=0,padx=(1,1), pady=(1,1), sticky=tk.NW)
         comboboxpreset.pack(padx=(1,1), pady=(1,1))
         comboboxpreset.set(json_file_names[json_file_names.index(self.script)])
         def clock():
             if self.recordstatus:
                 return
             else:
-                # hour2=time.strftime('%H')
-                # hour=time.strftime('%I')
-                # minute=time.strftime('%M')
-                # second=time.strftime('%S')
-                # day=time.strftime('%A')
-                # am_pm=time.strftime('%p')
-                # time_label.configure(text=hour+':'+minute+':'+second)
                 elapsed = perf_counter()-self.time
                 time_label.configure(text="{:.4f}s".format(elapsed))
                 time_label.after(1000,clock)
@@ -1944,11 +1180,6 @@ class TkinterBot(customtkinter.CTk):
                 self.thread7.start()
             else:
                 pass
-                # self.recordstatus=not self.recordstatus
-                # record_button.configure(fg_color='#55eecc', text='Record',state='normal')
-                # for value in self.input_events:
-                #     print(f'{value=}')
-                # self.thread7.join()
         self.scripttemp=self.script
         self.recordstatus=True
         self.input_events=[]
@@ -1982,33 +1213,49 @@ class TkinterBot(customtkinter.CTk):
             height=int(self.winfo_screenheight()/2)
             saved_window.geometry(f'{width-300}+{height-200}')
         buttonsave = customtkinter.CTkButton(framerecord, text="save all", command=save)
-        # buttonsave.grid(row=3,column=0,padx=(1,1),pady=(1,1), sticky=tk.NW)
         buttonsave.pack(padx=(1,1),pady=(1,1))
         framescript = customtkinter.CTkFrame(self.tab2, fg_color='#81b253')
         framescript.pack(padx=1, pady=1)
-        length=0
-        signature=''
-        with open(f'script/{self.script}', 'r') as jsonfile:
-            data = json.load(jsonfile)            
-            for index, action in enumerate(data):
-                if action['type']=='keyUp':
-                    signature+=action['button']
-            length=round(data[-1]['time'],4)
-        self.labelscript=customtkinter.CTkLabel(framescript,text=f'script duration: {length}', text_color="#010101",wraplength=550,justify='left')
-        self.labelscript.pack(padx=1,pady=1)
-        self.labelscript2=customtkinter.CTkLabel(framescript,text=f'script signature: {signature}', text_color="#010101",wraplength=550,justify='left')
-        self.labelscript2.pack(padx=1,pady=1)
         def setpointa():
             g_variable = self.g.get_player_location()
             self.pointx, self.pointy = (None, None) if g_variable is None else g_variable
             labelpointa.configure(text=f'({self.pointx}, {self.pointy})')
         buttonsetpointa = customtkinter.CTkButton(framescript, text="set point A", command=setpointa)
         buttonsetpointa.pack(padx=1, pady=1)
-        labelpointa=customtkinter.CTkLabel(framescript,text=f'', text_color="#010101",wraplength=550,justify='left')
+        labelpointa=customtkinter.CTkLabel(framescript,text=f'', text_color="#010101",justify='left')
         labelpointa.pack(padx=1,pady=1)
+        length=0
+        self.signature=''
+        with open(f'script/{self.script}', 'r') as jsonfile:
+            data = json.load(jsonfile)            
+            for index, action in enumerate(data):
+                if action['type']=='keyUp':
+                    self.signature+=action['button']
+            length=round(data[-1]['time'],4)
+        self.labelscript=customtkinter.CTkLabel(framescript,text=f'script duration: {length}', text_color="#010101",justify='left')
+        self.labelscript.pack(padx=1,pady=1)
+        def showscript():
+            showscript_window = customtkinter.CTkToplevel(framescript, fg_color='#abcdef')
+            showscript_window.title('chrome')
+            showscript_window.resizable(False,False)#width,height
+            label=customtkinter.CTkLabel(showscript_window,text=f'script signature: {self.signature}. ', text_color='#123321')
+            label.pack(padx=10,pady=(10,1), fill='none', expand=True)
+            def close():
+                showscript_window.destroy()
+                showscript_window.update()
+            button=customtkinter.CTkButton(showscript_window,text='ok',command=close)
+            button.pack(padx=10,pady=10, fill='none', expand=True)
+            showscript_window.iconpath = ImageTk.PhotoImage(file=os.path.join("icon.ico"))
+            showscript_window.wm_iconbitmap()
+            showscript_window.iconphoto(False, showscript_window.iconpath)
+            showscript_window.after(200,lambda: showscript_window.iconphoto(False, showscript_window.iconpath))
+            width=int(self.winfo_screenwidth()/2)
+            height=int(self.winfo_screenheight()/2)
+            showscript_window.geometry(f'{width-300}+{height-200}')
+        buttonshowscript = customtkinter.CTkButton(framescript, text="show script", command=showscript)
+        buttonshowscript.pack(padx=1, pady=1)
         with open(f'point/{self.script}', 'r') as jsonfile:
             data = json.load(jsonfile)
-            print(f'{data=}')
             self.pointx=data[0]
             self.pointy=data[1]
             labelpointa.configure(text=f'({self.pointx}, {self.pointy})')
@@ -2022,7 +1269,8 @@ class TkinterBot(customtkinter.CTk):
             buttonstop.configure(state='disabled')       
         self.scriptstopsignal=False
         imageknuckles = customtkinter.CTkImage(Image.open("assets/knuckles1.png"),size=(140,140))
-        buttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ea511f', text_color='black',image=imageknuckles,state='disabled')
+        buttonstop = customtkinter.CTkButton(framesonic, text="stop", command=stop, fg_color='#ea511f', text_color='black',state='disabled')
+        # buttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ea511f', text_color='black',image=imageknuckles,state='disabled')
         # buttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ff1400', text_color='black',image=imageknuckles)
         buttonstop.pack(padx=(1,1),pady=(1,1))
         def pause():
@@ -2030,18 +1278,21 @@ class TkinterBot(customtkinter.CTk):
             buttonstop.configure(state='normal') if self.scriptpausesignal else buttonstop.configure(state='disabled')
         self.scriptpausesignal=False
         imagetails = customtkinter.CTkImage(Image.open("assets/tails1.png"),size=(140,140))
-        buttonpause = customtkinter.CTkButton(framesonic, text="", command=pause, fg_color='#f1bf1f', text_color='black',image=imagetails,state='disabled')
+        buttonpause = customtkinter.CTkButton(framesonic, text="pause", command=pause, fg_color='#f1bf1f', text_color='black',state='disabled')
+        # buttonpause = customtkinter.CTkButton(framesonic, text="", command=pause, fg_color='#f1bf1f', text_color='black',image=imagetails,state='disabled')
         # buttonpause = customtkinter.CTkButton(framesonic, text="", command=pause, fg_color='#f1b000', text_color='black',image=imagetails)
         buttonpause.pack(padx=(1,1),pady=(1,1))
         def playback():
             self.thread8 = threading.Thread(target=self.run_thread8)
             self.thread8.start()
             self.scriptpausesignal=False
+            self.scriptstopsignal=False
             buttonplayback.configure(state='disabled')
             buttonpause.configure(state='normal')
             buttonstop.configure(state='disabled')
         imagesonic = customtkinter.CTkImage(Image.open("assets/sonic1.png"),size=(140,140))
-        buttonplayback = customtkinter.CTkButton(framesonic, text="", command=playback, fg_color='#0d7adf', text_color='black',image=imagesonic)
+        buttonplayback = customtkinter.CTkButton(framesonic, text="play", command=playback, fg_color='#0d7adf', text_color='black')
+        # buttonplayback = customtkinter.CTkButton(framesonic, text="", command=playback, fg_color='#0d7adf', text_color='black',image=imagesonic)
         buttonplayback.pack(padx=(1,1),pady=(1,1))
 
 
@@ -2067,34 +1318,28 @@ class TkinterBot(customtkinter.CTk):
             except AttributeError:
                 record_event('keyUp', elapsed_time(), key)
             if key == keyboard.Key.esc:
-                # Stop keyboard listener                
                 self.recordstatus=not self.recordstatus
                 self.record_button.configure(fg_color='#55eecc', text='Record',state='normal')
-                signature=''
+                self.signature=''
                 for value in self.input_events:
-                    print(f'{value=}')
                     if value['type']=='keyUp':
                         if 'Key' in value['button']:
-                            signature+=value['button'].replace('Key','')
+                            self.signature+=value['button'].replace('Key','')
                         else:
-                            signature+='.'+value['button']
+                            self.signature+='.'+value['button']
                 length=round(self.input_events[-1]['time'],4)
                 self.labelscript.configure(text=f'script duration: {length}')
-                self.labelscript2.configure(text=f'script signature: {signature}')
                 new_array_temp=[]
                 for index, action in enumerate(self.input_events):
                     button = action['button']
                     key = self.convertKey(button)
                     if key is not None:
                         self.input_events[index]['button'] = key
-                        # print(f'{key=} {index=}')
                         if key == 'esc':
                             pass
                         else:
                             new_array_temp.append(action)
-                self.input_events=new_array_temp
-                # for index, action in enumerate(self.input_events):
-                #     print(f"{action['button']}")                
+                self.input_events=new_array_temp            
                 raise keyboard.Listener.StopException
         def record_event(event_type, event_time, button, pos=None):
             self.input_events.append({
@@ -2110,18 +1355,16 @@ class TkinterBot(customtkinter.CTk):
             on_release=on_release) as listener:
             self.start_time = perf_counter()
             listener.join()
-            print(f'finish after raise1')
-        print(f'finish after raise2')
 
     async def playback(self):
-        print(f'starting script {self.script} in 1 ..')
+        # print(f'starting script {self.script} in 1 ..')
         time.sleep(1)
         with open(f'script/{self.script}', 'r') as jsonfile:
             data = json.load(jsonfile)
             while True:
                 time.sleep(1) # testing 
                 for index, action in enumerate(data):
-                    print(f'running: {index=} {action=}')
+                    # print(f'running: {index=} {action=}')
                     if self.scriptpausesignal:
                         keyupall()
                         print(f'script is paused .. ')
@@ -2196,19 +1439,20 @@ class TkinterBot(customtkinter.CTk):
                         #     pass
                     if action['type'] == 'keyDown':
                         if action['button'] == 'f9':
-                            print('is_f9_bruh')   
+                            # print('is_f9_bruh')
                             # await adjustportallimen2(g, spot=12.5, distx=103.5, docorrection=False, test=False)  #
                             await self.adjustcharacter(self.pointx,self.pointy)
                         if action['button'] == 'f10':
-                            print('is_f10_bruh')
+                            # print('is_f10_bruh')
                             # await self.adjustcharacter()
+                            pass
                         key = action['button']
-                        print(f'press {key=}')
+                        # print(f'press {key=}')
                         keydown(key)
                         # presskey(key)
                     elif action['type'] == 'keyUp':
                         key = action['button']
-                        print(f'release {key=}')
+                        # print(f'release {key=}')
                         keyup(key)
                         # await sleep(1.)
                         # releasekey(key)
@@ -2252,7 +1496,7 @@ class TkinterBot(customtkinter.CTk):
                             else:
                                 r /= 1000
                                 elapsed_time -= r
-                    print(f'sleep={elapsed_time=}')
+                    # print(f'sleep={elapsed_time=}')
                     await sleep(elapsed_time)
 
     def convertKey(self,button=None):
@@ -2278,6 +1522,7 @@ class TkinterBot(customtkinter.CTk):
         return cleaned_key
 
     async def adjustcharacter(self,a=10,b=10):
+        xynotfound=0
         while True:
             if self.scriptpausesignal:
                 keyupall()
@@ -2315,10 +1560,6 @@ class TkinterBot(customtkinter.CTk):
                         await self.character.ac.rightwalk(int((abs(x-a)*40)-30),int((abs(x-a)*40)))
 
     def setup_tab3(self):
-        # welcome to the ultimate tab3.. 
-        # self.framedesign = tk.Frame(self.tab3, bg='#a132f3', bd=0)
-        # self.framedesign = tk.Frame(self.tab3, bg='#f1f2f3', bd=0)
-        # self.framedesign.pack(padx=0, pady=0)
         input_fields = []
         def on_entry_click1(event):
             entry = event.widget
@@ -2395,10 +1636,6 @@ class TkinterBot(customtkinter.CTk):
         file_list = os.listdir(folder_path)
         json_files = [file for file in file_list if file.endswith(".json")]
         json_file_names = [os.path.splitext(file)[0] for file in json_files]
-        # num_json_files = len(json_files)
-        # print("Number of JSON files:", num_json_files)
-        # print("File names:", json_file_names)
-        # print("json_files:", json_files)
         comboboxclasstype = ttk.Combobox(self.frameprofile, values=json_file_names, state="readonly", width=17)
         comboboxclasstype.pack(side=tk.LEFT, padx=1, pady=1)
         comboboxclasstype.set(json_file_names[json_file_names.index(self.profile)])
@@ -2410,9 +1647,7 @@ class TkinterBot(customtkinter.CTk):
             try:
                 with open(f'json/{self.profile}.json', 'r') as json_file:
                     arrays = json.load(json_file)
-                    print(f'{arrays=}')
                 for array in arrays:
-                    print(f'{array=}')
                     add_input_field(loader=True,data=array)
             except Exception as e:
                 print(f'reading json: {e=}')
@@ -2431,7 +1666,6 @@ class TkinterBot(customtkinter.CTk):
         self.buttondesign2 = tk.Button(self.framebuttonadd, text="minus platform", command=minus_input_field)
         self.buttondesign2.pack(side=tk.LEFT, padx=1, pady=1)
         self.framedesign2 = tk.Frame(self.tab3, bg='#f132b3', bd=0)
-        # self.framedesign2 = tk.Frame(self.tab3, bg='#f1f2f3', bd=0)
         self.framedesign2.pack(padx=0, pady=0)
         self.framedesign3 = tk.Frame(self.tab3, bg='#a16213', bd=0)
         self.framedesign3.pack(padx=0, pady=0)
@@ -2443,7 +1677,7 @@ class TkinterBot(customtkinter.CTk):
             self.profile = comboboxclasstype.get()
             with open(f'json/{self.profile}.json', 'w') as json_file:
                 json.dump(platforms, json_file, indent=4)
-            print(f'saved platform. ')
+            # print(f'saved platform. ')
         self.buttonsaveprofile = tk.Button(self.framedesign3, text="Save", command=saveprofile, state=tk.NORMAL)
         self.buttonsaveprofile.grid(row=0, column=0, pady=2, padx=2, sticky='nsew')
         load_profile()
@@ -2484,7 +1718,6 @@ class TkinterBot(customtkinter.CTk):
         self.labelmessage.grid(row=2, column=0, columnspan=2, padx=1, pady=1)
         self.labelmessage2 = tk.Label(self.frametelegram, anchor='w', justify='left', text="")
         self.labelmessage2.grid(row=3, column=0, columnspan=2, padx=1, pady=1)
-        # framebutton = tk.Frame(frametelegram, bg='#e47ac3', bd=0)
         self.framebutton = tk.Frame(self.frametelegram, bg='#f1f2f3', bd=0)
         self.framebutton.grid(row=4, column=0, columnspan=2, pady=1)
         self.buttonbind = tk.Button(self.framebutton, text="bind", command=self.get_token, anchor='w')
@@ -2529,12 +1762,9 @@ class TkinterBot(customtkinter.CTk):
     def setup_tab5(self):
         pass
 
-    def setup_tab6(self):        
-        # self.framesettings = tk.Frame(self.tab6, bg='#a1b2c3', bd=0)
+    def setup_tab6(self):
         self.framesettings = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)
         self.framesettings.pack(padx=0, pady=0)
-        # self.framesettings.columnconfigure(0, weight='1') # not sure bout this
-        # self.framesettings.rowconfigure(0, weight='1') # not sure bout this
         self.labelipaddress = tk.Label(self.framesettings, anchor='w', justify='left', text="runesolver ip address: ")
         self.labelipaddress.grid(row=0, column=0, padx=1, pady=1, sticky='w')
         self.entryipaddress = tk.Entry(self.framesettings)
@@ -2573,22 +1803,19 @@ class TkinterBot(customtkinter.CTk):
         self.labelclasstype = tk.Label(self.framesettings, anchor='w', justify='left', text="classtype: ")
         self.labelclasstype.grid(row=7, column=0, padx=1, pady=1, sticky='w')        
         def on_select(event):
-            self.classtype = self.comboboxclasstype.get()
-        # options = ['flashjump', 'teleport', 'nightlord']        
+            self.classtype = self.comboboxclasstype.get()       
         folder_path = "classtype"
         file_list = os.listdir(folder_path)
         json_files = [file for file in file_list if file.endswith(".py")]
         json_file_names = [os.path.splitext(file)[0] for file in json_files]
         self.comboboxclasstype = ttk.Combobox(self.framesettings, values=json_file_names, state="readonly", width=17)
         self.comboboxclasstype.grid(row=7, column=1, padx=1, pady=1)
-        # self.comboboxclasstype.set(options[1]) if self.classtype=='teleport' else self.comboboxclasstype.set(options[0])
         self.comboboxclasstype.set(json_file_names[json_file_names.index(self.classtype)])
         self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)
         self.labelportal = tk.Label(self.framesettings, anchor='w', justify='left', text="portal: ")
         self.labelportal.grid(row=8, column=0, padx=1, pady=1, sticky='w')
         def on_checkbox_clicked():
             self.portaldisabled=False if checkbox_var.get() else True
-            print(f"Checkbox is checked {checkbox_var=} {self.portaldisabled=} {checkbox_var.get()=}")
         checkbox_var = tk.BooleanVar(value=False) if self.portaldisabled else tk.BooleanVar(value=True)
         self.checkboxportal = tk.Checkbutton(self.framesettings, text="", variable=checkbox_var, command=on_checkbox_clicked, font=('Arial', 10)) ## not sure bout this
         self.checkboxportal.grid(row=8, column=1, padx=0, pady=0, sticky='w')
@@ -2610,9 +1837,6 @@ class TkinterBot(customtkinter.CTk):
         self.config.set('keybind', 'classtype', str(self.comboboxclasstype.get()))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
-        # refreshkeybind()
-        # self.character.change_ac_type(Teleport()) if self.classtype=='teleport' else self.character.change_ac_type(Flashjump())
-        # self.character.change_ac_type(self.classtype)
         self.character.setup(
             left=self.line_position_slider.get()/2,
             right=self.line_position_slider2.get()/2,
@@ -2638,23 +1862,23 @@ class TkinterBot(customtkinter.CTk):
     
     def get_token(self):
         token = self.entrytoken.get()
-        print("Token:", token)
+        # print("Token:", token)
         if token == '0':
             return
         response = requests.get('https://api.telegram.org/bot'+token+'/getUpdates')
         if response.status_code == 200:
             # Parse and print the JSON content
             json_data = response.json()
-            print(f'{json_data=}')
+            # print(f'{json_data=}')
             # formated = json.dumps(json_data, indent=2)
             # print("Returned JSON:")
             # print(formated)
             if json_data['result']:
                 chat_id = json_data['result'][0]['message']['chat']['id']
-                print(f'{chat_id = }')
+                # print(f'{chat_id = }')
                 # 6871179594:AAH6ZiIEPyfmGQhgGp1bsCy3PvhA42rtyfk
                 img = self.g.get_screenshot()
-                print(f'{type(img)}')
+                # print(f'{type(img)}')
                 payload = {
                     'chat_id': chat_id,
                     'photo': 'https://picsum.photos/200/300',
@@ -2699,7 +1923,7 @@ class TkinterBot(customtkinter.CTk):
         photo0 = self.g.get_screenshot()
         position = win32gui.GetWindowRect(self.chathwnd)
         x, y, w, h = position
-        print(f'{x} {y} {w} {h}')
+        # print(f'{x} {y} {w} {h}')
         screenshot = ImageGrab.grab(position)
         screenshot2 = np.array(screenshot)
         img = cv2.cvtColor(screenshot2, cv2.COLOR_RGB2BGR)
@@ -2825,198 +2049,41 @@ class TkinterBot(customtkinter.CTk):
     def telegramshutdown(self):
         print(f'telegramshutdown')
         pass
-
-
-
-
     
     def on_close(self):
-        print("Closing the window")
-        #
+        print("\nBumblebee Bot window is closing .. waiting threads to join ..")
         self.pause=True
         self.scriptpausesignal=True
-        # # Add your code here to run before closing the window
-        # # config.add_section('main')
-        # self.config.set('main', 'key1', 'value1')
-        # self.config.set('main', 'key2', 'value2')
-        # self.config.set('main', 'key3', 'value3')
-        # self.config.set('main', 'minimapX', str(self.minimapX))
-        # self.config.set('main', 'minimapY', str(self.minimapY))
-        # self.config.set('main', 'initial_line_position', str(self.line_position_slider.get()))
-        # self.config.set('main', 'initial_line_position2', str(self.line_position_slider2.get()))
-        # self.config.set('main', 'initial_line_position3', str(self.line_position_slider3.get()))
-        # self.config.set('main', 'initial_line_position4', str(self.line_position_slider4.get()))
-        # self.config.set('main', 'initial_line_position', str(self.left))
-        # self.config.set('main', 'initial_line_position2', str(self.right))
-        # self.config.set('main', 'initial_line_position3', str(self.top))
-        # self.config.set('main', 'initial_line_position4', str(self.btm))
         self.config.set('main', 'profile', str(self.profile))
         self.config.set('main', 'preset', str(self.preset))
         self.config.set('main', 'script', str(self.script))
         self.config.set('main', 'rotation', str(self.rotation))
-        # self.config.set('main', 'portaldisabled', str(self.portaldisabled))
         self.config2.set('telegram', 'token', str(self.TOKEN))
         self.config2.set('telegram', 'chat_id', str(self.chat_id))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
         with open('secret.ini', 'w') as f:
-            self.config2.write(f)            
-        # # for input_field in input_fields:
-        # #     entry, entry2, entry3 = input_field[1].get(), input_field[2].get(), input_field[3].get()
-        # #     platforms.append([entry, entry2, entry3])
-        # # self.profile = comboboxclasstype.get()
-        
-        # allpresets=[]
-        # allpresets.append([self.minimapX,self.minimapY,self.line_position_slider.get(),self.line_position_slider2.get()
-        # ,self.line_position_slider3.get(),self.line_position_slider4.get()])
-        # with open(f'preset/{self.preset}.json', 'w') as json_file:
-        #     json.dump(allpresets, json_file, indent=4)
-        # self.canvasimageholdertemp.save(f'image/{self.preset}.png')
-        # print(f'saved preset. ') 
-        #
+            self.config2.write(f)
         self.stop_event.set()
-        # for _, stop_event in self.threads:
-        #     stop_event.set()
-        # for thread, _ in self.threads:
-        #     thread.join()
         self.telegram_keep_alive = False
-        # self.root.destroy()
         self.destroy()
         self.thread1.join()
-        print(f'thread1 joined. ')
-        # self.thread2.join()
-        # print(f'thread2 joined. ')
         self.thread3.join()
-        print(f'thread3 joined. ')
         self.thread6.join()
-        print(f'thread6 joined. ')
-        # self.thread7.join()
-        # print(f'thread7 joined. ')
-        # self.thread8.join()
-        # print(f'thread8 joined. ')
-
-
-
-    # def on_button_click():
-    #     stop_event = threading.Event()
-    #     thread = threading.Thread(target=start_the_main, args=(stop_event,))
-    #     thread.start()
-    #     threads.append((thread, stop_event))
-
-
-    # async def start_telegram():
-    #     application = Application.builder().token(TOKEN).build()
-    #     application.add_handler(CommandHandler('start', start_command))
-    #     # app.add_handler(CommandHandler('help', help_command))
-    #     # app.add_handler(CommandHandler('custom', custom_command))
-    #     # app.add_handler(MessageHandler(filters.TEXT, handle_message))
-    #     application.add_error_handler(error)
-    #     async with application:
-    #         await application.initialize() # inits bot, update, persistence
-    #         await application.start()
-    #         await application.updater.start_polling()
-    
-
-    # def start_the_main(stop_event):
-    #     g = Game((8, 63, minimapX, minimapY)) # 
-    #     loop = asyncio.new_event_loop()
-    #     # loop = asyncio.get_event_loop()
-    #     asyncio.set_event_loop(loop)
-    #     # loop.create_task(start_telegram())
-    #     # loop.run_until_complete(start_telegram())
-    #     # loop.run_until_complete(main(
-
-    #     loop.create_task(main(
-    #         stop_event, 
-    #         float(line_position_slider.get()), 
-    #         float(line_position_slider2.get()), 
-    #         float(line_position_slider3.get()), 
-    #         float(line_position_slider4.get()), 
-    #         g
-    #     ))
-    #     loop.run_forever()
-    #     # await application.updater.stop()
-    #     # await application.stop()
-    #     # await application.shutdown()
-    #     loop.close()
-
-    # def entry_focus_in(event):
-    #     if entry1.get()=="Enter x...":
-    #         entry1.delete(0,'end')
-    #         entry1.config(fg='Black')
-
-    # def entry_focus_out(event):
-    #     if entry1.get()=="":
-    #         entry1.insert(0,'Enter x...')
-    #         entry1.config(fg='gray')
-
-    # def entry2_focus_in(event):
-    #     if entry2.get()=="Enter y...":
-    #         entry2.delete(0,'end')
-    #         entry2.config(fg='Black')
-
-    # def entry2_focus_out(event):
-    #     if entry2.get()=="":
-    #         entry2.insert(0,'Enter y...')
-    #         entry2.config(fg='gray')
-
-
-
-
-
-    
-
-    # def start_the_main2(stop_event):
-    #     # loop = asyncio.new_event_loop()
-    #     loop = asyncio.get_event_loop()
-    #     asyncio.set_event_loop(loop)
-    #     loop.run_until_complete(telegrammain(
-    #         stop_event,
-    #     ))
-    #     loop.create_task(telegrammain(stop_event))
-    #     # loop.close()
-
-
 
 async def main2():
-    # mytkinter = TkinterBot()
-    # await mytkinter.telegram_run()
-    # asyncio.run(mytkinter.telegram_run())
-    # mytkinter.tkinter_run()
-
-    # TOKEN = '6871179594:AAH6ZiIEPyfmGQhgGp1bsCy3PvhA42rtyfk'
-    # application = Application.builder().token(TOKEN).build()
-    # application.add_handler(CommandHandler('start', start_command))
-    # # app.add_handler(CommandHandler('help', help_command))
-    # # app.add_handler(CommandHandler('custom', custom_command))
-    # # app.add_handler(MessageHandler(filters.TEXT, handle_message))
-    # application.add_error_handler(error)    
-
-    # Run application and other_application() within the same event loop
-    # async with application:
-    #     await application.initialize() # inits bot, update, persistence
-    #     await application.start()
-    #     await application.updater.start_polling()
-    #     await asyncio.sleep(60)
-    
     mytkinter = TkinterBot()
     mytkinter.start_threads()
     mytkinter.init_tkinter()
     mytkinter.mainloop()
 
-    print('done!')
+    print('\nThank you for using Bumblebee Bot .. \nWe hope our service has been helpful to you. \
+        \nIf you ever need anything else, dont hesitate to reach out: \
+        \n\nhttps://github.com/agumonlyt/maplestorybot \
+        \nhttps://discord.gg/dbsKm2jE27  \
+        \n\nWishing you a fantastic day ahead!')
 
-
-if __name__ == "__main__":    
-    # loop = asyncio.get_event_loop()
-    # loop = asyncio.new_event_loop()
-    # loop.run_until_complete(main2())
-    
-    # mytkinter = TkinterBot()
-    # # await mytkinter.telegram_run()
-    # # asyncio.run(mytkinter.telegram_run())    
-    # mytkinter.start_threads()
-    # mytkinter.wait_for_threads()
+if __name__ == "__main__":
     asyncio.run(main2())
     # # time.sleep(10) #????????
     pass
