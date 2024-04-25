@@ -245,6 +245,10 @@ class Game:
         location = self.checkertest3(ROBGR,x=500,y=292,w=530,h=293)
         return location
 
+    def pure_test(self): 
+        location = self.checkertest(PLAYER_BGRA,x=self.top,y=self.left,w=self.bottom,h=self.right)
+        return location
+
     def gma_detector(self):
         location = self.gma_detector_checker(GMBGR,x=0,y=300,w=400,h=550)
         # location = self.gma_detector_checker((119,170,179,255),x=0,y=250,w=15,h=265)
@@ -417,6 +421,7 @@ class Game:
                     # now4=perf_counter()
                     matches = np.where(np.all((img_reshaped == c), axis=1))[0]
                     # now5=perf_counter()-now4
+                    # print(f'n3={now3:.10f}')
                     # print(f'n1={now1:.10f} n3={now3:.10f} n5={now5:.10f}')
                     # print(f'{matches=}')
                     for idx in matches:

@@ -2,6 +2,7 @@
 
 import ctypes
 import ctypes.wintypes
+from ctypes import WinDLL
 import pyautogui
 from collections import namedtuple
 import time
@@ -28,6 +29,14 @@ from game import Game
 from runesolver import RuneSolver
 from action import Action
 from initinterception import keydown, keyup, sleep
+from mss import mss as mss_module
+# from mss.windows import MSS as mss
+import mss
+import mss.tools
+import numpy as np
+from multiprocessing import JoinableQueue
+from multiprocessing import Process
+
 
 
 
@@ -665,12 +674,71 @@ async def main():
     #     print(f'keyup shift')
     #     keyup('altleft')
     #     await sleep(.1)
-        
-    g = Game((8, 63, 200, 140)) #
-    while True:
-        x = g.get_player_location()
-        print(x)
-        time.sleep(1)
+
+    # user32, kernel32, shcore = (
+    #     WinDLL("user32", use_last_error=True),
+    #     WinDLL("kernel32", use_last_error=True),
+    #     WinDLL("shcore", use_last_error=True),
+    # )
+    # ZONE = 5
+    # WIDTH, HEIGHT = [user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)]    
+    # GRAB_ZONE = (
+    #     int(WIDTH / 2 - ZONE),
+    #     int(HEIGHT / 2 - ZONE),
+    #     int(WIDTH / 2 + ZONE),
+    #     int(HEIGHT / 2 + ZONE),
+    # )
+    # print(GRAB_ZONE)
+    # color_tolerance = 70
+    # R, G, B = (68, 221, 255)  # player
+    # # R, G, B = (250, 100, 250)  # purple
+    # sct = mss_module()
+    # g = Game((8, 63, 200, 140)) #
+    # while True:
+    #     # now=perf_counter()
+    #     # x = g.get_player_location()
+    #     # x = g.pure_test()
+    #     # print(x)
+    #     # time.sleep(1)
+    #     with mss() as sctt:
+    #         for _ in range(100):
+    #             now=perf_counter()
+    #             sctt.shot()
+    #             print(f'{perf_counter()-now:.10f}')
+    #     # img = np.array(sct.grab(GRAB_ZONE))
+    #     # pmap = np.array(img)
+    #     # pixels = pmap.reshape(-1, 4)
+    #     # color_mask = (
+    #     #         (pixels[:, 0] > R -  color_tolerance) & (pixels[:, 0] < R +  color_tolerance) &
+    #     #         (pixels[:, 1] > G -  color_tolerance) & (pixels[:, 1] < G +  color_tolerance) &
+    #     #         (pixels[:, 2] > B -  color_tolerance) & (pixels[:, 2] < B +  color_tolerance)
+    #     #     )
+    #     # matching_pixels = pixels[color_mask]
+    #     # if len(matching_pixels) > 0:
+    #     #     print(f'found')
+    #     # print(f'{perf_counter()-now:.10f}')
+    #     time.sleep(1)
+    
+    # def grab(queue: JoinableQueue) -> None:
+    #     rect = {"top": 0, "left": 0, "width": 600, "height": 800}
+    #     with mss.mss() as sct:
+    #         for _ in range(1_000):
+    #             queue.put(sct.grab(rect))
+    #     # Tell the other worker to stop
+    #     queue.put(None)
+    # def save(queue: JoinableQueue) -> None:
+    #     number = 0
+    #     output = "screenshots/file_{}.png"
+    #     to_png = mss.tools.to_png
+    #     while "there are screenshots":
+    #         img = queue.get()
+    #         if img is None:
+    #             break
+    #         to_png(img.rgb, img.size, output=output.format(number))
+    #         number += 1
+    # queue: JoinableQueue = JoinableQueue()
+    # Process(target=grab, args=(queue,)).start()
+    # Process(target=save, args=(queue,)).start()
     
     # current_time = datetime.now().time()    
     # one_am = dtime(1, 54, 0)  #
@@ -721,5 +789,5 @@ async def main():
 
 
 # Run the event loop
-if __name__ == "__main__":
+if __name__ == "__main__":    
     asyncio.run(main())
