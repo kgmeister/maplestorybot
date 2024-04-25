@@ -38,6 +38,7 @@ from character import Character
 customtkinter.set_appearance_mode('dark')
 customtkinter.set_default_color_theme('dark-blue')
 
+
 class TkinterBot(customtkinter.CTk):
     
     def __init__(self):
