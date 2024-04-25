@@ -118,7 +118,7 @@ class Interception:
         self._context[device].send(stroke)
 
     def send_key(self, stroke: Stroke) -> None:
-        self._context[self._keyboard].send(stroke)
+        self._context[self._keyboard].send(stroke)        
 
     def send_mouse(self, stroke: Stroke) -> None:
         self._context[self._mouse].send(stroke)

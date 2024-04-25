@@ -46,7 +46,7 @@ class RuneSolver:
 
     def set_maplehwnd(self, maplehwnd):
         self.maplehwnd = maplehwnd
-        print(f'{self.maplehwnd}')
+        # print(f'{self.maplehwnd=}')
 
 
     def disablerune(self):
@@ -509,8 +509,13 @@ class RuneSolver:
         # hwnd = win32gui.FindWindow(None, "MapleStory")
         position = win32gui.GetWindowRect(self.maplehwnd)
         x, y, w, h = position
-        runepos = (x+121, y+143, x+697, y+371)
-        screenshot = ImageGrab.grab(runepos)
+        runepos = (x+121, y+143, x+697, y+371) # 800x600
+        # runepos = (x+221, y+143, x+797, y+371) # 1074x768
+        # runepos = (x+341, y+143, x+917, y+371) # 1280x720
+        # runepos = (x+381, y+143, x+957, y+371) # 1366x768
+        # runepos = (x+631, y+143, x+1207, y+371) # 1920x1080 # if this coordinate not work, lemme know!
+        print(x,y,w,h)
+        screenshot = ImageGrab.grab(runepos,all_screens=True)
         # screenshot.show()
         # time.sleep(5)
         img = np.array(screenshot)

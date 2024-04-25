@@ -1,6 +1,10 @@
 import gdi_capture
 import numpy as np
 import cv2
+from time import perf_counter
+# from PIL import ImageGrab
+# import win32gui
+# import pygetwindow
 
 # These are colors taken from the mini-map in BGRA format.
 PLAYER_BGRA = (68, 221, 255, 255)
@@ -30,6 +34,7 @@ ESBGR = (51,187,255, 255) # especia please use the dot especia detector (timer) 
 TIBGR = (204,204,204, 255) # timer gray dot (304,48)
 GMBGR = (222,218,206, 255) # 
 DABGR = (0,0,0, 255) # 
+ROBGR = (187,187,204, 255) # mapril island infinity race rock light brown bgr value
 
 
 class Game:
@@ -56,6 +61,8 @@ class Game:
             else:
                 # Crop the image to show only the mini-map.
                 img_cropped = img[self.left:self.right, self.top:self.bottom]
+                # for img in img_cropped:
+                #     print(f'{img=}')
                 # img_cropped = img[self.top:self.bottom, self.left:self.right]
                 height, width = img_cropped.shape[0], img_cropped.shape[1]
                 # Reshape the image from 3-d to 2-d by row-major order.
@@ -65,9 +72,11 @@ class Game:
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
                 for c in color:
+                    # print(f'{c=}')
                     sum_x, sum_y, count = 0, 0, 0
                     # Find all index(s) of np.ndarray matching a specified BGRA tuple.
                     matches = np.where(np.all((img_reshaped == c), axis=1))[0]
+                    # print(f'{matches=}')
                     for idx in matches:
                         # Calculate the original (x, y) position of each matching index.
                         sum_x += idx % width
@@ -224,6 +233,22 @@ class Game:
         # location = self.checker(PLAYER_BGRA)
         return location[0] if len(location) > 0 else None
 
+    def rock_checker(self):
+        location = self.checkertest3(ROBGR,x=430,y=292,w=460,h=293)
+        return location
+    
+    def rock_checker2(self):
+        location = self.checkertest3(ROBGR,x=460,y=292,w=490,h=293)
+        return location
+
+    def rock_checker3(self):
+        location = self.checkertest3(ROBGR,x=500,y=292,w=530,h=293)
+        return location
+
+    def pure_test(self): 
+        location = self.checkertest(PLAYER_BGRA,x=self.top,y=self.left,w=self.bottom,h=self.right)
+        return location
+
     def gma_detector(self):
         location = self.gma_detector_checker(GMBGR,x=0,y=300,w=400,h=550)
         # location = self.gma_detector_checker((119,170,179,255),x=0,y=250,w=15,h=265)
@@ -339,19 +364,43 @@ class Game:
                         locations.append((x_pos, y_pos))
             # print(f'{locations=}')
             return locations
-        
+
+    # def init_maple_windows(self):
+    #     windows=[]
+    #     winlist=[]
+    #     winlist = pygetwindow.getWindowsWithTitle('MapleStory')
+    #     for w in winlist:
+    #         windows.append(w._hWnd)
+    #     for windowhwnd in windows:
+    #         position = win32gui.GetWindowRect(windowhwnd)
+    #         x, y, w, h = position
+    #         if w-x == 410:
+    #             self.chathwnd=windowhwnd
+    #         else:
+    #             self.maplehwnd=windowhwnd
+    #     self.position = win32gui.GetWindowRect(self.maplehwnd)
+                
     def checkertest(self, *color, x,y,w,h):
+        # now=perf_counter()
+        # screenshot = ImageGrab.grab(self.position)
+        # screenshot = np.array(screenshot)
+        # img = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR)
+        # now1=perf_counter()-now
+        # print(f'{now1=}')
+        # now2=perf_counter()
         with gdi_capture.CaptureWindow(self.hwnd) as img:
+            # now3=perf_counter()-now2
             locations = []
             if img is None:
                 print("MapleStory.exe was not found.")
             else:
-                # print(f'{img}')
+                # print(f'{img=} {img.ndim=}')
                 # print(f'{img.ndim}')
                 # print(f'{img.shape[0]}')
                 # print(f'{img.shape[1]}')
                 # print(f'{img.shape[2]}')
                 img_cropped = img[y:h, x:w]
+                # now2=perf_counter()-now
                 # img_cropped = img[0:600, 0:800]
                 # print(f'{img_cropped.shape[0]}')
                 # print(f'{img_cropped.shape[1]}')
@@ -360,14 +409,20 @@ class Game:
                 height, width = img_cropped.shape[0], img_cropped.shape[1]
                 # Reshape the image from 3-d to 2-d by row-major order.
                 img_reshaped = np.reshape(img_cropped, ((width * height), 4), order="C")
+                # now3=perf_counter()-now
                 # cv2.imshow('img_reshaped', img_reshaped)
                 # cv2.imshow('img_cropped', img_cropped)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()
+                # print(f'{img_cropped=}')
                 for c in color:
                     sum_x, sum_y, count = 0, 0, 0
                     # Find all index(s) of np.ndarray matching a specified BGRA tuple.
+                    # now4=perf_counter()
                     matches = np.where(np.all((img_reshaped == c), axis=1))[0]
+                    # now5=perf_counter()-now4
+                    # print(f'n3={now3:.10f}')
+                    # print(f'n1={now1:.10f} n3={now3:.10f} n5={now5:.10f}')
                     # print(f'{matches=}')
                     for idx in matches:
                         # Calculate the original (x, y) position of each matching index.
@@ -376,8 +431,9 @@ class Game:
                         count += 1
                         # print(f'{sum_x=} {sum_y=} {count=}')
                         # print(f'{idx % width=} {idx // width=} {idx % height=} {idx // height=} {width=} {count=}')
-                        print(f'{idx % width=} {idx // width=} {width=} {count=}')
-                    if count > 0:
+                        # print(f'{idx % width=} {idx // width=} {width=} {count=}')
+                    if count > 0:                        
+                        # print(f'{img_cropped=}')
                         x_pos = sum_x / count
                         y_pos = sum_y / count
                         locations.append((x_pos, y_pos))
@@ -414,3 +470,45 @@ class Game:
                         y_pos = sum_y / count
                         locations.append((x_pos, y_pos))
             return locations
+
+            
+    def checkertest3(self, *color, x,y,w,h):
+        with gdi_capture.CaptureWindow(self.hwnd) as img:
+            locations = []
+            if img is None:
+                print("MapleStory.exe was not found.")
+            else:
+                img_cropped = img[y:h, x-15:w-15]
+                img_cropped2 = img[y+50:h+50,x:w]
+                # print(f'{img_cropped=}')
+                height, width = img_cropped.shape[0], img_cropped.shape[1]
+                # Reshape the image from 3-d to 2-d by row-major order.
+                img_reshaped = np.reshape(img_cropped, ((width * height), 4), order="C")
+                img_reshaped2 = np.reshape(img_cropped2, ((width * height), 4), order="C")
+                # cv2.imshow('img_reshaped', img_reshaped)
+                # cv2.imshow('img_cropped', img_cropped)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
+                for c in color:
+                    sum_x, sum_y, count = 0, 0, 0
+                    count2=0
+                    # Find all index(s) of np.ndarray matching a specified BGRA tuple.
+                    matches = np.where(np.all((img_reshaped == c), axis=1))[0]
+                    for idx in matches:
+                        # Calculate the original (x, y) position of each matching index.
+                        # sum_x += idx % width
+                        # sum_y += idx // width
+                        count += 1
+                        # print(f'{idx % width=} {idx // width=} {width=} {count=}')
+                    if count > 0:
+                        # x_pos = sum_x / count
+                        # y_pos = sum_y / count
+                        # locations.append((x_pos, y_pos))
+                        return (True,False)
+                    matches2 = np.where(np.all((img_reshaped2 == c), axis=1))[0]
+                    for idx in matches2:
+                        count2 += 1
+                    if count2 > 0:
+                        return (False,True)
+            # return locations
+            return None

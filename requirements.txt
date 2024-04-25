@@ -5,3 +5,7 @@ pyautogui
 pywin32
 python-telegram-bot
 requests
+pynput
+pillow
+Pillow
+customtkinter

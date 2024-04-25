@@ -438,7 +438,8 @@ class SystemCursor:
 
         if duration is None:
             # duration = random.uniform(0.5, 2.0)
-            duration = random.uniform(0.5, 1.1)
+            # duration = random.uniform(0.5, 1.1)
+            duration = random.uniform(0.3, .6)
             print(f'{duration=}')
             # duration = random.uniform(1.99, 2.0)
         # pyautogui.PAUSE = duration / len(human_curve.points)
