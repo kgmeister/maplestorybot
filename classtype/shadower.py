@@ -34,11 +34,12 @@ class Shadower(Action):
         self.checkrune=True
         self.solverune=True
         self.now=0        
-        self.rotation_list = ['default', 'mapril']
+        self.rotation_list = ['default', 'mapril', 'hotel']
         self.rotation='default'
         self.rotation_mapping = {
             'default': self.clockwise,
             'mapril': self.mapril,
+            'hotel': self.hotel,
         }
 
     def define(self):
@@ -369,6 +370,25 @@ class Shadower(Action):
         y=int(distance*144)
         await self.rightp(x,y)
         await self.rightr()
+
+    async def hotel(self,x,y):
+        if x < self.right and x > self.left:
+            if y > self.top:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            else:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+        elif x > self.right:
+            if y > self.top:
+                await random.choice([self.goupattack])()
+            else:
+                await random.choice([self.goleftattack, self.goleftattackk])()
+        elif x < self.left:
+            if y > self.top:
+                await random.choice([self.gorightattack, self.gorightattackk])()
+            else:
+                await random.choice([self.godownattack])()
+
+        await self.post_perform_action(x,y)
 
     async def clockwise(self,x,y):
         if y > self.top and (y > self.btm-self.offsety and y <= self.btm+self.offsety):

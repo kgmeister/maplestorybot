@@ -1270,16 +1270,16 @@ class TkinterBot(customtkinter.CTk):
             self.thread8.join() 
             buttonplayback.configure(state='normal')
             buttonpause.configure(state='disabled')
-            buttonstop.configure(state='disabled')       
+            self.scriptbuttonstop.configure(state='disabled')       
         self.scriptstopsignal=False
         imageknuckles = customtkinter.CTkImage(Image.open("assets/knuckles1.png"),size=(140,140))
-        buttonstop = customtkinter.CTkButton(framesonic, text="stop", command=stop, fg_color='#ea511f', text_color='black',state='disabled')
-        # buttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ea511f', text_color='black',image=imageknuckles,state='disabled')
-        # buttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ff1400', text_color='black',image=imageknuckles)
-        buttonstop.pack(padx=(1,1),pady=(1,1))
+        self.scriptbuttonstop = customtkinter.CTkButton(framesonic, text="stop", command=stop, fg_color='#ea511f', text_color='black',state='disabled')
+        # self.scriptbuttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ea511f', text_color='black',image=imageknuckles,state='disabled')
+        # self.scriptbuttonstop = customtkinter.CTkButton(framesonic, text="", command=stop, fg_color='#ff1400', text_color='black',image=imageknuckles)
+        self.scriptbuttonstop.pack(padx=(1,1),pady=(1,1))
         def pause():
             self.scriptpausesignal=not self.scriptpausesignal
-            buttonstop.configure(state='normal') if self.scriptpausesignal else buttonstop.configure(state='disabled')
+            self.scriptbuttonstop.configure(state='normal') if self.scriptpausesignal else self.scriptbuttonstop.configure(state='disabled')
         self.scriptpausesignal=False
         imagetails = customtkinter.CTkImage(Image.open("assets/tails1.png"),size=(140,140))
         buttonpause = customtkinter.CTkButton(framesonic, text="pause/resume", command=pause, fg_color='#f1bf1f', text_color='black',state='disabled')
@@ -1293,7 +1293,7 @@ class TkinterBot(customtkinter.CTk):
             self.scriptstopsignal=False
             buttonplayback.configure(state='disabled')
             buttonpause.configure(state='normal')
-            buttonstop.configure(state='disabled')
+            self.scriptbuttonstop.configure(state='disabled')
         imagesonic = customtkinter.CTkImage(Image.open("assets/sonic1.png"),size=(140,140))
         buttonplayback = customtkinter.CTkButton(framesonic, text="play", command=playback, fg_color='#0d7adf', text_color='black')
         # buttonplayback = customtkinter.CTkButton(framesonic, text="", command=playback, fg_color='#0d7adf', text_color='black',image=imagesonic)
@@ -1369,9 +1369,10 @@ class TkinterBot(customtkinter.CTk):
                 time.sleep(1) # testing 
                 for index, action in enumerate(data):
                     # print(f'running: {index=} {action=}')
-                    if pythonkeyboard.is_pressed("f10"):
-                        print(f'yes')
-                        self.scriptpausesignal==True
+                    if pythonkeyboard.is_pressed("esc"):
+                        self.scriptpausesignal=True
+                        self.scriptbuttonstop.configure(state='normal')
+                        print(f'yes p={self.scriptpausesignal}')
                     if self.scriptpausesignal:
                         keyupall()
                         print(f'script is paused .. ')

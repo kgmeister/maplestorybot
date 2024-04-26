@@ -735,6 +735,8 @@ async def main():
     while True:
         if pythonkeyboard.is_pressed("f10"):
             print(f'yes')
+        else:
+            print(f'no')
         time.sleep(1)
 
     # def grab(queue: JoinableQueue) -> None:
