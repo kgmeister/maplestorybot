@@ -10,6 +10,7 @@ from time import perf_counter
 import numpy as np
 import threading
 import pygetwindow
+import keyboard as pythonkeyboard
 from pynput import keyboard, mouse
 from pynput.keyboard import Listener as KeyListener  # type: ignore[import]
 from pynput.mouse import Listener as MouseListener  # type: ignore[import]
@@ -47,7 +48,7 @@ class TkinterBot(customtkinter.CTk):
         self.config = ConfigParser()
         self.config.read('settings.ini')
         self.config2 = ConfigParser()
-        self.config2.read('secret.ini')
+        self.config2.read('secret/secret.ini')
         self.minimapX = int(self.config.get('main', 'minimapX'))
         self.minimapY = int(self.config.get('main', 'minimapY'))
         self.initial_line_position = float(self.config.get('main', 'initial_line_position'))
@@ -1281,7 +1282,7 @@ class TkinterBot(customtkinter.CTk):
             buttonstop.configure(state='normal') if self.scriptpausesignal else buttonstop.configure(state='disabled')
         self.scriptpausesignal=False
         imagetails = customtkinter.CTkImage(Image.open("assets/tails1.png"),size=(140,140))
-        buttonpause = customtkinter.CTkButton(framesonic, text="pause", command=pause, fg_color='#f1bf1f', text_color='black',state='disabled')
+        buttonpause = customtkinter.CTkButton(framesonic, text="pause/resume", command=pause, fg_color='#f1bf1f', text_color='black',state='disabled')
         # buttonpause = customtkinter.CTkButton(framesonic, text="", command=pause, fg_color='#f1bf1f', text_color='black',image=imagetails,state='disabled')
         # buttonpause = customtkinter.CTkButton(framesonic, text="", command=pause, fg_color='#f1b000', text_color='black',image=imagetails)
         buttonpause.pack(padx=(1,1),pady=(1,1))
@@ -1368,6 +1369,9 @@ class TkinterBot(customtkinter.CTk):
                 time.sleep(1) # testing 
                 for index, action in enumerate(data):
                     # print(f'running: {index=} {action=}')
+                    if pythonkeyboard.is_pressed("f10"):
+                        print(f'yes')
+                        self.scriptpausesignal==True
                     if self.scriptpausesignal:
                         keyupall()
                         print(f'script is paused .. ')
@@ -2065,7 +2069,7 @@ class TkinterBot(customtkinter.CTk):
         self.config2.set('telegram', 'chat_id', str(self.chat_id))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
-        with open('secret.ini', 'w') as f:
+        with open('secret/secret.ini', 'w') as f:
             self.config2.write(f)
         self.stop_event.set()
         self.telegram_keep_alive = False

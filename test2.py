@@ -36,6 +36,7 @@ import mss.tools
 import numpy as np
 from multiprocessing import JoinableQueue
 from multiprocessing import Process
+import keyboard as pythonkeyboard
 
 
 
@@ -86,6 +87,13 @@ class INPUT(ctypes.Structure):
         ('type', ctypes.wintypes.DWORD),
         ('i', _I),
     ]
+    
+user32, kernel32, shcore = (
+    WinDLL("user32", use_last_error=True),
+    WinDLL("kernel32", use_last_error=True),
+    WinDLL("shcore", use_last_error=True),
+)
+
 # End of the SendInput win32 data structures.
 
 # def sleep(dur):
@@ -675,11 +683,6 @@ async def main():
     #     keyup('altleft')
     #     await sleep(.1)
 
-    # user32, kernel32, shcore = (
-    #     WinDLL("user32", use_last_error=True),
-    #     WinDLL("kernel32", use_last_error=True),
-    #     WinDLL("shcore", use_last_error=True),
-    # )
     # ZONE = 5
     # WIDTH, HEIGHT = [user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)]    
     # GRAB_ZONE = (
@@ -719,6 +722,21 @@ async def main():
     #     # print(f'{perf_counter()-now:.10f}')
     #     time.sleep(1)
     
+    # a=True
+    # while True:
+    #     if a==True:
+    #         a=False
+    #         kernel32.Beep(440, 75), kernel32.Beep(700, 100)
+    #     else:
+    #         a=True
+    #         kernel32.Beep(440, 75), kernel32.Beep(200, 100)
+    #     time.sleep(1)
+    
+    while True:
+        if pythonkeyboard.is_pressed("f10"):
+            print(f'yes')
+        time.sleep(1)
+
     # def grab(queue: JoinableQueue) -> None:
     #     rect = {"top": 0, "left": 0, "width": 600, "height": 800}
     #     with mss.mss() as sct:
