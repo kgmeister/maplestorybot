@@ -36,7 +36,15 @@ class Nightwalker(Action):
         self.runetimer=0
         self.checkrune=True
         self.solverune=True
-        self.now=0        
+        self.now=0
+        ## enter portal algorithm variable goes here
+        self.plb=83.5 # portal left boundary
+        self.prb=85.5 # portal right boundary
+        self.plbm2=self.plb-2 # portal left boundary minus two, 
+        self.prbp2=self.prb+2 # portal right boundary plus two, 
+        self.successthreshold=180.5 # what will be the coordinate of your character if successfully entered portal. 
+        self.preventgotonextmap=47.5 # if there is a goto next map portal, put here
+        ## all the entry goes here
         self.rotation_list = ['default', 'leftright', 'leftrightlong', 'leftrightdownlong', 'leftrightuplong',
             'moonbridge','arcana_lp','nightwalkertest', 'BtLD3']
         self.rotation='default'
