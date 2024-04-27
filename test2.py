@@ -732,12 +732,12 @@ async def main():
     #         kernel32.Beep(440, 75), kernel32.Beep(200, 100)
     #     time.sleep(1)
     
-    while True:
-        if pythonkeyboard.is_pressed("f10"):
-            print(f'yes')
-        else:
-            print(f'no')
-        time.sleep(1)
+    # while True:
+    #     if pythonkeyboard.is_pressed("f10"):
+    #         print(f'yes')
+    #     else:
+    #         print(f'no')
+    #     time.sleep(1)
 
     # def grab(queue: JoinableQueue) -> None:
     #     rect = {"top": 0, "left": 0, "width": 600, "height": 800}
@@ -786,13 +786,6 @@ async def main():
     # print(f'n2={now2-now:.10f} n3={now3-now2:.10f} n4={now4-now3:.10f}')
     # print(f'{a=} {b=} {c=}')
     # print(f'{type(a)=} {type(b)=} {type(c)=}')
-    
-    # while True:
-    #     for i in range(10):
-    #         keydown('a')
-    #     keyup('b')
-    #     print(f'end. ')
-    #     time.sleep(1)
 
     # file_path = r'C:\Windows\system32\drivers\keyboard.sys'
     # try:
@@ -805,6 +798,13 @@ async def main():
     #     print("Permission denied. Make sure you have appropriate permissions to read the file.")
     # except Exception as e:
     #     print("An error occurred:", e)
+    
+    while True:
+        for i in range(10):
+            keydown('a')
+            keyup('a')
+            time.sleep(.1)
+        print(f'end. ')
 
 
 

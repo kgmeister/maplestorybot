@@ -1,0 +1,178 @@
+ok. hi youtube. 
+
+so we are doing a night walker lazy rotation.. 
+
+so let's start up our bot.. 
+
+no actually, just head over to our nightwalker.py classfile. 
+
+first, let's add an entry. 
+
+now, let's write our custom rotation!
+
+this is what our NW rotation will looks like:
+
+ok. basically, 
+
+we want to spam bite at that location, 
+jump down, use portal (yes this bot can use portal precisely and efficiently), 
+jump down, plant fountain, press the shadow skill to go back to the previous spot, 
+jump left, loot, jump all the way right, press the shadows skill again to go back, 
+
+yeah, that is our rotation. 
+
+let's start coding. 
+
+ok first, we need to know what is the x,y of that spot. 
+
+ok i make the drawing better. 
+
+now let's continue. 
+
+there are 4 portals. 
+
+then we want to stand directly above the btm left portal to spam bite. 
+
+ok. now we code. 
+
+first we code the bite. 
+
+you need to code/change to your key setting. 
+
+my bite key is 's'. 
+
+just checking is the sp() and sr() function exist already. 
+
+now we need to add a timer. 
+
+we will rewrite the post_perform_action in this rotation. 
+
+because it is special. 
+
+yes we  want to press random button. leave that on. 
+
+delete replace ropeconnect we don't need that. 
+
+we don't need to plant cosmic shower. delete. 
+
+we need fountain. 
+
+we need rune. 
+
+now add a bite timer. 
+
+bitetimer0, bitetimer, bite are new variables, add them at the top of the file. 
+
+just search fountaintimer0, and add that above it. 
+
+here. in the init function. 
+
+ctrl+alt+up/down to select multi line. 
+
+ctrl+shift+left/right to highlight. 
+
+esc to reset. 
+
+now we have our bitetimer, we add that in our rotation. 
+
+check the self.bite flag, enter the if case, perform spambite action, turn the flag to False, reset bitetimer0. 
+
+perf_counter() simply return current system time. idk. it works anyway. 
+
+if bite on cd, we just do nothing. 
+
+maybe sleep .2 seconds. 
+
+ok this part is pretty much done. 
+
+next we want to jump down twice and enter the portal. 
+
+for that we need a timer, a timer to countdown fountain replant. 
+
+we have that already, our fountain timer. 
+
+so we just use that. 
+
+and then when we at ground platform, we want to enter portal. 
+
+i will explain the gotoportal algorithm in seperate video, cause it's too long and too complicated. 
+
+ok now we have successfully entered portal, 
+
+we want to go plant fountain. 
+
+we will appear at y=28.5 after entering btm left portal. 
+
+check in action.py if we have implemented cp() cr()
+
+yea
+
+alright, now we want to do loot rotation. 
+
+we can just continue from after planting fountain. 
+
+press  down left between 222ms and 333ms (random)
+
+good to have sleep(.1) after flash jump to wait for the landing. 
+
+i forgot how steadfast shadow work, i will adjust later
+
+ok now we done our looting rotation. 
+
+look our nightwalker rotation, very simple, 782-759, 24 lines of code. 
+
+because we go back, and we go loot, we spent about 10 seconds there. so we minus that. 
+
+ok, our rotation is complete, now if our character is not at all the listen x,y in the tree, we just go back to our spot. 
+
+this will not work, because your character will keep jumping and jumping. 
+
+we need to walk. 
+
+essentially means if x > 85.5 and x <= 88.5, 
+
+this is the power of tree. you can plug in value anywhere XD. 
+
+ok. pretty much DONE EVERYTHING!!!!!!!!!!!!!
+
+50 MINUTES!!! 
+
+ok i will showcase the bot, then i will explain the use portal algorithm in the next video. thank you for watching. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

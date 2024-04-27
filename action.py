@@ -3,7 +3,7 @@ import time
 from time import perf_counter
 from configparser import ConfigParser
 # from initinterception import interception, move_to, move_relative, left_click, keydown, keyup, sleep
-from initinterception import keydown, keyup, sleep
+from initinterception import keydown, keyup, keyupall, sleep
 
 
 
@@ -43,8 +43,21 @@ class Action:
         self.sbtm=58.0 # 54.5
         self.runesolver=None
         self.g=None
-        ## misc
+        ## misc. others. 
         self.replaceropeconnect=False
+        ## enter portal algorithm variable goes here
+        self.goingtoportal=False
+        self.gotoportal1=False
+        self.gotoportal2=False
+        self.gotoportal3=False
+        self.gotoportal4=False        
+        self.plb=73.5 # portal left boundary
+        self.prb=74.5 # portal right boundary
+        self.plbm2=self.plb-2 # portal left boundary minus two, 71.5
+        self.prbp2=self.prb+2 # portal right boundary plus two, 76.5
+        self.successthreshold=180.5 # what will be the coordinate of your character if successfully entered portal. 
+        self.preventgotonextmap=56.5 # if there is a goto next map portal, put here
+        ## all the entry goes here
         self.rotation_list = ['default']
         self.rotation='default'
         self.rotation_mapping = {
@@ -869,6 +882,380 @@ class Action:
 
         if self.solverune:
             await self.runesolver.gotorune(self.g)
+
+    ############ TODO: FINISH THIS CHANGE CHANNEL ALGORITHM ############
+
+    async def changechannelthingtemp(self,x,y):
+        
+        # clocktimer = now - clocktimer0
+        # if clocktimer > 1800:
+        #     clocktimer0 = now
+        #     current_time = datetime.now().time()
+        #     if current_time.hour <= 2:
+        #         minutechecker=True
+        # if minutechecker:
+        #     minutetimer = now - minutetimer0
+        #     if minutetimer > 60:
+        #         minutetimer0 = now
+        #         current_time = datetime.now().time()
+        #         if current_time.hour == 1:
+        #             if current_time.minute >= 55 and current_time.minute <= 59:
+        #                 allowed=False
+        #                 changechannel=True
+        #         if current_time.hour == 2:
+        #                 allowed=False
+        #                 changechannel=True
+        
+        # cctimer = now - cctimer0
+        # if cctimer > 3000:
+        #     cc = True
+        #     cctimer0=now
+        # if cc:
+        #     cc = False
+        #     allowed=False
+        #     changechannel=True
+
+        # if allowed:
+        #     pass
+        # else:
+        #     send5('00')
+        #     goingtoportal, gotoportal1, gotoportal2, gotoportal3, gotoportal4=False,False,False,False,False
+        #     if changechannel:
+        #         lockit()
+        #         setconfirm(False)
+        #         print(f'changing channel ..')
+        #         await change_channel2(g)
+        #         # await change_channel(d)
+        #         print(f'changing channel finished ..')
+        #         time.sleep(2)
+        #         while still_in_zakum_map2(g):
+        #         # while still_in_zakum_map(d):
+        #             # await adjustportal(d,spot=21,distx=10,docorrection=True)
+        #             # await adjustportal2(g,spot=21,distx=10,docorrection=True)
+        #             await adjustportal2(g,spot=21,distx=10.5,docorrection=True)
+        #             await upp()
+        #             await upr()
+        #             time.sleep(1)
+        #         time.sleep(1)
+        #         print(f'checking red dot ..')
+        #         await red_dot()
+        #         print(f'checking red dot finished ..')
+        #         # send3('00')
+        #         time.sleep(1)
+        #         changechannel = False
+        #     elif liedetector:
+        #         lockit()
+        #         t = time.localtime()
+        #         currenttime = time.strftime("%H:%M:%S", t)
+        #         print(f'oskillsigtermpos2 {currenttime}')
+        #         time.sleep(.1)
+        #         send5('00')
+        #         time.sleep(1)
+        #         os.kill(os.getpid(), signal.SIGTERM)
+        #     else:
+        #         lockit()
+        #         await solve_rune_please2(g)
+        #         # await solve_rune_please(d)
+        #         await random.choice([rightjumpshikigamitengushift, leftjumpshikigamitengushift])()
+        #         time.sleep(1.5)
+        #         rune = runechecker(g)
+        #         print(f'here shows previous rune solver success or missed. True means still got rune. False means rune is solved. {rune = }')
+        #         runetimer0 = perf_counter()
+        #     allowed = True
+        #     reset = True
+        #     unlock()
+        #     pass
+
+
+        pass
+
+    ############### ENTER PORTAL ALGORITHM ###################
+
+    async def portalenterorskip(self,x,y):
+        if self.gotoportal1:
+            print(f'first {x=}')
+            if not self.goingtoportal and not (x >= self.plbm2 and x <= self.prbp2):
+                print(f'not goingtoportal ..')
+                if x>=46.5 and x<=48.5:
+                    await self.rightp()
+                    pass
+                elif x < self.plb:
+                    await self.rightp()
+                    await self.upp()
+                elif x > self.prb:
+                    await self.leftp()
+                    await self.upp()
+                self.goingtoportal=True
+                # continue
+                return
+            elif x >= self.plbm2 and x <= self.prbp2:
+                print(f'goingtoportal equals true ..')
+                self.goingtoportal = True
+            if self.goingtoportal:
+                print(f'start goingtoportal .. ')
+                if x < self.preventgotonextmap: # got a portal to other map, prevent that
+                    keyupall()
+                    print(f'dangerous portal soon. stopping. ')
+                    self.gotoportal1=False
+                    self.goingtoportal=False
+                    self.tries=0
+                if x >= self.plbm2 and x <= self.prbp2:
+                    print(f'send300 gotoportal1')
+                    keyupall()
+                    self.gotoportal1=False
+                    self.goingtoportal=False
+                    self.tries=0
+                    await sleep(.1)
+                    # while True:
+                    for i in range(15): # hopefully don't stucked forever
+                        g_variable = self.g.get_player_location() # double checking
+                        x, y = (None, None) if g_variable is None else g_variable
+                        if x == None:
+                            pass
+                        else:
+                            # if x > 129.5:
+                            # if x > 180.5:
+                            if x > self.successthreshold:
+                                await sleep(.1)
+                                break
+                            else:
+                                print(f'uppr saves, x, {x}')                                        
+                                if x < self.plb:
+                                    await self.rightp(71,111)
+                                    await self.rightr(71,131)
+                                elif x > self.prb:
+                                    await self.leftp(71,111)
+                                    await self.leftr(71,131)
+                                await self.uppr()
+                                await sleep(.05)
+                        # if self.pause:
+                        #     keyupall()
+                        #     while (self.pause):
+                        #         time.sleep(2)
+                        #         print('playactions == blocked: (new feature: sleeping(2))')
+                        #         print('playactions == released: (new feature: sleeping(2))')
+                        #         # if stop_event.is_set():
+                        #         #     sendnclose()
+                        #         #     stop_flag = True
+                        #         #     return
+                    # time.sleep(5)
+                    # gotoportal2=True
+                    # continue
+                else:
+                    self.tries+=1
+                    if self.tries > 90:
+                        print(f'tries finished. ')
+                        keyupall()
+                        self.gotoportal1=False
+                        self.goingtoportal=False
+                        self.tries=0
+        # if gotoportal2:
+        #     if not goingtoportal and not (x >= 177.5 and x <= 182.5):
+        #         lockit()
+        #         if x >= 207.5 and x <=209.5: # right hand side next map portal
+        #             await leftp()
+        #         elif x < 179.5:
+        #             await rightp()
+        #             await upp()
+        #         elif x > 180.5:
+        #             await leftp()
+        #             await upp()
+        #         goingtoportal=True
+        #         continue
+        #     elif x >= 177.5 and x <= 182.5:
+        #         goingtoportal = True
+        #     if goingtoportal:
+        #         if x <= 167.5 or x >= 200.5:
+        #             await shiftpr()
+        #             print(f'tries finished. ')
+        #             send5('00')
+        #             gotoportal2=False
+        #             goingtoportal=False
+        #             tries=0
+        #         if x >= 177.5 and x <= 182.5:
+        #             print(f'send300 gotoportal2')
+        #             send5('00')
+        #             send5('00')
+        #             gotoportal2=False
+        #             goingtoportal=False
+        #             tries=0
+        #             unlock()
+        #             await sleep(.1)
+        #             # while True:
+        #             for i in range(15):
+        #                 g_variable = g.get_player_location() # double checking
+        #                 x, y = (None, None) if g_variable is None else g_variable
+        #                 if x == None:
+        #                     pass
+        #                 else:
+        #                     if x < 68.5:
+        #                         await sleep(.1)
+        #                         break
+        #                     else:                                        
+        #                         print(f'uppr saves, x, {x}')
+        #                         if x < 179.5:
+        #                             await rightp(71,111)
+        #                             await rightr(71,131)
+        #                         elif x > 180.5:
+        #                             await leftp(71,111)
+        #                             await leftr(71,131)
+        #                         await uppr()
+        #                         await sleep(.05)
+        #                 if myvariable:
+        #                     send5('00')
+        #                     while (myvariable):
+        #                         time.sleep(2)
+        #                         print('playactions == blocked: (new feature: sleeping(2))')
+        #                         print('playactions == released: (new feature: sleeping(2))')
+        #                         if stop_event.is_set():
+        #                             sendnclose()
+        #                             stop_flag = True
+        #                             return
+        #             # time.sleep(5)
+        #             # gotoportal1=True
+        #             continue
+        #         else:
+        #             tries+=1
+        #             if tries > 90:
+        #                 print(f'tries finished. ')
+        #                 send5('00')
+        #                 gotoportal2=False
+        #                 goingtoportal=False
+        #                 tries=0
+        # if gotoportal3:
+        #     if not goingtoportal and not (x >= 188.5 and x <= 193.5):
+        #         lockit()
+        #         if x < 190.5:
+        #             await rightp()
+        #             await upp()
+        #         elif x > 191.5:
+        #             await leftp()
+        #             await upp()
+        #         goingtoportal=True
+        #         continue
+        #     elif x >= 188.5 and x <= 193.5:
+        #         goingtoportal = True
+        #     if goingtoportal:
+        #         if x >= 188.5 and x <= 193.5:
+        #             print(f'send300 gotoportal3')
+        #             send5('00')
+        #             send5('00')
+        #             gotoportal3=False
+        #             goingtoportal=False
+        #             tries=0
+        #             unlock()
+        #             await sleep(.1)
+        #             # while True:
+        #             for i in range(15):
+        #                 g_variable = g.get_player_location() # double checking
+        #                 x, y = (None, None) if g_variable is None else g_variable
+        #                 if x == None:
+        #                     pass
+        #                 else:
+        #                     # if x < 68.5:
+        #                     if y > 60.5: # 70.5
+        #                         await sleep(.1)
+        #                         break
+        #                     else:                                        
+        #                         print(f'uppr saves, x, {x}')
+        #                         if x < 190.5:
+        #                             await rightp(71,111)
+        #                             await rightr(71,131)
+        #                         elif x > 191.5:
+        #                             await leftp(71,111)
+        #                             await leftr(71,131)
+        #                         await uppr()
+        #                         await sleep(.05)
+        #                 if myvariable:
+        #                     send5('00')
+        #                     while (myvariable):
+        #                         time.sleep(2)
+        #                         print('playactions == blocked: (new feature: sleeping(2))')
+        #                         print('playactions == released: (new feature: sleeping(2))')
+        #                         if stop_event.is_set():
+        #                             sendnclose()
+        #                             stop_flag = True
+        #                             return
+        #             # time.sleep(5)
+        #             # gotoportal1=True
+        #             continue
+        #         else:
+        #             tries+=1
+        #             if tries > 90:
+        #                 print(f'tries finished. ')
+        #                 send5('00')
+        #                 gotoportal3=False
+        #                 goingtoportal=False
+        #                 tries=0
+        # if gotoportal4:
+        #     if not goingtoportal and not (x >= 55.5 and x <= 60.5):
+        #         lockit()
+        #         if x < 57.5:
+        #             await rightp()
+        #             await upp()
+        #         elif x > 58.5:
+        #             await leftp()
+        #             await upp()
+        #         goingtoportal=True
+        #         continue
+        #     elif x >= 55.5 and x <= 60.5:
+        #         goingtoportal = True
+        #     if goingtoportal:
+        #         if x >= 55.5 and x <= 60.5:
+        #             print(f'send300 gotoportal4')
+        #             send5('00')
+        #             send5('00')
+        #             gotoportal4=False
+        #             goingtoportal=False
+        #             tries=0
+        #             unlock()
+        #             await sleep(.1)
+        #             # while True:
+        #             for i in range(15):
+        #                 g_variable = g.get_player_location() # double checking
+        #                 x, y = (None, None) if g_variable is None else g_variable
+        #                 if x == None:
+        #                     pass
+        #                 else:
+        #                     # if x < 68.5:
+        #                     if y > 60.5: # 70.5
+        #                         await sleep(.1)
+        #                         break
+        #                     else:                                        
+        #                         print(f'uppr saves, x, {x}')
+        #                         if x < 57.5:
+        #                             await rightp(71,111)
+        #                             await rightr(71,131)
+        #                         elif x > 58.5:
+        #                             await leftp(71,111)
+        #                             await leftr(71,131)
+        #                         await uppr()
+        #                         await sleep(.05)
+        #                 if myvariable:
+        #                     send5('00')
+        #                     while (myvariable):
+        #                         time.sleep(2)
+        #                         print('playactions == blocked: (new feature: sleeping(2))')
+        #                         print('playactions == released: (new feature: sleeping(2))')
+        #                         if stop_event.is_set():
+        #                             sendnclose()
+        #                             stop_flag = True
+        #                             return
+        #             # time.sleep(5)
+        #             # gotoportal1=True
+        #             continue
+        #         else:
+        #             tries+=1
+        #             if tries > 90:
+        #                 print(f'tries finished. ')
+        #                 send5('00')
+        #                 gotoportal4=False
+        #                 goingtoportal=False
+        #                 tries=0
+
+
+
+
 
     # randomiser patch
 

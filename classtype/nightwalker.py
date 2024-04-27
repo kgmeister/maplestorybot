@@ -24,6 +24,9 @@ class Nightwalker(Action):
         self.cosmicshowerplanttimer0=0
         self.cosmicshowerplanttimer=0
         self.cosmicshowerplant=True
+        self.bitetimer0=0
+        self.bitetimer=0
+        self.bite=True
         self.fountaintimer0=0
         self.fountaintimer=0
         self.fountain=True
@@ -35,7 +38,7 @@ class Nightwalker(Action):
         self.solverune=True
         self.now=0        
         self.rotation_list = ['default', 'leftright', 'leftrightlong', 'leftrightdownlong', 'leftrightuplong',
-            'moonbridge','arcana_lp','nightwalkertest']
+            'moonbridge','arcana_lp','nightwalkertest', 'BtLD3']
         self.rotation='default'
         self.rotation_mapping = {
             'default': self.clockwise,
@@ -46,6 +49,7 @@ class Nightwalker(Action):
             'moonbridge': self.moonbridge,
             'arcana_lp': self.arcana_lp,
             'nightwalkertest': self.nightwalkertest,
+            'BtLD3': self.BtLD3,
         }
 
     def define(self):
@@ -662,6 +666,177 @@ class Nightwalker(Action):
             pass
 
 
+
+    ##### Night Walker Odium Patch #####
+
+    async def rightjumpjumpattack(self):
+        print(f'rightjumpjumpattack')
+        await self.rightp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.rightr()
+        await sleep(.1)
+
+    async def leftjumpjumpattack(self):
+        print(f'leftjumpjumpattack')
+        await self.leftp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.jumpp()
+        await self.jumpr()
+        await self.attackp()
+        await self.attackr()
+        await self.leftr()
+        await sleep(.1)
+
+    async def jumpdownplantfountain(self):
+        print(f'jumpdownplantfountain')
+        await self.downp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.downr()
+        await self.facerightfountain()
+        await self.downp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.downr() # jump down again to cast phalanx
+        await self.cp() # my phalanx is 'c'
+        await self.cr()
+        await self.dp() # cast steadfast shadow to go back
+        await self.dr() # cast steadfast shadow to go back
+        # await self.dp() # cast steadfast shadow to set return point ？？？？
+        # await self.dr() # cast steadfast shadow to set return point ？？？？
+        await self.spambite()
+        await self.leftjumpjumpattack()
+        await self.leftwalk(222,333)
+        await sleep(.3)
+        await self.rightjumpjumpattack()
+        await sleep(.1)
+        await self.rightjumpjumpattack()
+        await sleep(.1)
+        await self.rightjumpjumpattack()
+        await sleep(.1)
+        await self.dp() # cast steadfast shadow to go back
+        await self.dr() # cast steadfast shadow to go back
+        await sleep(.1)
+
+
+
+    async def jumpdowntwice(self):
+        print(f'jumpdowntwice')
+        await self.dp() # cast steadfast shadow to set return point
+        await self.dr() # cast steadfast shadow to set return point
+        await self.downp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.downr()
+        await sleep(.5)
+        await self.downp()
+        await self.jumpp()
+        await self.jumpr()
+        await self.downr()
+
+    async def spambite(self):
+        print(f'spambite')
+        await self.sp()
+        await self.sr()
+
+    async def BtLD3(self,x,y):
+        # spam bite
+        # jump down twice, use portal
+        # jump down once, use fountain, 
+        # press shadow skill to go back, 
+        # jump left
+        # jump all the way right to loot, 
+        # press shadow skill to go back. 
+        if self.goingtoportal or self.gotoportal1 or self.gotoportal2 or self.gotoportal3 or self.gotoportal4:
+            pass
+        else:
+            if x >= 83.5 and x <= 85.5:
+                if y > 25.5 and y <= 39.5:
+                    if self.fountain:
+                        # jump down twice, enter portal.
+                        await random.choice([self.jumpdowntwice])()
+                        self.gotoportal1=True
+                    else:
+                        if self.bite:
+                            await random.choice([self.spambite])()
+                            self.bite=False
+                            self.bitetimer0=perf_counter()
+                        else:
+                            time.sleep(.2)
+                elif y > 56.5 and y <= 70.5:
+                    if self.gotoportal1:
+                        pass
+                    else:
+                        pass
+            elif x >= 184.5 and x <= 186.5:
+                if y > 21.5 and y <= 28.5:
+                    if self.fountain:
+                        await random.choice([self.jumpdownplantfountain])()
+                        self.fountain=False
+                        self.fountaintimer0=perf_counter()
+                    else:
+                        print(f'not yet implemented. ')
+                else:
+                    print(f'not yet implemented. ')
+            else:
+                if x > 85.5:
+                    if x <= 88.5:
+                        await random.choice([self.leftwalk])()
+                    else:
+                        await random.choice([self.goleftattack])()
+                elif x < 83.5:
+                    if x >= 80.5:
+                        await random.choice([self.rightwalk])()
+                    else:
+                        await random.choice([self.gorightattack])()
+                else:
+                    if y > 39.5:
+                        await random.choice([self.goupattack])()                    
+                    elif y <= 26.5:
+                        await random.choice([self.godownattack])()
+                    
+
+
+
+
+
+
+
+        # await self.post_perform_action(x,y)        
+        self.now = perf_counter()
+        self.randommtimer = self.now - self.randommtimer0
+        if self.randommtimer > 15:
+            self.randommtimer0 = self.now
+            # p = random.randint(0, len(self.randomlist)-1)
+            code = random.choice(self.randomlist)
+            if code is not None:
+                print(f'randomiser {code=}')
+                await self.send2(code)
+                await self.send3(code)
+        self.bitetimer = self.now - self.bitetimer0
+        if self.bitetimer > 8:
+            self.bite = True
+        self.fountaintimer = self.now - self.fountaintimer0
+        if self.fountaintimer > 49:
+            self.fountain = True
+        self.runetimer = self.now - self.runetimer0
+        if self.runetimer > 900: 
+            self.checkrune = True
+        if self.checkrune:
+            self.solverune = self.runesolver.runechecker(self.g)
+        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft} gr={self.goright}')
+        if self.solverune:
+            await self.runesolver.gotorune(self.g)
+        
+        await self.portalenterorskip(x,y)
+
+    ##### Night Walker Odium Patch End #####
 
 
 
