@@ -388,7 +388,8 @@ class TkinterBot(customtkinter.CTk):
             elif w-x == 1382 or w-x == 1296 or w-x == 1040 or w-x == 816:
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
-            elif w-x == 1384 or w-x == 1298 or w-x == 1042 or w-x == 818:
+            # elif w-x == 1384 or w-x == 1298 or w-x == 1042 or w-x == 818: 
+            elif w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
 

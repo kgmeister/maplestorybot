@@ -50,7 +50,7 @@ class Action:
         self.gotoportal1=False
         self.gotoportal2=False
         self.gotoportal3=False
-        self.gotoportal4=False        
+        self.gotoportal4=False
         self.plb=73.5 # portal left boundary
         self.prb=74.5 # portal right boundary
         self.plbm2=self.plb-2 # portal left boundary minus two, 71.5

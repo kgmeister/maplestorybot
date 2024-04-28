@@ -46,7 +46,7 @@ class RuneSolver:
 
     def set_maplehwnd(self, maplehwnd):
         self.maplehwnd = maplehwnd
-        # print(f'{self.maplehwnd=}')
+        print(f'{self.maplehwnd=}')
 
 
     def disablerune(self):

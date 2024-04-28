@@ -21,6 +21,7 @@ class Adele(Action):
         self.goleft=True
         self.goright=False
         self.randomlist = ['z', 'x', 'c', 'space', '2', '3', '0', 'f9', 'w', 'e', 'r', 't', 's', 'd', 'f', 'v']
+        # self.randomlist = []
         self.cosmicshowerplanttimer0=0
         self.cosmicshowerplanttimer=0
         self.cosmicshowerplant=True
@@ -33,9 +34,9 @@ class Adele(Action):
         self.runetimer=0
         self.checkrune=True
         self.solverune=True
-        self.now=0        
+        self.now=0
         self.rotation_list = ['default', 'leftright', 'leftrightlong', 'leftrightdownlong', 'leftrightuplong',
-            'moonbridge','arcana_lp']
+            'moonbridge','arcana_lp', 'arigatou']
         self.rotation='default'
         self.rotation_mapping = {
             'default': self.clockwise,
@@ -45,6 +46,8 @@ class Adele(Action):
             'leftrightuplong': self.leftrightuplong,
             'moonbridge': self.moonbridge,
             'arcana_lp': self.arcana_lp,
+            'arigatou': self.arigatou,
+
         }
 
     def define(self):
@@ -935,3 +938,43 @@ class Adele(Action):
 
         if self.solverune:
             await self.runesolver.gotorune(self.g)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    async def arigatou(self, x,y):
+        await self.leftp(1000,1200)
+        await self.leftr()
+        await sleep(2.0)
+
+
