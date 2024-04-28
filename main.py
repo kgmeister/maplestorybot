@@ -377,9 +377,12 @@ class TkinterBot(customtkinter.CTk):
         winlist = pygetwindow.getWindowsWithTitle('MapleStory')
         for w in winlist:
             windows.append(w._hWnd)
+        print(f'{winlist=}')
+        print(f'{windows=}')
         for windowhwnd in windows:
             position = win32gui.GetWindowRect(windowhwnd)
             x, y, w, h = position
+            print(f'{windows=} {w-x=}')
             if w-x == 410:
                 self.chathwnd=windowhwnd
             elif w-x == 1382 or w-x == 1296 or w-x == 1040 or w-x == 816:
