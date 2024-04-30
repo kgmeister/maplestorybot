@@ -936,6 +936,11 @@ class Action:
 
         if self.solverune:
             await self.runesolver.gotorune(self.g)
+            await random.choice([self.gorightattack, self.goleftattack])()
+            time.sleep(1.5)
+            self.solverune = self.runesolver.runechecker(self.g)
+            print(f'here shows previous rune solver success or missed. True means still got rune. False means rune is solved. {self.solverune = }')
+            self.runetimer0 = perf_counter()
 
     ############ TODO: FINISH THIS CHANGE CHANNEL ALGORITHM ############
 
