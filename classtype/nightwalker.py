@@ -677,6 +677,14 @@ class Nightwalker(Action):
 
     ##### Night Walker Odium Patch #####
 
+    async def spambiteandjumpdown(self):
+        print(f'spambiteandjumpdown')
+        await self.spambite()
+        await sleep(.1)
+        await self.jumpdownonce()
+        await self.omen()
+        await sleep(.1)
+
     async def rightjumpjumpattack(self):
         print(f'rightjumpjumpattack')
         await self.rightp()
@@ -748,10 +756,23 @@ class Nightwalker(Action):
         await self.jumpr()
         await self.downr()
 
+    async def jumpdownonce(self):
+        print(f'jumpdownonce')
+        await self.downp(111,171)
+        await self.jumpp(71,101)
+        await self.jumpr(3,11)
+        await self.downr(3,11)
+        await sleep(1.)
+
     async def spambite(self):
         print(f'spambite')
         await self.sp()
         await self.sr()
+
+    async def omen(self):
+        print(f'omen')
+        await self.ctrlp()
+        await self.ctrlr()
 
     async def BtLD3(self,x,y):
         # spam bite
@@ -765,11 +786,10 @@ class Nightwalker(Action):
             pass
         else:
             if x >= 83.5 and x <= 85.5:
-                if y > 25.5 and y <= 39.5:
+                if y > 26.5 and y <= 39.5:
                     if self.fountain:
                         # jump down twice, enter portal.
                         await random.choice([self.jumpdowntwice])()
-                        self.gotoportal1=True
                     else:
                         if self.bite:
                             await random.choice([self.spambite])()
@@ -778,10 +798,13 @@ class Nightwalker(Action):
                         else:
                             time.sleep(.2)
                 elif y > 56.5 and y <= 70.5:
-                    if self.gotoportal1:
-                        pass
-                    else:
-                        pass
+                    if self.fountain:
+                        if self.gotoportal1:
+                            pass
+                        else:
+                            self.gotoportal1=True
+                else:
+                    await random.choice([self.spambiteandjumpdown])()
             elif x >= 184.5 and x <= 186.5:
                 if y > 21.5 and y <= 28.5:
                     if self.fountain:
@@ -818,15 +841,16 @@ class Nightwalker(Action):
 
         # await self.post_perform_action(x,y)        
         self.now = perf_counter()
-        self.randommtimer = self.now - self.randommtimer0
-        if self.randommtimer > 15:
-            self.randommtimer0 = self.now
-            # p = random.randint(0, len(self.randomlist)-1)
-            code = random.choice(self.randomlist)
-            if code is not None:
-                print(f'randomiser {code=}')
-                await self.send2(code)
-                await self.send3(code)
+        if not self.fountain:
+            self.randommtimer = self.now - self.randommtimer0
+            if self.randommtimer > 15:
+                self.randommtimer0 = self.now
+                # p = random.randint(0, len(self.randomlist)-1)
+                code = random.choice(self.randomlist)
+                if code is not None:
+                    print(f'randomiser {code=}')
+                    await self.send2(code)
+                    await self.send3(code)
         self.bitetimer = self.now - self.bitetimer0
         if self.bitetimer > 8:
             self.bite = True
@@ -838,7 +862,8 @@ class Nightwalker(Action):
             self.checkrune = True
         if self.checkrune:
             self.solverune = self.runesolver.runechecker(self.g)
-        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft} gr={self.goright}')
+        print(f'{x=} {y=} rt={self.runetimer} sr={self.solverune} ft={self.fountaintimer} gl={self.goleft} gr={self.goright}', end=' ')
+        print(f'goingtoportal={self.goingtoportal} gotoportal1={self.gotoportal1}')
         if self.solverune:
             await self.runesolver.gotorune(self.g)
         

@@ -1,167 +1,80 @@
-ok. hi youtube. 
+hello youtube. 
 
-so we are doing a night walker lazy rotation.. 
+there are two sleep function in my bot. 
 
-so let's start up our bot.. 
+time.sleep()
 
-no actually, just head over to our nightwalker.py classfile. 
+and
 
-first, let's add an entry. 
+await sleep()
 
-now, let's write our custom rotation!
+what is the diff????
 
-this is what our NW rotation will looks like:
+time.sleep() is from the python 'time' library. 
 
-ok. basically, 
+await sleep() is a busy loop i write here. 
 
-we want to spam bite at that location, 
-jump down, use portal (yes this bot can use portal precisely and efficiently), 
-jump down, plant fountain, press the shadow skill to go back to the previous spot, 
-jump left, loot, jump all the way right, press the shadows skill again to go back, 
+it is just a yea busy loo. 
 
-yeah, that is our rotation. 
+in fact the async await is not even needed. 
 
-let's start coding. 
+but why is it there??
 
-ok first, we need to know what is the x,y of that spot. 
+because i lazy to delete. 
 
-ok i make the drawing better. 
+because there is too many lines of code in the bot that uses await sleep()
+so if i delete 1, i have to delete all. and i am lazy. 
 
-now let's continue. 
+now, let me show you what is the differrence in terms of performance. 
 
-there are 4 portals. 
+it is very important in botting because, you need very accurate actions/sequence at attacks. 
 
-then we want to stand directly above the btm left portal to spam bite. 
+ok. i have three sleep function here. 
 
-ok. now we code. 
+let's run. 
 
-first we code the bite. 
 
-you need to code/change to your key setting. 
+first, time.sleep(.001)
 
-my bite key is 's'. 
+so according to its definition, the python time.sleep sleeps for at least .001 seconds, then wake up at the next interrupt cycle, idk, something like that. 
 
-just checking is the sp() and sr() function exist already. 
+but for busy loop, it's difference, let's take a look. 
 
-now we need to add a timer. 
+yeah, it sleeps exactly .001 seconds. sometimes it is not. like thiss 1. 
 
-we will rewrite the post_perform_action in this rotation. 
+but most of the time, it sleeps for whatever timing you ask him to sleep.  
 
-because it is special. 
+but from my experience, is only up to 0.001 second, 
 
-yes we  want to press random button. leave that on. 
+it is not as accurate if 0.0001 second. 
 
-delete replace ropeconnect we don't need that. 
+ok. 
 
-we don't need to plant cosmic shower. delete. 
+but, what is the cons?
 
-we need fountain. 
+cpu intensive. 
 
-we need rune. 
+busy loop is very cpu intensive. 
 
-now add a bite timer. 
+let's observe the task manager. 
 
-bitetimer0, bitetimer, bite are new variables, add them at the top of the file. 
+7.0~8.0% cpu power
 
-just search fountaintimer0, and add that above it. 
+now time.sleep()
 
-here. in the init function. 
+is less than 1%. 
 
-ctrl+alt+up/down to select multi line. 
 
-ctrl+shift+left/right to highlight. 
+so, conclusion, use await sleep() in your rotation, if the delay timing is important. 
 
-esc to reset. 
+otherwise, use time.sleep(). 
 
-now we have our bitetimer, we add that in our rotation. 
+example in my code, in my custom rotation, i use all await sleep()
 
-check the self.bite flag, enter the if case, perform spambite action, turn the flag to False, reset bitetimer0. 
 
-perf_counter() simply return current system time. idk. it works anyway. 
+but in the main.py, i use time.sleep()
 
-if bite on cd, we just do nothing. 
-
-maybe sleep .2 seconds. 
-
-ok this part is pretty much done. 
-
-next we want to jump down twice and enter the portal. 
-
-for that we need a timer, a timer to countdown fountain replant. 
-
-we have that already, our fountain timer. 
-
-so we just use that. 
-
-and then when we at ground platform, we want to enter portal. 
-
-i will explain the gotoportal algorithm in seperate video, cause it's too long and too complicated. 
-
-ok now we have successfully entered portal, 
-
-we want to go plant fountain. 
-
-we will appear at y=28.5 after entering btm left portal. 
-
-check in action.py if we have implemented cp() cr()
-
-yea
-
-alright, now we want to do loot rotation. 
-
-we can just continue from after planting fountain. 
-
-press  down left between 222ms and 333ms (random)
-
-good to have sleep(.1) after flash jump to wait for the landing. 
-
-i forgot how steadfast shadow work, i will adjust later
-
-ok now we done our looting rotation. 
-
-look our nightwalker rotation, very simple, 782-759, 24 lines of code. 
-
-because we go back, and we go loot, we spent about 10 seconds there. so we minus that. 
-
-ok, our rotation is complete, now if our character is not at all the listen x,y in the tree, we just go back to our spot. 
-
-this will not work, because your character will keep jumping and jumping. 
-
-we need to walk. 
-
-essentially means if x > 85.5 and x <= 88.5, 
-
-this is the power of tree. you can plug in value anywhere XD. 
-
-ok. pretty much DONE EVERYTHING!!!!!!!!!!!!!
-
-50 MINUTES!!! 
-
-ok i will showcase the bot, then i will explain the use portal algorithm in the next video. thank you for watching. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ok thank you for watching!
 
 
 

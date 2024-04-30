@@ -128,6 +128,12 @@ async def sleep(dur):
     while perf_counter() < end:
         pass
 
+def sleeplol(dur): # async is not needed buddy. :))
+    now = perf_counter()
+    end = now + dur
+    while perf_counter() < end:
+        pass
+
 # to convert keycode
 def _get_keycode(key: str) -> int:
     try:

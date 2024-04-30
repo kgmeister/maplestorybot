@@ -28,7 +28,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 from game import Game
 from runesolver import RuneSolver
 from action import Action
-from initinterception import keydown, keyup, sleep
+from initinterception import keydown, keyup, keyupall, sleep, sleeplol
 from mss import mss as mss_module
 # from mss.windows import MSS as mss
 import mss
@@ -799,12 +799,22 @@ async def main():
     # except Exception as e:
     #     print("An error occurred:", e)
     
+    # while True:
+    #     for i in range(10):
+    #         keydown('a')
+    #         # keyup('a')
+    #         keyupall()
+    #         time.sleep(.1)
+    #     print(f'end. ')
+
     while True:
-        for i in range(10):
-            keydown('a')
-            keyup('a')
-            time.sleep(.1)
-        print(f'end. ')
+        for i in range(100):
+            now=perf_counter()
+            # time.sleep(.001)
+            # await sleep(.001)
+            sleeplol(.001)
+            print(f'{perf_counter()-now:.10f}')
+        # break
 
 
 

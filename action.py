@@ -51,6 +51,7 @@ class Action:
         self.gotoportal2=False
         self.gotoportal3=False
         self.gotoportal4=False
+        self.tries=0
         self.plb=73.5 # portal left boundary
         self.prb=74.5 # portal right boundary
         self.plbm2=self.plb-2 # portal left boundary minus two, 71.5
@@ -94,6 +95,11 @@ class Action:
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
         
+    async def sleeprandom(self,x=31,y=101):
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep()
+
     async def escp(self,x=31,y=101):
         keydown('esc')
         r = random.randint(x, y)
@@ -179,6 +185,22 @@ class Action:
         await self.jumpr()
 
     ## additional patch for extra key buttons. 
+
+    async def ctrlp(self,x=31,y=101):
+        keydown('ctrl')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ctrlr(self,x=31,y=101):
+        keyup('ctrl')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ctrlpr(self,x=31,y=101):
+        await self.ctrlp()
+        await self.ctrlr()
 
     async def bp(self,x=31,y=101):
         keydown('b')
@@ -1017,6 +1039,7 @@ class Action:
                             # if x > 180.5:
                             if x > self.successthreshold:
                                 await sleep(.1)
+                                print(f'successfully use portal. ')                      
                                 break
                             else:
                                 print(f'uppr saves, x, {x}')                                        
@@ -1255,6 +1278,147 @@ class Action:
 
 
 
+
+
+
+    ## refactor gotorune patch
+    async def gotorune(self, g):    
+        g_variable = g.get_rune_location()
+        x, y = (None, None) if g_variable is None else g_variable
+        if x == None:
+            print(f'x==None..continue..means..no..rune..')
+            return     
+        else:
+            print(f'rune location: {x=} {y=}')
+            purpdist = x
+            lowdist = x - 2
+            highdist = x + 2
+            height = y + 1  # LOL
+        prevhigh = 0
+        prevhighcount = 0
+        counter = 0
+        lastdistance = 0
+        lastheight = 0
+        theI = 0
+        keyupall()
+        while (True):
+            if self.stoprune:
+                return
+            while (True):
+                print(f'theI {theI}')
+                theI += 1
+                if theI > 50:
+                    print(f'theI return .. ')
+                    return
+                r = random.randint(1, 4)
+                r /= 1000
+                await sleep(r)
+                g_variable = g.get_player_location()
+                x, y = (None, None) if g_variable is None else g_variable
+                if x == None:
+                    print(f'x==None..continue..means..no..player..something blocking bruh ..f')
+                    r = random.randint(900, 1100)
+                    r /= 1000
+                    await sleep(r)
+                else:
+                    break
+            print(f'solving rune?1 ..')
+            if (x >= lowdist and x <= highdist):
+                print(f'playerx: {x}, playery: {y}, height: {height}, {purpdist =}')
+                h1 = 3
+                if y >= height-h1 and y <= height+h1:
+                    print('already at rune position')
+                    r = random.randint(770, 920)
+                    r /= 1000
+                    await sleep(r)
+                    print(f'pressing npc ..')
+                    await self.npcp(3,11)
+                    await self.npcr()
+                    print(f'done pressing npc ..')
+                    r = random.randint(1000, 1700)
+                    r /= 1000
+                    await sleep(r)
+                    await self.runesolver3()
+                    # runesolver(d)
+                    return
+                    # break
+                else:
+                    if y == prevhigh:
+                        prevhighcount += 1
+                        if prevhighcount > 6:
+                            await self.leftp()
+                            await self.jumpp()
+                            await self.jumpr()
+                            await self.leftr()
+                    if abs(y - prevhigh) < 15:
+                        yinyang=False
+                    prevhigh = y
+                    if y > height:
+                        print(y)
+                        print(height)
+                        if abs(y-height) < 15:
+                            await self.jumpupjumpattack()
+                        else:
+                            await self.ropeconnectpr()
+                        r = random.randint(1000, 1700)
+                        r /= 1000
+                        await sleep(r)
+                    else:
+                        print(y)
+                        print(height)
+                        if abs(y-height<15):
+                            await self.downjump()
+                        else:
+                            await self.downjumpv2()
+                        r = random.randint(1000, 1500)
+                        r /= 1000
+                        await sleep(r)
+                    r = random.randint(500, 900)
+                    r /= 1000
+                    await sleep(r)
+            else:
+                distance = x - purpdist
+                theight = y - height
+                print(f'distance: {distance}, {lastdistance}, {purpdist=}, {x=}, ')
+                if lastdistance - distance == 0:
+                    if lastheight - theight == 0:
+                        counter += 1
+                        if counter > 66:
+                            await self.leftp()
+                            await self.jumpp()
+                            await self.jumpr()
+                            await self.leftr()
+                else:
+                    counter = 0
+                lastdistance = distance
+                lastheight = theight
+                if distance > 30 or distance < -30:
+                    if distance > 30:
+                        print('hey distance > 30', distance)
+                        # jumpjumpleft()
+                        # await adjustportalll(distance)
+                        await self.leftjumpjumpattack()
+                    if distance < -30:
+                        await self.rightjumpjumpattack()
+                elif distance > 0:
+                    distances = int(distance * 100 / 2.0)
+                    print(f'> 0 {distances}')
+                    await self.leftp(distances-50, distances+50)
+                    await self.leftr(100, 300)
+                    print(f'height: {height}')
+                    if height == 32:
+                        time.sleep(.6)
+                    pass
+                elif distance < 0:
+                    distances = int(abs(distance) * 100 / 2.0)
+                    print(f'< 0 {distances}')
+                    await self.rightp(distances-50, distances+50)
+                    await self.rightr(100, 300)
+                    if height == 32:
+                        time.sleep(.6)
+                    pass
+                elif distance == 0:
+                    pass
 
 
     # randomiser patch
