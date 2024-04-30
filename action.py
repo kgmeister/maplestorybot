@@ -116,6 +116,38 @@ class Action:
         await self.escp()
         await self.escr()
 
+    async def enterp(self,x=31,y=101):
+        keydown('enter')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def enterr(self,x=31,y=101):
+        keyup('enter')
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+    
+    async def enterpr(self,x=31,y=101):
+        await self.enterp()
+        await self.enterr()
+
+    def enterp_special(self,x=31,y=101):
+        keydown('enter')
+        r = random.randint(x, y)
+        r /= 1000
+        time.sleep(r)
+
+    def enterr_special(self,x=31,y=101):
+        keyup('enter')
+        r = random.randint(x, y)
+        r /= 1000
+        time.sleep(r)
+
+    def enterpr_special(self,x=31,y=101):
+        self.enterp_special(x,y)
+        self.enterr_special(x,y)
+
     async def leftp(self,x=31,y=101):
         keydown('left')
         r = random.randint(x, y)

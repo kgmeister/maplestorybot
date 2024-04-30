@@ -37,6 +37,9 @@ import numpy as np
 from multiprocessing import JoinableQueue
 from multiprocessing import Process
 import keyboard as pythonkeyboard
+from pynput.mouse import Listener, Button
+from pynput import keyboard
+import pygetwindow
 
 
 
@@ -807,14 +810,51 @@ async def main():
     #         time.sleep(.1)
     #     print(f'end. ')
 
-    while True:
-        for i in range(100):
-            now=perf_counter()
-            # time.sleep(.001)
-            # await sleep(.001)
-            sleeplol(.001)
-            print(f'{perf_counter()-now:.10f}')
-        # break
+    # while True:
+    #     for i in range(100):
+    #         now=perf_counter()
+    #         # time.sleep(.001)
+    #         # await sleep(.001)
+    #         sleeplol(.001)
+    #         print(f'{perf_counter()-now:.10f}')
+    #     # break
+
+    maplehwnd=0
+    windows=[]
+    winlist=[]
+    winlist = pygetwindow.getWindowsWithTitle('MapleStory')
+    for w in winlist:
+        windows.append(w._hWnd)
+    print(f'{winlist=}')
+    print(f'{windows=}')
+    for windowhwnd in windows:
+        position = win32gui.GetWindowRect(windowhwnd)
+        x, y, w, h = position
+        print(f'{windows=} {w-x=}')
+        if w-x == 1936 or w-x == 1382 or w-x == 1296 or w-x == 1040 or w-x == 816:
+            maplehwnd=windowhwnd
+        elif w-x == 1938 or w-x == 1384 or w-x == 1298 or w-x == 1042 or w-x == 818: # some windows 10
+        # elif w-x == 1944 or w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
+            maplehwnd=windowhwnd
+    position = win32gui.GetWindowRect(maplehwnd)
+    x0, y0, w, h = position
+    def on_press(key):
+        if key == keyboard.Key.esc:
+            print(f'esc')
+            mouse_listener.stop()
+            return False
+    def on_click(x, y, button, pressed):
+        if pressed and button == Button.left:
+            print(f'{x=} {y=} {x0=} {y0=} {x-x0=} {y-y0=}')
+    mouse_listener = Listener(on_click=on_click)
+    mouse_listener.start()
+    with keyboard.Listener(on_press=on_press) as listener:
+        try:
+            listener.join()
+        except Exception as e:
+            print(f'exception. {e=}')
+
+
 
 
 

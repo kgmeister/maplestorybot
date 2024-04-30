@@ -32,7 +32,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 from attack import leftp, leftr, rightp, rightr, sleep, npcp, npcr
 from action import Action
 from runesolver import RuneSolver
-from initinterception import  move_relative, left_click, initiate_move, auto_capture_devices2, keydown, keyup, keyupall
+from initinterception import  move_relative, left_click, right_click, initiate_move, auto_capture_devices2, keydown, keyup, keyupall
 from helper import Helper
 from character import Character
 
@@ -121,6 +121,7 @@ class TkinterBot(customtkinter.CTk):
         self.loop7 = asyncio.new_event_loop()
         self.loop8 = asyncio.new_event_loop()
         self.loop9 = asyncio.new_event_loop()
+        self.loop10 = asyncio.new_event_loop()
         self.thread1 = threading.Thread(target=self.run_thread1)
         self.thread3 = threading.Thread(target=self.run_thread3)
         self.thread6 = threading.Thread(target=self.run_thread6)
@@ -142,6 +143,7 @@ class TkinterBot(customtkinter.CTk):
         self.setup_tab2()
         self.setup_tab3()
         self.setup_tab4()
+        self.setup_tab5()
         self.setup_tab6()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.tkinter_started=True
@@ -209,6 +211,10 @@ class TkinterBot(customtkinter.CTk):
     def run_thread9(self):
         asyncio.set_event_loop(self.loop9)
         self.loop9.run_until_complete(self.async_function9()) # 
+
+    def run_thread10(self):
+        asyncio.set_event_loop(self.loop10)
+        self.loop10.run_until_complete(self.async_function10()) # auto clicker monster life
 
     def start_threads(self):
         self.thread1.start()
@@ -370,6 +376,9 @@ class TkinterBot(customtkinter.CTk):
 
     async def async_function8(self): # script playback thread
         await self.playback()
+
+    async def async_function10(self): # auto clicker monster life
+        await self.autoclicker()
 
     def init_maple_windows(self):
         windows=[]
@@ -1772,7 +1781,139 @@ class TkinterBot(customtkinter.CTk):
 
 
     def setup_tab5(self):
-        pass
+        frametab41 = customtkinter.CTkFrame(self.tab5)
+        frametab41.pack(padx=1, pady=(1,1))
+        position = win32gui.GetWindowRect(self.maplehwnd)
+        x0, y0, w, h = position
+        self.autoclickerstop=False
+        self.monsternumber=26
+        self.repeatcount=floor(100/self.monsternumber)
+        self.cboxslot=199
+        self.monsterslot=155
+        def autoclicker():
+            self.autoclickerstop=False
+            self.thread10 = threading.Thread(target=self.run_thread10)
+            self.thread10.start()
+            while True:
+                if self.autoclickerstop:
+                    print(f'{self.autoclickerstop=}')
+                    self.thread10.join()
+                    return
+                self.he.movetoandclick(x0+878,y0+760) # click shop 878,760
+                for j in range(9):
+                    for i in range(10):
+                        if self.autoclickerstop:
+                            print(f'{self.autoclickerstop=}')
+                            self.thread10.join()
+                            return
+                        else:
+                            self.he.movetoandclick(x0+697,y0+418) # click buy --> enter --> enter 697,418
+                            self.character.ac.enterpr_special(3,11)
+                            self.character.ac.enterpr_special(3,11)
+                self.he.movetoandclick(x0+996,y0+754) # click return to farm 996,754
+                for j in range(self.repeatcount):
+                    self.he.movetoandclick(x0+154,y0+669) # click decorate farm 154,669
+                    for i in range(round(self.monsternumber+self.monsternumber*1.5)):
+                        if self.autoclickerstop:
+                            print(f'{self.autoclickerstop=}')
+                            self.thread10.join()
+                            return
+                        else:
+                            self.he.movetoandclick(x0+self.cboxslot,y0+719) # click c box --> enter --> enter 136 199 277 350 419,719
+                            self.character.ac.enterpr_special(3,11)
+                            self.character.ac.enterpr_special(3,11)
+                    self.he.movetoandclick(x0+77,y0+292) # click auto take care  --> enter 77,292
+                    time.sleep(.033)
+                    self.character.ac.enterpr_special()
+                    time.sleep(.013)
+                    self.character.ac.enterpr_special()
+                    time.sleep(.033)
+                    self.he.movetoandclick(x0+69,y0+665) # click my monster 69,665
+                    for i in range(self.monsternumber):
+                        if self.autoclickerstop:
+                            print(f'{self.autoclickerstop=}')
+                            self.thread10.join()
+                            return
+                        else:
+                            self.he.movetoandrclick(x0+self.monsterslot,y0+726,duration=.05) # right click monster 155 243 312 377 456 539,726
+                            self.he.movetoandclick(x0+self.monsterslot,y0+597,duration=.1) # click discharge 155 243 312 377 456 539,597
+                            self.he.movetoandclick(x0+492,y0+453,duration=.1) # click the tick --> enter 492,453
+                            time.sleep(.08) # server lag
+                            self.character.ac.enterpr_special(3,11)
+        autoclickerbutton = customtkinter.CTkButton(frametab41, text="autoclicker GO!", command=autoclicker)
+        autoclickerbutton.pack(padx=(1,1),pady=(1,1))
+        frametab42 = customtkinter.CTkFrame(self.tab5)
+        frametab42.pack(padx=1, pady=(1,1))
+        labelmonsternumber = customtkinter.CTkLabel(frametab42,text='how many monster slot?')
+        labelmonsternumber.pack(padx=(1,1),pady=(1,1))
+        inputmonsternumber = customtkinter.CTkEntry(frametab42, placeholder_text='20')
+        inputmonsternumber.pack(padx=(1,1),pady=(1,1))
+        labelcboxslot = customtkinter.CTkLabel(frametab42,text='CGrade Mob Box slot (1/2/3/4/5):')
+        labelcboxslot.pack(padx=(1,1),pady=(1,1))
+        inputcboxslot = customtkinter.CTkEntry(frametab42, placeholder_text='2')
+        inputcboxslot.pack(padx=(1,1),pady=(1,1))
+        labelmonsterslot = customtkinter.CTkLabel(frametab42,text='which monster slot to discharge (2/3/4/5/6/7)?')
+        labelmonsterslot.pack(padx=(1,1),pady=(1,1))
+        inputmonsterslot = customtkinter.CTkEntry(frametab42, placeholder_text='2')
+        inputmonsterslot.pack(padx=(1,1),pady=(1,1))
+        def resetmaple():
+            position = win32gui.GetWindowRect(self.maplehwnd)
+            x0, y0, w, h = position
+            tempmonsternumber=inputmonsternumber.get()
+            if tempmonsternumber.isnumeric():
+                self.monsternumber=int(tempmonsternumber)
+                self.repeatcount=floor(100/self.monsternumber)
+            tempcboxslot=inputcboxslot.get()
+            if tempcboxslot.isnumeric():
+                tempcboxslot=int(tempcboxslot)
+                if tempcboxslot >= 1 and tempcboxslot <= 5:
+                    if tempcboxslot==1:
+                        self.cboxslot=136 # 136 199 277 350 419,
+                    elif tempcboxslot==2:
+                        self.cboxslot=199 # 136 199 277 350 419,
+                    elif tempcboxslot==3:
+                        self.cboxslot=277 # 136 199 277 350 419,
+                    elif tempcboxslot==4:
+                        self.cboxslot=350 # 136 199 277 350 419,
+                    elif tempcboxslot==5:
+                        self.cboxslot=419 # 136 199 277 350 419,
+            tempinputmonsterslot=inputmonsterslot.get()
+            if tempinputmonsterslot.isnumeric():
+                tempinputmonsterslot=int(tempinputmonsterslot)
+                if tempinputmonsterslot >= 2 and tempinputmonsterslot <= 7:
+                    if tempinputmonsterslot == 2:
+                        self.monsterslot=155 # 155 243 312 377 456 539
+                    elif tempinputmonsterslot == 3:
+                        self.monsterslot=243 # 155 243 312 377 456 539
+                    elif tempinputmonsterslot == 4:
+                        self.monsterslot=312 # 155 243 312 377 456 539
+                    elif tempinputmonsterslot == 5:
+                        self.monsterslot=377 # 155 243 312 377 456 539
+                    elif tempinputmonsterslot == 6:
+                        self.monsterslot=456 # 155 243 312 377 456 539
+                    elif tempinputmonsterslot == 7:
+                        self.monsterslot=539 # 155 243 312 377 456 539
+            print(f'number={self.monsternumber} cslot={tempcboxslot} mslot={tempinputmonsterslot}')
+        self.monsternumber=26
+        self.repeatcount=floor(100/self.monsternumber)
+        self.cboxslot=199
+        self.monsterslot=155
+        resetmaplebutton = customtkinter.CTkButton(frametab42, text="set all variable to current value", command=resetmaple)
+        resetmaplebutton.pack(padx=(1,1),pady=(10,1))
+
+
+    async def autoclicker(self):
+        def on_press(key):
+            pass
+        def on_release(key):
+            if key == keyboard.Key.esc:
+                print(f'esc {self.autoclickerstop=}')
+                self.autoclickerstop=True
+                raise keyboard.Listener.StopException
+        with keyboard.Listener(
+            on_press=on_press,
+            on_release=on_release) as listener:
+            listener.join()
 
     def setup_tab6(self):
         self.framesettings = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)

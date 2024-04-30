@@ -1,80 +1,135 @@
 hello youtube. 
 
-there are two sleep function in my bot. 
+enjoy my python programming timelapse. 
 
-time.sleep()
+today we are coding our tab4: autoclicker. 
 
-and
+because in about one month time, monster life is gonna be removed. 
 
-await sleep()
+let's level up our monster life using bot!!!!
 
-what is the diff????
-
-time.sleep() is from the python 'time' library. 
-
-await sleep() is a busy loop i write here. 
-
-it is just a yea busy loo. 
-
-in fact the async await is not even needed. 
-
-but why is it there??
-
-because i lazy to delete. 
-
-because there is too many lines of code in the bot that uses await sleep()
-so if i delete 1, i have to delete all. and i am lazy. 
-
-now, let me show you what is the differrence in terms of performance. 
-
-it is very important in botting because, you need very accurate actions/sequence at attacks. 
-
-ok. i have three sleep function here. 
-
-let's run. 
+timelapse starto. 
 
 
-first, time.sleep(.001)
 
-so according to its definition, the python time.sleep sleeps for at least .001 seconds, then wake up at the next interrupt cycle, idk, something like that. 
+naisu. 
 
-but for busy loop, it's difference, let's take a look. 
+our first button. 
 
-yeah, it sleeps exactly .001 seconds. sometimes it is not. like thiss 1. 
+ok. so theres a few coordinates to click. 
 
-but most of the time, it sleeps for whatever timing you ask him to sleep.  
 
-but from my experience, is only up to 0.001 second, 
 
-it is not as accurate if 0.0001 second. 
 
+
+
+
+im not sure about the library. so im gonna test it. 
+chatgpt lying to me =(
+i dont trust chatgpt already. lets google. 
+stackoverflow is better =))
+i cant exit the program ..
+i think that 2 line should be in the esc 
+but let's just try chatgpt answer first ..
+yep .. doesn't work. 
+oh wtff
+ok let me do more research and testing.. i pause recording now.. 
+ok here's how you do it. 
+you add a keyboard listener. 
+ok just like that. 
+now we want to get maplestory window, and we minus that. 
+ok we just copy this code. 
+alright! all set. 
+now let's get those coordinates. 
+
+x0=-1882 y0=23 # this our maple window 0,0
+x=-1804 y=311 # this be our offset
+x0-x=-78 y0-y=-288 # this should be the other way round
+
+- auto take care = 77,292
+
+- my monster = 69,665
+- right click monster = 155 243 312 377 456 539,726
+- discharge = 155 243 312 377 456 539,597
+- the tick --> press enter = 492,453
+
+- decorate farm = 154,669
+- c box --> enter --> enter = 136 199 277 350 419,719
+- shop = 878,760
+- buy --> enter --> enter = 697,418
+- return to farm = 996,754
+
+alright! we got all offset! now let's code our autoclicker!
+ok first, get maple coordinate. 
 ok. 
+alright! we got our SOP!
+now code in the coordinates. 
+now, we bring in our human-like mouse cursor!
+now shall we test?
+i have no idea what gonna happen. 
+yay of course. 
+XXXXDDXXDDXXDXXXXXDX
+okok  we need a failsafe. 
+let's code our failsafe now. 
+this is similar to record function in tab2. 
+we have a keyboard listener .. until esc is pressed. (failsafe)
+ok i not sure how this work, need test. 
+idk what am i doing but let's go. 
+i still dk what am i doing but let's try. 
+no idea. 
+don't do this at home. 
+very dangerous. 
+no idea. =)
+debugging ...
+i still can't see the logic error. 
+ok guys i found it WTF ..
+now add a forever loop. 
+isn't it cool. 
+=)
+another account. 
+forgot to change slot. 
+fuck. 
+myfuckinggodquest. 
+i hate this game. 
+i hate this game. 
+ok this is very good. 
+next we want to change those value to variables. 
+ok check if any error. 
+ok this is good enough. 
+now we create the GUI for user to enter those variables. 
+GUI programming is the worst. 
+it forces you to do 4x the work. 
+=((
 
-but, what is the cons?
+i guess that's it for the monster life autoclicker =((
 
-cpu intensive. 
+346am
 
-busy loop is very cpu intensive. 
+i think i spent 8 hours doing this =((
 
-let's observe the task manager. 
+i want to cry =(((((((((((
 
-7.0~8.0% cpu power
-
-now time.sleep()
-
-is less than 1%. 
+thank you for watching. 
 
 
-so, conclusion, use await sleep() in your rotation, if the delay timing is important. 
-
-otherwise, use time.sleep(). 
-
-example in my code, in my custom rotation, i use all await sleep()
 
 
-but in the main.py, i use time.sleep()
 
-ok thank you for watching!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
