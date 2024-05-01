@@ -401,6 +401,9 @@ class TkinterBot(customtkinter.CTk):
             # elif w-x == 1944 or w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
+            elif w-x == 2592: # extra testing from users
+                self.maplehwnd=windowhwnd
+                self.runesolver.set_maplehwnd(self.maplehwnd)
 
     def init_maple_windows_old(self):
         hwnd = 0
