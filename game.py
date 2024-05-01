@@ -244,6 +244,10 @@ class Game:
     def rock_checker3(self):
         location = self.checkertest3(ROBGR,x=500,y=292,w=530,h=293)
         return location
+        
+    def vdance_checker(self):
+        location = self.checkertest4(DABGR,x=159,y=523,w=660,h=525)
+        return location[0] if len(location) > 0 else None
 
     def pure_test(self): 
         location = self.checkertest(PLAYER_BGRA,x=self.top,y=self.left,w=self.bottom,h=self.right)
@@ -512,3 +516,41 @@ class Game:
                         return (False,True)
             # return locations
             return None
+
+
+            
+    def checkertest4(self, *color, x,y,w,h):
+        with gdi_capture.CaptureWindow(self.hwnd) as img:
+            locations = []
+            if img is None:
+                print("MapleStory.exe was not found.")
+            else:
+                img_cropped = img[y:h, x:w]
+                # print(f'{img_cropped=}')
+                height, width = img_cropped.shape[0], img_cropped.shape[1]
+                # Reshape the image from 3-d to 2-d by row-major order.
+                img_reshaped = np.reshape(img_cropped, ((width * height), 4), order="C")
+                # cv2.imshow('img_reshaped', img_reshaped)
+                # cv2.imshow('img_cropped', img_cropped)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
+                for c in color:
+                    sum_x, sum_y, count = 0, 0, 0
+                    # Find all index(s) of np.ndarray matching a specified BGRA tuple.
+                    # matches = np.where(np.all((img_reshaped == c), axis=1))[0]
+                    matches = np.where(
+                        (img_reshaped[:,0] >= 227) & (img_reshaped[:,0] <= 238) &
+                        (img_reshaped[:,1] >= 166) & (img_reshaped[:,1] <= 180) &
+                        (img_reshaped[:,2] >= 247) & (img_reshaped[:,2] <= 248) 
+                        )[0]
+                    for idx in matches:
+                        # Calculate the original (x, y) position of each matching index.
+                        sum_x += idx % width
+                        sum_y += idx // width
+                        count += 1
+                        # print(f'{idx % width=} {idx // width=} {width=} {count=}')
+                    if count > 0:
+                        x_pos = sum_x / count
+                        y_pos = sum_y / count
+                        locations.append((x_pos, y_pos))
+            return locations

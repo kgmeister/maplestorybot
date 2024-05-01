@@ -224,15 +224,18 @@ class TkinterBot(customtkinter.CTk):
     async def async_function3(self):
         while not self.tkinter_started:
             time.sleep(1.01)
-        self.thread4 = threading.Thread(target=self.run_thread4)
-        self.thread4.start() # all the detector goes here
-        self.thread5 = threading.Thread(target=self.run_thread5)
-        self.thread5.start() # gma detector goes here
+        # self.thread4 = threading.Thread(target=self.run_thread4)
+        # self.thread4.start() # all the detector goes here
+        # self.thread5 = threading.Thread(target=self.run_thread5)
+        # self.thread5.start() # gma detector goes here
+        self.thread9 = threading.Thread(target=self.run_thread9)
+        self.thread9.start() # rock detector
         self.ac=self.character.ac
         self.polocheckertimer0=0
         self.now=0
         xynotfound=0
         await initiate_move()
+        now=0
         while True:
             if self.pause:
                 keyupall()
@@ -240,25 +243,31 @@ class TkinterBot(customtkinter.CTk):
                 while self.pause:
                     time.sleep(1)
                     if self.stop_event.is_set():
-                        self.thread4.join()
-                        self.thread5.join()
+                        # self.thread4.join()
+                        # self.thread5.join()
                         return
                 print(f'script resumed ..')
             #
-            time.sleep(.411) # when testing ..
+            # time.sleep(.411) # when testing ..
             # time.sleep(.011) # when real botting ..
             # time.sleep(.001) # when idk maybe you gone insane ..
-            g_variable = self.g.get_player_location()
-            x, y = (None, None) if g_variable is None else g_variable
+            # g_variable = self.g.get_player_location()
+            # x, y = (None, None) if g_variable is None else g_variable
+            x, y = (None, None)
             if x == None or y == None:
-                xynotfound+=1
-                if xynotfound > 70:
-                    t = time.localtime()
-                    currenttime = time.strftime("%H:%M:%S", t)
-                    print(f'something is wrong .. character not found .. exiting .. {currenttime}')
-                    self.pause=True
-                print(f'x==None, pass ..')
-                time.sleep(.1)
+                loc = self.g.vdance_checker()
+                if loc is not None:
+                    print(f'time={perf_counter()-now:.10f} {loc=}')
+                now=perf_counter()
+                pass
+                # xynotfound+=1
+                # if xynotfound > 70:
+                #     t = time.localtime()
+                #     currenttime = time.strftime("%H:%M:%S", t)
+                #     print(f'something is wrong .. character not found .. exiting .. {currenttime}')
+                #     self.pause=True
+                # print(f'x==None, pass ..')
+                # time.sleep(.1)
             else: #
                 xynotfound=0
                 await self.character.perform_next_attack(x,y)
@@ -401,7 +410,7 @@ class TkinterBot(customtkinter.CTk):
             # elif w-x == 1944 or w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
-            elif w-x == 1374 or w-x == 2592: # extra testing from users
+            elif w-x == 2592: # extra testing from users
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
 
