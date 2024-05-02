@@ -59,6 +59,9 @@ class Game:
             if img is None:
                 print("MapleStory.exe was not found.")
             else:
+                # cv2.imshow('img', img)
+                # cv2.waitKey(0)
+                # cv2.destroyAllWindows()
                 # Crop the image to show only the mini-map.
                 img_cropped = img[self.left:self.right, self.top:self.bottom]
                 # for img in img_cropped:
@@ -68,6 +71,7 @@ class Game:
                 # Reshape the image from 3-d to 2-d by row-major order.
                 img_reshaped = np.reshape(img_cropped, ((width * height), 4), order="C")
                 # cv2.imshow('img_reshaped', img_reshaped)
+                # print(f'{img_cropped=}')
                 # cv2.imshow('img_cropped', img_cropped)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()

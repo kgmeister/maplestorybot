@@ -19,7 +19,7 @@ class Helper:
     async def move_to(self,x,y):
         self.hc.move_to((x,y))
 
-    def movetoandclick(self,x,y,duration=None):
+    def movetoandclick(self,x,y,duration=None,sleep=.01):
         # print(f'left click')
         mx,my = mouse_position()
         if mx >= x-2 and mx <= x+2:
@@ -33,7 +33,7 @@ class Helper:
             self.hc.move_to(point=(x,y),duration=duration)
         time.sleep(.01)
         left_click()
-        time.sleep(.01)
+        time.sleep(sleep)
 
 
     def movetoandrclick(self,x,y,duration=None):
@@ -49,8 +49,8 @@ class Helper:
             # print(f'right click movex')
             self.hc.move_to(point=(x,y),duration=duration)
         time.sleep(.01)
-        right_click()
-        time.sleep(.01)
+        # right_click()
+        # time.sleep(.15)
 
 
     async def move_to_and_click(self,x,y):

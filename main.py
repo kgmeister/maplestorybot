@@ -401,7 +401,7 @@ class TkinterBot(customtkinter.CTk):
             # elif w-x == 1944 or w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
-            elif w-x == 1374 or w-x == 2592: # extra testing from users
+            elif w-x == 1300 or w-x == 824 or w-x == 1374 or w-x == 2592: # extra testing from users
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
 
@@ -1789,10 +1789,10 @@ class TkinterBot(customtkinter.CTk):
         position = win32gui.GetWindowRect(self.maplehwnd)
         x0, y0, w, h = position
         self.autoclickerstop=False
-        self.monsternumber=26
-        self.repeatcount=floor(100/self.monsternumber)
-        self.cboxslot=199
-        self.monsterslot=155
+        # self.monsternumber=20
+        # self.repeatcount=floor(100/self.monsternumber)
+        # self.cboxslot=199
+        # self.monsterslot=539
         def autoclicker():
             self.autoclickerstop=False
             self.thread10 = threading.Thread(target=self.run_thread10)
@@ -1803,20 +1803,29 @@ class TkinterBot(customtkinter.CTk):
                     self.thread10.join()
                     return
                 self.he.movetoandclick(x0+878,y0+760) # click shop 878,760
-                for j in range(9):
-                    for i in range(10):
+                for j in range(14):
+                    for i in range(14):
                         if self.autoclickerstop:
                             print(f'{self.autoclickerstop=}')
                             self.thread10.join()
                             return
                         else:
-                            self.he.movetoandclick(x0+697,y0+418) # click buy --> enter --> enter 697,418
+                            self.he.movetoandclick(x0+697,y0+418) # click buy --> enter --> enter 697,418                            
                             self.character.ac.enterpr_special(3,11)
+                            time.sleep(.005)
                             self.character.ac.enterpr_special(3,11)
+                            time.sleep(.005)
+                time.sleep(.1)
+                self.character.ac.enterpr_special(3,11)
+                time.sleep(.1) # just to be safe. 
+                self.character.ac.enterpr_special(3,11)
+                time.sleep(.1)
                 self.he.movetoandclick(x0+996,y0+754) # click return to farm 996,754
                 for j in range(self.repeatcount):
                     self.he.movetoandclick(x0+154,y0+669) # click decorate farm 154,669
-                    for i in range(round(self.monsternumber+self.monsternumber*1.5)):
+                    time.sleep(.1) # double click to ensure it click
+                    self.he.movetoandclick(x0+154,y0+669) # click decorate farm 154,669
+                    for i in range(round(self.monsternumber+self.monsternumber*1.7)):
                         if self.autoclickerstop:
                             print(f'{self.autoclickerstop=}')
                             self.thread10.join()
@@ -1827,9 +1836,13 @@ class TkinterBot(customtkinter.CTk):
                             self.character.ac.enterpr_special(3,11)
                     self.he.movetoandclick(x0+77,y0+292) # click auto take care  --> enter 77,292
                     time.sleep(.033)
+                    self.he.movetoandclick(x0+77,y0+292) # click auto take care  --> enter 77,292 # double click to ensure
+                    time.sleep(.033)
                     self.character.ac.enterpr_special()
                     time.sleep(.013)
                     self.character.ac.enterpr_special()
+                    time.sleep(.033)
+                    self.character.ac.enterpr_special() # triple enter to ensure
                     time.sleep(.033)
                     self.he.movetoandclick(x0+69,y0+665) # click my monster 69,665
                     for i in range(self.monsternumber):
@@ -1838,11 +1851,22 @@ class TkinterBot(customtkinter.CTk):
                             self.thread10.join()
                             return
                         else:
-                            self.he.movetoandrclick(x0+self.monsterslot,y0+726,duration=.05) # right click monster 155 243 312 377 456 539,726
-                            self.he.movetoandclick(x0+self.monsterslot,y0+597,duration=.1) # click discharge 155 243 312 377 456 539,597
-                            self.he.movetoandclick(x0+492,y0+453,duration=.1) # click the tick --> enter 492,453
-                            time.sleep(.08) # server lag
+                            self.he.movetoandrclick(x0+self.monsterslot,y0+726,duration=.05) # right click monster 155 243 312 377 456 539,726                            
                             self.character.ac.enterpr_special(3,11)
+                            time.sleep(.050)
+                            self.character.ac.enterpr_special(3,11)
+                            time.sleep(.100)
+                            right_click()
+                            time.sleep(.150)
+                            self.he.movetoandclick(x0+self.monsterslot,y0+597,duration=.1,sleep=.1) # click discharge 155 243 312 377 456 539,597
+                            self.he.movetoandclick(x0+492,y0+453,duration=.1,sleep=.1) # click the tick --> enter 492,453
+                            time.sleep(.08) # server lag
+                        self.character.ac.enterpr_special(3,11)
+                        time.sleep(.08) # server lag
+                    self.character.ac.enterpr_special(3,11)
+                    time.sleep(.08) # server lag
+                    self.character.ac.enterpr_special(3,11)
+                    time.sleep(.08) # server lag
         autoclickerbutton = customtkinter.CTkButton(frametab41, text="autoclicker GO!", command=autoclicker)
         autoclickerbutton.pack(padx=(1,1),pady=(1,1))
         frametab42 = customtkinter.CTkFrame(self.tab5)
@@ -1857,7 +1881,7 @@ class TkinterBot(customtkinter.CTk):
         inputcboxslot.pack(padx=(1,1),pady=(1,1))
         labelmonsterslot = customtkinter.CTkLabel(frametab42,text='which monster slot to discharge (2/3/4/5/6/7)?')
         labelmonsterslot.pack(padx=(1,1),pady=(1,1))
-        inputmonsterslot = customtkinter.CTkEntry(frametab42, placeholder_text='2')
+        inputmonsterslot = customtkinter.CTkEntry(frametab42, placeholder_text='7')
         inputmonsterslot.pack(padx=(1,1),pady=(1,1))
         def resetmaple():
             position = win32gui.GetWindowRect(self.maplehwnd)
@@ -1897,10 +1921,10 @@ class TkinterBot(customtkinter.CTk):
                     elif tempinputmonsterslot == 7:
                         self.monsterslot=539 # 155 243 312 377 456 539
             print(f'number={self.monsternumber} cslot={tempcboxslot} mslot={tempinputmonsterslot}')
-        self.monsternumber=26
+        self.monsternumber=20
         self.repeatcount=floor(100/self.monsternumber)
         self.cboxslot=199
-        self.monsterslot=155
+        self.monsterslot=456
         resetmaplebutton = customtkinter.CTkButton(frametab42, text="set all variable to current value", command=resetmaple)
         resetmaplebutton.pack(padx=(1,1),pady=(10,1))
 
