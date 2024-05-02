@@ -1,6 +1,7 @@
 import gdi_capture
 import numpy as np
 import cv2
+import time
 from time import perf_counter
 # from PIL import ImageGrab
 # import win32gui
@@ -250,8 +251,14 @@ class Game:
         return location
         
     def vdance_checker(self):
-        location = self.checkertest4(DABGR,x=159,y=523,w=660,h=525)
-        return location[0] if len(location) > 0 else None
+        location = self.checkertest4(DABGR,x=435,y=691,w=1034,h=693)
+        # location = self.checkertest4(DABGR,x=159,y=523,w=660,h=525)
+        # return location[0] if len(location) > 0 else None
+        return location # count actually
+
+    def vdance_checker2(self):
+        location = self.checkertest5(DABGR,x=435,y=719,w=1034,h=720)
+        return location
 
     def pure_test(self): 
         location = self.checkertest(PLAYER_BGRA,x=self.top,y=self.left,w=self.bottom,h=self.right)
@@ -522,7 +529,7 @@ class Game:
             return None
 
 
-            
+
     def checkertest4(self, *color, x,y,w,h):
         with gdi_capture.CaptureWindow(self.hwnd) as img:
             locations = []
@@ -543,7 +550,7 @@ class Game:
                     # Find all index(s) of np.ndarray matching a specified BGRA tuple.
                     # matches = np.where(np.all((img_reshaped == c), axis=1))[0]
                     matches = np.where(
-                        (img_reshaped[:,0] >= 227) & (img_reshaped[:,0] <= 238) &
+                        (img_reshaped[:,0] >= 227) & (img_reshaped[:,0] <= 239) &
                         (img_reshaped[:,1] >= 166) & (img_reshaped[:,1] <= 180) &
                         (img_reshaped[:,2] >= 247) & (img_reshaped[:,2] <= 248) 
                         )[0]
@@ -553,8 +560,54 @@ class Game:
                         sum_y += idx // width
                         count += 1
                         # print(f'{idx % width=} {idx // width=} {width=} {count=}')
-                    if count > 0:
-                        x_pos = sum_x / count
-                        y_pos = sum_y / count
-                        locations.append((x_pos, y_pos))
-            return locations
+                    # if count > 0:
+                    #     x_pos = sum_x / count
+                    #     y_pos = sum_y / count
+                    #     locations.append((x_pos, y_pos))
+            # return locations
+            return count
+            
+    def checkertest5(self, *color, x,y,w,h):
+        with gdi_capture.CaptureWindow(self.hwnd) as img:
+            locations = []
+            if img is None:
+                print("MapleStory.exe was not found.")
+            else:
+                img_cropped = img[y:h, x:w]
+                img_cropped2 = img[y-2:h-2, x:w]
+                height, width = img_cropped.shape[0], img_cropped.shape[1]
+                img_reshaped = np.reshape(img_cropped, ((width * height), 4), order="C")
+                img_reshaped2 = np.reshape(img_cropped2, ((width * height), 4), order="C")
+                for c in color:
+                    sum_x, sum_y, count = 0, 0, 0
+                    # matches = np.where(
+                    #     (img_reshaped[:,0] >= 237) & (img_reshaped[:,0] <= 239) &
+                    #     (img_reshaped[:,1] >= 135) & (img_reshaped[:,1] <= 137) &
+                    #     (img_reshaped[:,2] >= 253) & (img_reshaped[:,2] <= 255) 
+                    #     )[0]
+                    matches = np.where(
+                        (img_reshaped[:,0] >= 180) & (img_reshaped[:,0] <= 239) &
+                        (img_reshaped[:,1] >= 135) & (img_reshaped[:,1] <= 195) &
+                        (img_reshaped[:,2] >= 253) & (img_reshaped[:,2] <= 255) 
+                        )[0]
+                    # print(f'{matches=}')
+                    # for idx in matches:
+                    #     pass
+                    for idx in matches:
+                        # print(f'{img_reshaped2[idx]=}')
+                        if img_reshaped2[idx,0]+66 < 255:
+                            if img_reshaped2[idx,1]+66 < 255:
+                                if img_reshaped2[idx,2]+66 < 255:
+                                    # print(f'press npc key now. {img_reshaped2[idx]}')
+                                    return True
+                        # print(f'{sum_x=} {sum_y=} {count=}')
+                        # sum_x += idx % width
+                        # sum_y += idx // width
+                        count += 1
+                    # print(f'{sum_x=} {sum_y=} {count=}')
+                    # if count > 0:
+                    #     x_pos = sum_x / count
+                    #     y_pos = sum_y / count
+                    #     locations.append((x_pos, y_pos))
+                    # print(f'{locations=}')
+            return False

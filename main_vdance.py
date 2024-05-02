@@ -236,6 +236,7 @@ class TkinterBot(customtkinter.CTk):
         xynotfound=0
         await initiate_move()
         now=0
+        self.pressvdancenpc=False
         while True:
             if self.pause:
                 keyupall()
@@ -245,6 +246,7 @@ class TkinterBot(customtkinter.CTk):
                     if self.stop_event.is_set():
                         # self.thread4.join()
                         # self.thread5.join()
+                        self.thread9.join()
                         return
                 print(f'script resumed ..')
             #
@@ -254,12 +256,14 @@ class TkinterBot(customtkinter.CTk):
             # g_variable = self.g.get_player_location()
             # x, y = (None, None) if g_variable is None else g_variable
             x, y = (None, None)
-            if x == None or y == None:
-                loc = self.g.vdance_checker()
-                if loc is not None:
-                    print(f'time={perf_counter()-now:.10f} {loc=}')
+            if x == None or y == None:  
+                if self.pressvdancenpc:
+                    self.pressvdancenpc=False
+                    await self.character.ac.npcp(3,11)
+                    await self.character.ac.npcr(3,11)
+                    # print(f'time={perf_counter()-now:.10f}')
+                time.sleep(.0001)
                 now=perf_counter()
-                pass
                 # xynotfound+=1
                 # if xynotfound > 70:
                 #     t = time.localtime()
@@ -270,50 +274,37 @@ class TkinterBot(customtkinter.CTk):
                 # time.sleep(.1)
             else: #
                 xynotfound=0
-                await self.character.perform_next_attack(x,y)
+                # await self.character.perform_next_attack(x,y)
                 
 
     async def async_function9(self):
-        now=perf_counter()
-        thirdtimer0=now
-        thirdtimer=now
-        self.fourth=False
-        third=False
-        second=False
-        self.rocklockcounter=0
-        self.rocklockcounter2=0
+        self.pressvdancenpc=False         
+        diff=0
+        self.maincount=0
+        now=0
+        cur=0
+        prev=0
         while True:
             while self.pause:
                 time.sleep(1)
                 if self.stop_event.is_set():
-                    return
-                self.fourth=third=second=False                
-                thirdtimer0=perf_counter()
-            if third:
-                rockloc = self.g.rock_checker3()
-            elif second:
-                rockloc = self.g.rock_checker2()
-            else:
-                rockloc = self.g.rock_checker()
-            if rockloc is not None:
-                if rockloc[0]:
-                    self.rocklockcounter+=1
-                    print(f'rockloc {self.rocklockcounter=}')
-                    self.rockduck=True
-                elif rockloc[1]:
-                    self.rocklockcounter2+=1
-                    print(f'rockloc2 {self.rocklockcounter2=}')
-                    self.rockduck2=True                    
+                    return            
+            # vdanceloc = self.g.vdance_checker()            
+            # print(f'af9={perf_counter()-now:.10f} {vdanceloc=}')
+            if self.g.vdance_checker2():
+                self.pressvdancenpc=True
+                print(f'press npc now. ')
+            # if vdanceloc > 0:
+                # prev=cur
+                # cur=vdanceloc
+                # if cur==prev:
+                #     diff=0
+                # else:
+                #     diff+=1
+                #     if diff>3:
+                #         self.pressvdancenpc=True
+                #         diff=0
             now=perf_counter()
-            if not self.fourth:        
-                thirdtimer = now-thirdtimer0                
-                if thirdtimer >= 46:
-                    self.fourth=True
-                elif thirdtimer >= 30:
-                    third=True
-                    second=False
-                elif thirdtimer >= 15:
-                    second=True
 
     async def async_function4(self):
         whitedotcounter=0

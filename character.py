@@ -82,7 +82,7 @@ class Character:
         # self.teleport=True
         # self.ac = Action()
         self.ac = None
-        self.classtype = {            
+        self.classtype = {
             'adele': Adele,
             'angelicbuster': Angelicbuster,
             'aran': Aran,
