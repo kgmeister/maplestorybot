@@ -25,13 +25,15 @@ Bumblebee Bot 是专为2D MMORPG 游戏《楓之谷》定制的脚本。
 
 # Quick Installation:
 1. install python 3.12 (https://www.python.org/ftp/python/3.12.0/python-3.12.0-amd64.exe)
-2. install interception (https://github.com/oblitum/Interception)
-3. create a new folder somewhere (preferably desktop)
-4. run cmd (administrator) --> `cd C:\Users\myusername\Desktop\myfoldername`
-5. `git clone https://github.com/agumonlyt/Bumblebee`
-6. `cd Bumblebee`
-7. `pip install -r requirements.txt`
-8. `python main.py`
+2. install interception (https://github.com/oblitum/Interception) *# need restart pc after install*
+3. install git (https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe)
+4. create a new folder somewhere (preferably desktop)
+5. run cmd (administrator) --> `cd C:\Users\myusername\Desktop\myfoldername`
+6. `git clone https://github.com/agumonlyt/maplestorybot`
+7. `cd Bumblebee`
+8. `pip install -r requirements.txt`
+9. `python main.py`
+
 
 # Discord Link: 
 https://discord.gg/dbsKm2jE27
