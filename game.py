@@ -257,7 +257,8 @@ class Game:
         return location # count actually
 
     def vdance_checker2(self):
-        location = self.checkertest5(DABGR,x=435,y=719,w=1034,h=720)
+        location = self.checkertest5(DABGR,x=435,y=719,w=1034,h=720) # 1366x768
+        # location = self.checkertest5(DABGR,x=392,y=671,w=991,h=672) # 1280x720
         return location
 
     def pure_test(self): 
