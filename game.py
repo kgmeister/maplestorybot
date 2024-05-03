@@ -259,6 +259,7 @@ class Game:
     def vdance_checker2(self):
         location = self.checkertest5(DABGR,x=435,y=719,w=1034,h=720) # 1366x768
         # location = self.checkertest5(DABGR,x=392,y=671,w=991,h=672) # 1280x720
+        # location = self.checkertest5(DABGR,x=264,y=719,w=863,h=720) # 1024x768
         return location
 
     def pure_test(self): 
@@ -600,7 +601,7 @@ class Game:
                             if img_reshaped2[idx,1]+66 < 255:
                                 if img_reshaped2[idx,2]+66 < 255:
                                     # print(f'press npc key now. {img_reshaped2[idx]}')
-                                    return True
+                                    return idx
                         # print(f'{sum_x=} {sum_y=} {count=}')
                         # sum_x += idx % width
                         # sum_y += idx // width
@@ -611,4 +612,4 @@ class Game:
                     #     y_pos = sum_y / count
                     #     locations.append((x_pos, y_pos))
                     # print(f'{locations=}')
-            return False
+            return 0

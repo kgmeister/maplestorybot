@@ -261,6 +261,7 @@ class TkinterBot(customtkinter.CTk):
                     self.pressvdancenpc=False
                     await self.character.ac.npcp(3,11)
                     await self.character.ac.npcr(3,11)
+                    # print(f'pressed. \n')
                     # print(f'time={perf_counter()-now:.10f}')
                 time.sleep(.0001)
                 now=perf_counter()
@@ -284,16 +285,28 @@ class TkinterBot(customtkinter.CTk):
         now=0
         cur=0
         prev=0
+        previdx=0
+        idx=0
         while True:
             while self.pause:
                 time.sleep(1)
                 if self.stop_event.is_set():
                     return            
-            # vdanceloc = self.g.vdance_checker()            
+            # vdanceloc = self.g.vdance_checker()
             # print(f'af9={perf_counter()-now:.10f} {vdanceloc=}')
-            if self.g.vdance_checker2():
-                self.pressvdancenpc=True
-                print(f'press npc now. ')
+            # print(f'time_per_loop={perf_counter()-now:.10f}')
+            idx = self.g.vdance_checker2()
+            if idx > 0:
+                if previdx==0:
+                    self.pressvdancenpc=True
+                elif idx==previdx:
+                    self.pressvdancenpc=False
+                elif idx!=previdx:
+                    self.pressvdancenpc=True
+                print(f'on point. {perf_counter()-now:.10f} {previdx=} {idx=} {self.pressvdancenpc}')
+                previdx=idx
+            else:
+                previdx=0
             # if vdanceloc > 0:
                 # prev=cur
                 # cur=vdanceloc
