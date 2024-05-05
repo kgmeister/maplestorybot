@@ -401,7 +401,7 @@ class TkinterBot(customtkinter.CTk):
             # elif w-x == 1944 or w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
-            elif w-x == 1300 or w-x == 824 or w-x == 1374 or w-x == 2592: # extra testing from users
+            elif w-x == 1388 or w-x == 1300 or w-x == 824 or w-x == 1374 or w-x == 2592: # extra testing from users
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
 
@@ -1674,7 +1674,7 @@ class TkinterBot(customtkinter.CTk):
                 for array in arrays:
                     add_input_field(loader=True,data=array)
             except Exception as e:
-                print(f'reading json: {e=}')
+                print(f'reading json2: {e=}')
         buttonnewprofile = tk.Button(self.frameprofile, text="load", command=load_profile, anchor='w')
         buttonnewprofile.pack(side=tk.LEFT, padx=1, pady=1)
         self.framebuttonxy = tk.Frame(self.tab3, bg='#71f243', bd=0)
