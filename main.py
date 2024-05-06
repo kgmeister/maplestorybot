@@ -1424,8 +1424,8 @@ class TkinterBot(customtkinter.CTk):
             listener.join()
 
     async def changechannel_zakum(self):
-        def press(button,sleep):
-                button()
+        async def press(button,sleep):
+                await button()
                 time.sleep(sleep)
         position = win32gui.GetWindowRect(self.maplehwnd)
         x, y, w, h = position
@@ -1442,15 +1442,15 @@ class TkinterBot(customtkinter.CTk):
                 self.scriptstopsignal=True
                 return # stop doing everything onwards. just return to safety. 
         time.sleep(1.)
-        self.character.ac.ccbuttonpr()
+        await self.character.ac.ccbuttonpr()
         time.sleep(5.) # in case character were still using some skills just before enter zakum map. you can change this number just becareful. 
-        [self.character.ac.leftpr() for _ in range(random.randint(1, 5))]
-        [self.character.ac.downpr() for _ in range(random.randint(1, 3))] # why not
-        self.character.ac.enterpr()
+        [await self.character.ac.leftpr() for _ in range(random.randint(1, 5))]
+        [await self.character.ac.downpr() for _ in range(random.randint(1, 3))] # why not
+        await self.character.ac.enterpr()
         time.sleep(2.) # 
         while self.helper.still_in_zakum_map2(self.g,self.maplehwnd): # move character to zakum entrance portal to go out. 
             await self.helper.adjustportal2(g=self.g,spot=21,distx=10.5,docorrection=True,ca=self.character.ac) 
-            [press(self.character.ac.uppr,.06) for _ in range(random.randint(1, 2))]
+            [await press(self.character.ac.uppr,.06) for _ in range(random.randint(1, 2))]
         # check for red dot/guild dot/bl dot after cc
         await self.helper.checkreddotaftercomeoutfromzakummap(hwnd=self.maplehwnd,ca=self.character.ac, position1=(8,63,self.minimapX,self.minimapY)) # sorry perfectionist =(
         # TODO: repeat this function for guild dot 
@@ -1458,8 +1458,8 @@ class TkinterBot(customtkinter.CTk):
         
 
     async def changechannel(self): # ardentmill
-        def press(button,sleep):
-                button()
+        async def press(button,sleep):
+                await button()
                 time.sleep(sleep)
         position = win32gui.GetWindowRect(self.maplehwnd)
         x, y, w, h = position
@@ -1468,13 +1468,13 @@ class TkinterBot(customtkinter.CTk):
         print(f'clicking 539,253 (ardentmill)')
         left_click()
         time.sleep(.1)
-        self.character.ac.enterpr()
-        self.character.ac.ccbuttonpr()
+        await self.character.ac.enterpr()
+        await self.character.ac.ccbuttonpr()
         time.sleep(.1)        
-        [self.character.ac.leftpr() for _ in range(random.randint(1, 10))]
-        self.character.ac.enterpr()
+        [await self.character.ac.leftpr() for _ in range(random.randint(1, 10))]
+        await self.character.ac.enterpr()
         time.sleep(5.) # adjust this to your pc loading speed i guess, mine need 5 seconds to cc. 
-        [press(self.character.ac.uppr,.06) for _ in range(random.randint(4, 10))] # ideally TODO: check ardentmill map loaded. 
+        [await press(self.character.ac.uppr,.06) for _ in range(random.randint(4, 10))] # ideally TODO: check ardentmill map loaded. 
         time.sleep(2.) # coming out from ardent. TODO: check if back to hunting map.
         # TODO: check for red dot/guild dot/bl dot after cc
         # TODO: set a limit for cc, in case character died, stop it from spamming cc! i've been banned once due to this spamming! no appeal can be made.  
