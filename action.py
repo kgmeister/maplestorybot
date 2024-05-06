@@ -193,6 +193,10 @@ class Action:
         r = random.randint(x, y)
         r /= 1000
         await sleep(r)
+    
+    async def leftpr(self,x=31,y=101):
+        await self.leftp()
+        await self.leftr()
 
     async def rightp(self,x=31,y=101):
         keydown('right')
@@ -205,6 +209,10 @@ class Action:
         r = random.randint(x, y)
         r /= 1000
         await sleep(r)
+    
+    async def rightpr(self,x=31,y=101):
+        await self.rightp()
+        await self.rightr()
 
     async def upp(self,x=31,y=101):
         keydown('up')
@@ -217,6 +225,10 @@ class Action:
         r = random.randint(x, y)
         r /= 1000
         await sleep(r)
+    
+    async def uppr(self,x=31,y=101):
+        await self.upp()
+        await self.upr()
 
     async def downp(self,x=31,y=101):
         keydown('down')
