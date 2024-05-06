@@ -7,35 +7,37 @@ from time import perf_counter
 # import win32gui
 # import pygetwindow
 
+alpha=255
+# alpha=0
 # These are colors taken from the mini-map in BGRA format.
-PLAYER_BGRA = (68, 221, 255, 255)
-RUNE_BGRA = (255, 102, 221, 255)
-ENEMY_BGRA = (0, 0, 255, 255)
-GUILD_BGRA = (255, 102, 102, 255)
-BUDDY_BGRA = (225, 221, 17, 255)
+PLAYER_BGRA = (68, 221, 255, alpha)
+RUNE_BGRA = (255, 102, 221, alpha)
+ENEMY_BGRA = (0, 0, 255, alpha)
+GUILD_BGRA = (255, 102, 102, alpha)
+BUDDY_BGRA = (225, 221, 17, alpha)
 
-EB3BGR = (0, 34, 204, 255)
-EBBGR = (238, 255, 255, 255) # yellow timer (x+405, y+75, x+406, y+76) (397,44)
-LDBGR = (136, 51, 170, 255)
-RDBGR = (0, 0, 255, 255)
-GDBGR = (221, 170, 170, 255)
-WDBGR = (255, 255, 255, 255)
-DCBGR = (187, 221, 238, 255)
-OKBGR = (17,187,170, 255) # broid die #normalpc
-# OKBGR = (17,187,153, 255) # broid die 
-# OKBGR = (0,187,170, 255) # died_ok [0 187 170] [0 204 153]
-ORBGR = (1,136,245, 255) # orange_mushroom [1 136 245] [] #normalpc
-LOBGR = (17,170,136, 255) # 
-# POBGR = (17,85,238, 255) # 
-POBGR = (102,136,255, 255) # 
-PO2BGR = (0,0,255, 255) # 
-VIBGR = (136,57,170, 255) # violetta detector (x+701, y+472, x+702, y+473) (693,441)
-SWBGR = (238,255,255, 255) # storming will always be 0 stormwing habitat detector (timer) (221,255,255, 255) (x+405, y+75, x+406, y+76) (397,44)
-ESBGR = (51,187,255, 255) # especia please use the dot especia detector (timer) (221,255,255, 255) (x+405, y+75, x+406, y+76) (397,44)
-TIBGR = (204,204,204, 255) # timer gray dot (304,48)
-GMBGR = (222,218,206, 255) # 
-DABGR = (0,0,0, 255) # 
-ROBGR = (187,187,204, 255) # mapril island infinity race rock light brown bgr value
+EB3BGR = (0, 34, 204, alpha)
+EBBGR = (238, 255, 255, alpha) # yellow timer (x+405, y+75, x+406, y+76) (397,44)
+LDBGR = (136, 51, 170, alpha)
+RDBGR = (0, 0, 255, alpha)
+GDBGR = (221, 170, 170, alpha)
+WDBGR = (255, 255, 255, alpha)
+DCBGR = (187, 221, 238, alpha)
+OKBGR = (17,187,170, alpha) # broid die #normalpc
+# OKBGR = (17,187,153, alpha) # broid die 
+# OKBGR = (0,187,170, alpha) # died_ok [0 187 170] [0 204 153]
+ORBGR = (1,136,245, alpha) # orange_mushroom [1 136 245] [] #normalpc
+LOBGR = (17,170,136, alpha) # 
+# POBGR = (17,85,238, alpha) # 
+POBGR = (102,136,255, alpha) # 
+PO2BGR = (0,0,255, alpha) # 
+VIBGR = (136,57,170, alpha) # violetta detector (x+701, y+472, x+702, y+473) (693,441)
+SWBGR = (238,255,255, alpha) # storming will always be 0 stormwing habitat detector (timer) (221,255,255, 255) (x+405, y+75, x+406, y+76) (397,44)
+ESBGR = (51,187,255, alpha) # especia please use the dot especia detector (timer) (221,255,255, 255) (x+405, y+75, x+406, y+76) (397,44)
+TIBGR = (204,204,204, alpha) # timer gray dot (304,48)
+GMBGR = (222,218,206, alpha) # 
+DABGR = (0,0,0, alpha) # 
+ROBGR = (187,187,204, alpha) # mapril island infinity race rock light brown bgr value
 
 
 class Game:
@@ -169,6 +171,10 @@ class Game:
 
     def reddot_checker(self):
         location = self.locate(ENEMY_BGRA)
+        return location[0] if len(location) > 0 else None
+
+    def liedetector_checker(self):
+        location = self.checker(LOBGR, x=430,y=375,w=431,h=376)
         return location[0] if len(location) > 0 else None
 
     def polo_checker(self):

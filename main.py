@@ -327,6 +327,7 @@ class TkinterBot(customtkinter.CTk):
 
     async def async_function4(self): # this thread do all pixel detection / checker function. 
         diedcheckercounter=0
+        liedetectorcounter=0
         reddotcounter=0
         self.cc=False
         whitedotcounter=0
@@ -341,7 +342,7 @@ class TkinterBot(customtkinter.CTk):
                 diedcheckercounter+=1
                 if diedcheckercounter > 1: # usually check twice to confirm character really died. 
                     diedcheckercounter=0 # reset
-                    print(f'character died. ')
+                    print(f'character died. attempt to press ok .. ')
                     position = win32gui.GetWindowRect(self.maplehwnd)
                     x, y, w, h = position
                     await self.helper.move_to_and_click_and_move_away(x+390,y+400); time.sleep(.1) # x+440 y+400 for non-broid # all offsets are of 800x600 reso, TODO: write a list of offset for all reso.
@@ -352,7 +353,18 @@ class TkinterBot(customtkinter.CTk):
                 if reddotcounter > 1: # usually check twice to confirm really has red dot. you can change to 0 to immediately change channel. 
                     reddotcounter=0
                     self.cc=True # we can't directly cc in this thread because cc-ing is a long process, it will block other detectors. 
+                    print(f'red dot detected. changing channel. {self.cc=}')
             liedetectorcheckerlocations = self.g.liedetector_checker()
+            if liedetectorcheckerlocations is not None:
+                print(f'{liedetectorcheckerlocations=}')
+                liedetectorcounter+=1
+                if liedetectorcounter > 1: # usually check twice
+                    liedetectorcounter=0
+                    self.pause=True
+                    self.scriptpausesignal=True
+                    print(f'lie detector detector. stopping everything. [testing] {self.pause=} {self.scriptpausesignal=}')
+            
+
             # if not self.pausepolochecker and not self.portaldisabled: # i disable this because most user don't want to enter bounty portal
             #     polocheckerlocations = self.g.polo_checker() # check for portal on minimap
             #     if polocheckerlocations is not None:
