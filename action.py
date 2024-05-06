@@ -29,6 +29,8 @@ class Action:
         self.ropeconnect = self.config.get('keybind', 'ropeconnect')
         self.npc = self.config.get('keybind', 'npc')
         self.fountainkey = self.config.get('keybind', 'fountainkey')
+        self.ccbutton = self.config.get('keybind', 'ccbutton')
+        self.bossui = self.config.get('keybind', 'bossui')
         self.offsety=10
         self.offsetx=10
         ## for main rotation
@@ -147,6 +149,38 @@ class Action:
     def enterpr_special(self,x=31,y=101):
         self.enterp_special(x,y)
         self.enterr_special(x,y)
+
+    async def ccbuttonp(self,x=31,y=101):
+        keydown(self.ccbutton)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ccbuttonr(self,x=31,y=101):
+        keyup(self.ccbutton)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+    
+    async def ccbuttonpr(self,x=31,y=101):
+        await self.ccbuttonp()
+        await self.ccbuttonr()
+
+    async def bossuip(self,x=31,y=101):
+        keydown(self.bossui)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def bossuir(self,x=31,y=101):
+        keyup(self.bossui)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+    
+    async def bossuipr(self,x=31,y=101):
+        await self.bossuip()
+        await self.bossuir()
 
     async def leftp(self,x=31,y=101):
         keydown('left')

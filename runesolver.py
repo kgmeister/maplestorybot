@@ -57,11 +57,11 @@ class RuneSolver:
 
 
     def runechecker(self, g):
-        purplebgr = (255, 102, 221)
-        purpdist = 0
-        lowdist = 0
-        highdist = 0
-        height = 0
+        # purplebgr = (255, 102, 221)
+        # purpdist = 0
+        # lowdist = 0
+        # highdist = 0
+        # height = 0
         g_variable = g.get_rune_location()
         x, y = (None, None) if g_variable is None else g_variable
         if x == None:

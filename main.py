@@ -74,7 +74,7 @@ class TkinterBot(customtkinter.CTk):
 
         self.runesolver = RuneSolver()
         self.ac=None
-        self.he = Helper()
+        self.helper = Helper()
         self.character = Character()
 
         self.application = None
@@ -232,6 +232,13 @@ class TkinterBot(customtkinter.CTk):
         self.polocheckertimer0=0
         self.now=0
         xynotfound=0
+        self.cc=False
+        # ugly code starts here
+        now=0
+        cctimer0=0
+        cctimer=0
+        cc=False
+        # ugly code ends here
         await initiate_move()
         while True:
             if self.pause:
@@ -262,6 +269,18 @@ class TkinterBot(customtkinter.CTk):
             else: #
                 xynotfound=0
                 await self.character.perform_next_attack(x,y)
+
+                now=perf_counter()                
+                cctimer=now-cctimer0
+                if cctimer>3000: # 60sec * 50min = 3000sec
+                    # cc=True
+                    keyupall()
+                    await self.changechannel()
+                    cctimer0=perf_counter() # reset
+                if self.cc: # this is for red dot. 
+                    self.cc=False
+                    keyupall()
+                    await self.changechannel_zakum() # we don't go ardent because it has 5 min cd. 
                 
 
     async def async_function9(self):
@@ -306,7 +325,10 @@ class TkinterBot(customtkinter.CTk):
                 elif thirdtimer >= 15:
                     second=True
 
-    async def async_function4(self):
+    async def async_function4(self): # this thread do all pixel detection / checker function. 
+        diedcheckercounter=0
+        reddotcounter=0
+        self.cc=False
         whitedotcounter=0
         while True:
             while self.pause:
@@ -316,32 +338,35 @@ class TkinterBot(customtkinter.CTk):
             diedcheckerlocations = self.g.died_checker()
             if diedcheckerlocations is not None:
                 print(f'{diedcheckerlocations=}')
-                # hwnd = win32gui.FindWindow(None, "MapleStory")
-                position = win32gui.GetWindowRect(self.maplehwnd)
-                x, y, w, h = position
-                print(f'moving to x, y')
-                await self.he.move_to(x+self.position6[0],y+self.position6[1])
-                time.sleep(.1)
-                print(f'clicking x, y')
-                left_click()
-                print(f'done clicking')
-                move_relative(10,0)
-                time.sleep(.1)
-            if not self.pausepolochecker and not self.portaldisabled:
-                polocheckerlocations = self.g.polo_checker() # check for portal on minimap
-                if polocheckerlocations is not None:
-                    print(f'{polocheckerlocations=}')
-                    self.polochecker = True
-                    self.gotoportal=True
-            whitedotlocations = self.g.white_dot_checker()
-            if whitedotlocations is not None:
-                whitedotcounter+=1
-                if whitedotcounter>1:
-                    self.whitedotoccur=True
-                    self.polochecker=True
-                    self.gotoportal=False
-            elif whitedotlocations is None:
-                whitedotcounter=0
+                diedcheckercounter+=1
+                if diedcheckercounter > 1: # usually check twice to confirm character really died. 
+                    diedcheckercounter=0 # reset
+                    print(f'character died. ')
+                    position = win32gui.GetWindowRect(self.maplehwnd)
+                    x, y, w, h = position
+                    await self.helper.move_to_and_click_and_move_away(x+390,y+400); time.sleep(.1) # x+440 y+400 for non-broid # all offsets are of 800x600 reso, TODO: write a list of offset for all reso.
+            reddotcheckerlocations = self.g.reddot_checker()
+            if reddotcheckerlocations is not None:
+                print(f'{reddotcheckerlocations=}')
+                reddotcounter+=1
+                if reddotcounter > 1: # usually check twice to confirm really has red dot. you can change to 0 to immediately change channel. 
+                    reddotcounter=0
+                    self.cc=True # we can't directly cc in this thread because cc-ing is a long process, it will block other detectors. 
+            # if not self.pausepolochecker and not self.portaldisabled: # i disable this because most user don't want to enter bounty portal
+            #     polocheckerlocations = self.g.polo_checker() # check for portal on minimap
+            #     if polocheckerlocations is not None:
+            #         print(f'{polocheckerlocations=}')
+            #         self.polochecker = True
+            #         self.gotoportal=True
+            # whitedotlocations = self.g.white_dot_checker() # this is when character botting, pressed up, accidentally entered portal, dialogue come out. 
+            # if whitedotlocations is not None:
+            #     whitedotcounter+=1
+            #     if whitedotcounter>1: # usually check twice to confirm character really entered portal by accident. 
+            #         self.whitedotoccur=True
+            #         self.polochecker=True
+            #         self.gotoportal=False
+            # elif whitedotlocations is None:
+            #     whitedotcounter=0
             
             time.sleep(2)
             
@@ -580,7 +605,7 @@ class TkinterBot(customtkinter.CTk):
             position = win32gui.GetWindowRect(self.maplehwnd)
             x, y, w, h = position
             time.sleep(.1)
-            await self.he.move_to(x+self.portaldialogueX,y+self.portaldialogueY)
+            await self.helper.move_to(x+self.portaldialogueX,y+self.portaldialogueY)
             time.sleep(.1)
             left_click()
             self.pausepolochecker=True
@@ -591,7 +616,7 @@ class TkinterBot(customtkinter.CTk):
             position = win32gui.GetWindowRect(self.maplehwnd)
             x, y, w, h = position
             time.sleep(.1)
-            await self.he.move_to(x+self.portaldialogueX,y+self.wolfdialogueY)
+            await self.helper.move_to(x+self.portaldialogueX,y+self.wolfdialogueY)
             time.sleep(.1)
             left_click()
             self.pausepolochecker=True
@@ -1376,9 +1401,71 @@ class TkinterBot(customtkinter.CTk):
             self.start_time = perf_counter()
             listener.join()
 
+    async def changechannel_zakum(self):
+        def press(button,sleep):
+                button()
+                time.sleep(sleep)
+        position = win32gui.GetWindowRect(self.maplehwnd)
+        x, y, w, h = position
+        # set a limit for cc, in case character died, stop it from spamming cc! i've been banned once due to this spamming! no appeal. 
+        for i in range(10): # set a limit on how many tries to attempt to move to zakum map to avoid BAN!
+            await self.character.ac.bossuipr() # remember set it in settings.ini
+            await self.helper.move_to_and_click(x+104,y+204) # zakum 800x600
+            await self.helper.move_to_and_click(x+510,y+562) # gobutton 800x600
+            if self.helper.still_in_zakum_map2(self.g,self.maplehwnd):
+                break # successfully entered zakum map. exit loop. 
+            print(f'this is try no.{i} ..')
+            if i > 8: # something wrong. you are done. 
+                self.pause=True # hopefully this work. not tested. yet. 
+                self.scriptstopsignal=True
+                return # stop doing everything onwards. just return to safety. 
+        time.sleep(1.)
+        self.character.ac.ccbuttonpr()
+        time.sleep(5.) # in case character were still using some skills just before enter zakum map. you can change this number just becareful. 
+        [self.character.ac.leftpr() for _ in range(random.randint(1, 5))]
+        [self.character.ac.downpr() for _ in range(random.randint(1, 3))] # why not
+        self.character.ac.enterpr()
+        time.sleep(2.) # 
+        while self.helper.still_in_zakum_map2(self.g,self.maplehwnd): # move character to zakum entrance portal to go out. 
+            await self.helper.adjustportal2(g=self.g,spot=21,distx=10.5,docorrection=True,ca=self.character.ac) 
+            [press(self.character.ac.uppr,.06) for _ in range(random.randint(1, 2))]
+        # check for red dot/guild dot/bl dot after cc
+        await self.helper.checkreddotaftercomeoutfromzakummap(hwnd=self.maplehwnd,ca=self.character.ac, position1=(8,63,self.minimapX,self.minimapY)) # sorry perfectionist =(
+        # TODO: repeat this function for guild dot 
+        # TODO: count number of red dot/guild dot/bl dot (instanced map)
+        
+
+    async def changechannel(self): # ardentmill
+        def press(button,sleep):
+                button()
+                time.sleep(sleep)
+        position = win32gui.GetWindowRect(self.maplehwnd)
+        x, y, w, h = position
+        await self.helper.move_to(x+539,y+253) # ardentmill offset (800x600) TODO: write a list of offset for all reso. 
+        time.sleep(.1)
+        print(f'clicking 539,253 (ardentmill)')
+        left_click()
+        time.sleep(.1)
+        self.character.ac.enterpr()
+        self.character.ac.ccbuttonpr()
+        time.sleep(.1)        
+        [self.character.ac.leftpr() for _ in range(random.randint(1, 10))]
+        self.character.ac.enterpr()
+        time.sleep(5.) # adjust this to your pc loading speed i guess, mine need 5 seconds to cc. 
+        [press(self.character.ac.uppr,.06) for _ in range(random.randint(4, 10))] # ideally TODO: check ardentmill map loaded. 
+        time.sleep(2.) # coming out from ardent. TODO: check if back to hunting map.
+        # TODO: check for red dot/guild dot/bl dot after cc
+        # TODO: set a limit for cc, in case character died, stop it from spamming cc! i've been banned once due to this spamming! no appeal can be made.  
+
     async def playback(self):
-        # print(f'starting script {self.script} in 1 ..')
+        print(f'starting script {self.script} in 1 ..')
         time.sleep(1)
+        runetimer0=0
+        runetimer=0
+        rune=False
+        cctimer0=0
+        cctimer=0
+        self.cc=False
         with open(f'script/{self.script}', 'r') as jsonfile:
             data = json.load(jsonfile)
             while True:
@@ -1401,85 +1488,21 @@ class TkinterBot(customtkinter.CTk):
                                 return
                         print(f'script resumed ..')
 
-                    # if perf_counter()-nowtime>60000:
-                        # checkrune=True
-                    # if index%50==0 and checkrune==True:
-                    #     self.runesolver.runechecker(self.g)
-                    # if allowed:
-                        # pass
-                    # else:
-                        # if changechannel:
-                            # await change_channel2(g)
-                            # time.sleep(2)
-                            # while still_in_zakum_map2(g):
-                                # await adjustportal2(g,spot=21,distx=10.5,docorrection=True)
-                                # await upp()
-                                # await upr()
-                                # time.sleep(1)
-                            # time.sleep(1)
-                            # print(f'checking red dot ..')
-                            # await red_dot()
-                            # print(f'checking red dot finished ..')
-                            # time.sleep(1)
-                            # changechannel = False
-                        # elif liedetector:
-                        #     myvariable = True
-                        #     t = time.localtime()
-                        #     currenttime = time.strftime("%H:%M:%S", t)
-                        #     print(f'oskillsigtermpos2 {currenttime}')            
-                        #     # os.kill(os.getpid(), signal.SIGTERM)
-                        # else:
-                            # await self.runesolver.gotorune(self.g)
-                            # await random.choice([rightjumpjumpattack, leftjumpjumpattack])()
-                            # time.sleep(1.5)
-                            # rune = runechecker(g)
-                            # print(f'here shows previous rune solver success or missed. True means still got rune. False means rune is solved. {rune = }')
-                            # nowtime = perf_counter()
-                            # checkrune=rune
-                        # allowed = True
-                        # reset = True
-                        # unlock()
-                        # pass
-                    # with lock:
-                    # for i in range(1):
-                        # if self.myvariable:
-                            # send5('00')
-                            # while (myvariable):
-                                # time.sleep(2)
-                                # print('playactions == blocked: (new feature: sleeping(2))')
-                                # os.system("pause")
-                                # r = random.randint(500,1500)
-                                # r /= 1000
-                                # sleep(r)
-                                # print('playactions == released: (new feature: sleeping(2))')
-                                # print('playactions == released: (new feature: sleeping(2))', r)
-                                # if stop_event.is_set():
-                                    # sendnclose()
-                                    # global stop_flag
-                                    # stop_flag = True
-                                    # return
-                            # pass
-                        # else:
-                        #     pass
                     if action['type'] == 'keyDown':
                         if action['button'] == 'f9':
-                            # print('is_f9_bruh')
-                            # await adjustportallimen2(g, spot=12.5, distx=103.5, docorrection=False, test=False)  #
+                            # print('read f9')
                             await self.adjustcharacter(self.pointx,self.pointy)
                         if action['button'] == 'f10':
-                            # print('is_f10_bruh')
-                            # await self.adjustcharacter()
+                            # print('f10')
+                            # await self.adjustcharacter(self.pointx,self.pointy)
                             pass
                         key = action['button']
                         # print(f'press {key=}')
                         keydown(key)
-                        # presskey(key)
                     elif action['type'] == 'keyUp':
                         key = action['button']
                         # print(f'release {key=}')
                         keyup(key)
-                        # await sleep(1.)
-                        # releasekey(key)
                     try:
                         next_action = data[index + 1]
                     except IndexError:
@@ -1522,6 +1545,32 @@ class TkinterBot(customtkinter.CTk):
                                 elapsed_time -= r
                     # print(f'sleep={elapsed_time=}')
                     await sleep(elapsed_time)
+
+                    # here onwards are equivalent to post_perform_action()
+                    if action['type'] == 'keyUp' and index%10<=3: # don't do checking for all key input. do every 10 key input
+                        now=perf_counter()
+                        runetimer=now-runetimer0
+                        if runetimer>900:
+                            # rune=True
+                            gotrune=self.runesolver.runechecker(self.g)
+                            if gotrune:
+                                keyupall()
+                                await self.runesolver.gotorune(self.g) # gotoruneandsolverune
+                                await random.choice([self.character.ac.goleftattack,self.character.ac.gorightattack])(); time.sleep(.5) # move away to unblock rune purple dot
+                                if self.runesolver.runechecker(self.g): # if rune not solved for some reason
+                                    pass # attempt solve rune again in the next loop
+                                else:
+                                    runetimer0=perf_counter() # reset
+                        cctimer=now-cctimer0
+                        if cctimer>3000: # 60sec * 50min = 3000sec
+                            # cc=True
+                            keyupall()
+                            await self.changechannel()
+                            cctimer0=perf_counter() # reset
+                        if self.cc:
+                            self.cc=False
+                            keyupall()
+                            await self.changechannel_zakum() # this version of changing channel is from reddotdetector. 
 
     def convertKey(self,button=None):
         PYNPUT_SPECIAL_CASE_MAP = {
@@ -1802,7 +1851,7 @@ class TkinterBot(customtkinter.CTk):
                     print(f'{self.autoclickerstop=}')
                     self.thread10.join()
                     return
-                self.he.movetoandclick(x0+878,y0+760) # click shop 878,760
+                self.helper.movetoandclick(x0+878,y0+760) # click shop 878,760
                 for j in range(14):
                     for i in range(14):
                         if self.autoclickerstop:
@@ -1810,7 +1859,7 @@ class TkinterBot(customtkinter.CTk):
                             self.thread10.join()
                             return
                         else:
-                            self.he.movetoandclick(x0+697,y0+418) # click buy --> enter --> enter 697,418                            
+                            self.helper.movetoandclick(x0+697,y0+418) # click buy --> enter --> enter 697,418                            
                             self.character.ac.enterpr_special(3,11)
                             time.sleep(.005)
                             self.character.ac.enterpr_special(3,11)
@@ -1820,23 +1869,23 @@ class TkinterBot(customtkinter.CTk):
                 time.sleep(.1) # just to be safe. 
                 self.character.ac.enterpr_special(3,11)
                 time.sleep(.1)
-                self.he.movetoandclick(x0+996,y0+754) # click return to farm 996,754
+                self.helper.movetoandclick(x0+996,y0+754) # click return to farm 996,754
                 for j in range(self.repeatcount):
-                    self.he.movetoandclick(x0+154,y0+669) # click decorate farm 154,669
+                    self.helper.movetoandclick(x0+154,y0+669) # click decorate farm 154,669
                     time.sleep(.1) # double click to ensure it click
-                    self.he.movetoandclick(x0+154,y0+669) # click decorate farm 154,669
+                    self.helper.movetoandclick(x0+154,y0+669) # click decorate farm 154,669
                     for i in range(round(self.monsternumber+self.monsternumber*1.7)):
                         if self.autoclickerstop:
                             print(f'{self.autoclickerstop=}')
                             self.thread10.join()
                             return
                         else:
-                            self.he.movetoandclick(x0+self.cboxslot,y0+719) # click c box --> enter --> enter 136 199 277 350 419,719
+                            self.helper.movetoandclick(x0+self.cboxslot,y0+719) # click c box --> enter --> enter 136 199 277 350 419,719
                             self.character.ac.enterpr_special(3,11)
                             self.character.ac.enterpr_special(3,11)
-                    self.he.movetoandclick(x0+77,y0+292) # click auto take care  --> enter 77,292
+                    self.helper.movetoandclick(x0+77,y0+292) # click auto take care  --> enter 77,292
                     time.sleep(.033)
-                    self.he.movetoandclick(x0+77,y0+292) # click auto take care  --> enter 77,292 # double click to ensure
+                    self.helper.movetoandclick(x0+77,y0+292) # click auto take care  --> enter 77,292 # double click to ensure
                     time.sleep(.033)
                     self.character.ac.enterpr_special()
                     time.sleep(.013)
@@ -1844,22 +1893,22 @@ class TkinterBot(customtkinter.CTk):
                     time.sleep(.033)
                     self.character.ac.enterpr_special() # triple enter to ensure
                     time.sleep(.033)
-                    self.he.movetoandclick(x0+69,y0+665) # click my monster 69,665
+                    self.helper.movetoandclick(x0+69,y0+665) # click my monster 69,665
                     for i in range(self.monsternumber):
                         if self.autoclickerstop:
                             print(f'{self.autoclickerstop=}')
                             self.thread10.join()
                             return
                         else:
-                            self.he.movetoandrclick(x0+self.monsterslot,y0+726,duration=.05) # right click monster 155 243 312 377 456 539,726                            
+                            self.helper.movetoandrclick(x0+self.monsterslot,y0+726,duration=.05) # right click monster 155 243 312 377 456 539,726                            
                             self.character.ac.enterpr_special(3,11)
                             time.sleep(.050)
                             self.character.ac.enterpr_special(3,11)
                             time.sleep(.100)
                             right_click()
                             time.sleep(.150)
-                            self.he.movetoandclick(x0+self.monsterslot,y0+597,duration=.1,sleep=.1) # click discharge 155 243 312 377 456 539,597
-                            self.he.movetoandclick(x0+492,y0+453,duration=.1,sleep=.1) # click the tick --> enter 492,453
+                            self.helper.movetoandclick(x0+self.monsterslot,y0+597,duration=.1,sleep=.1) # click discharge 155 243 312 377 456 539,597
+                            self.helper.movetoandclick(x0+492,y0+453,duration=.1,sleep=.1) # click the tick --> enter 492,453
                             time.sleep(.08) # server lag
                         self.character.ac.enterpr_special(3,11)
                         time.sleep(.08) # server lag
