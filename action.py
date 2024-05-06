@@ -179,9 +179,9 @@ class Action:
         r /= 1000
         await sleep(r)
     
-    async def ardentpr(self,x=31,y=101):
-        await self.ardentp()
-        await self.ardentr()
+    async def bossuipr(self,x=31,y=101):
+        await self.bossuip()
+        await self.bossuir()
 
     async def ardentp(self,x=31,y=101):
         keydown(self.ardent)
