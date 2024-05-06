@@ -242,6 +242,8 @@ class TkinterBot(customtkinter.CTk):
         # ugly code ends here
         await initiate_move()
         while True:
+            if pythonkeyboard.is_pressed("esc"):
+                self.pause=True
             if self.pause:
                 keyupall()
                 print(f'script is paused .. click resume to resume. ')
@@ -348,8 +350,7 @@ class TkinterBot(customtkinter.CTk):
                     x, y, w, h = position
                     if self.broiddisabled:
                         await self.helper.move_to_and_click_and_move_away(x+440,y+400); time.sleep(.1) ## TODO: write a list of offset for all reso.
-                        self.pause=True
-                        self.scriptpausesignal=True                        
+                        self.togglepause()
                         print(f'no broid. stopping bot. TODO: click map and teleport back and continue botting. ')
                     else:
                         await self.helper.move_to_and_click_and_move_away(x+390,y+400); time.sleep(.1) ## all offsets are of 800x600 reso
@@ -367,8 +368,7 @@ class TkinterBot(customtkinter.CTk):
                 liedetectorcounter+=1
                 if liedetectorcounter > 1: # usually check twice
                     liedetectorcounter=0
-                    self.pause=True
-                    self.scriptpausesignal=True
+                    self.togglepause()
                     print(f'lie detector detector. stopping everything. [testing] {self.pause=} {self.scriptpausesignal=}')
             whitedotcheckerlocations = self.g.white_dot_checker()
             if whitedotcheckerlocations: # this is when accidentally pressed up and enter bounty portal and dialogue come out. 
@@ -656,6 +656,11 @@ class TkinterBot(customtkinter.CTk):
         self.polochecker=False
         return truefalse
     
+    async def togglepause(self):
+        self.pause=True
+        self.scriptpausesignal=True
+        self.scriptbuttonstop.configure(state='normal')        
+
     async def pausewrapper(self, func):
         if not self.pause:
             await func()
