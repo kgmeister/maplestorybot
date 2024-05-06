@@ -352,6 +352,7 @@ class TkinterBot(customtkinter.CTk):
                 if reddotcounter > 1: # usually check twice to confirm really has red dot. you can change to 0 to immediately change channel. 
                     reddotcounter=0
                     self.cc=True # we can't directly cc in this thread because cc-ing is a long process, it will block other detectors. 
+            liedetectorcheckerlocations = self.g.liedetector_checker()
             # if not self.pausepolochecker and not self.portaldisabled: # i disable this because most user don't want to enter bounty portal
             #     polocheckerlocations = self.g.polo_checker() # check for portal on minimap
             #     if polocheckerlocations is not None:

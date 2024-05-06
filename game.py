@@ -167,6 +167,10 @@ class Game:
         # location = self.checker(PLAYER_BGRA)
         return location[0] if len(location) > 0 else None
 
+    def reddot_checker(self):
+        location = self.locate(ENEMY_BGRA)
+        return location[0] if len(location) > 0 else None
+
     def polo_checker(self):
         location = self.locate(POBGR)
         # location = self.checker(PLAYER_BGRA)
