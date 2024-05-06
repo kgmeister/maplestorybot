@@ -31,6 +31,7 @@ class Action:
         self.fountainkey = self.config.get('keybind', 'fountainkey')
         self.ccbutton = self.config.get('keybind', 'ccbutton')
         self.bossui = self.config.get('keybind', 'bossui')
+        self.ardent = self.config.get('keybind', 'ardent')
         self.offsety=10
         self.offsetx=10
         ## for main rotation
@@ -178,9 +179,25 @@ class Action:
         r /= 1000
         await sleep(r)
     
-    async def bossuipr(self,x=31,y=101):
-        await self.bossuip()
-        await self.bossuir()
+    async def ardentpr(self,x=31,y=101):
+        await self.ardentp()
+        await self.ardentr()
+
+    async def ardentp(self,x=31,y=101):
+        keydown(self.ardent)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+
+    async def ardentr(self,x=31,y=101):
+        keyup(self.ardent)
+        r = random.randint(x, y)
+        r /= 1000
+        await sleep(r)
+    
+    async def ardentpr(self,x=31,y=101):
+        await self.ardentp()
+        await self.ardentr()
 
     async def leftp(self,x=31,y=101):
         keydown('left')

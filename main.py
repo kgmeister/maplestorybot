@@ -71,6 +71,7 @@ class TkinterBot(customtkinter.CTk):
         self.script = self.config.get('main', 'script')
         self.rotation = self.config.get('main', 'rotation')
         self.portaldisabled = self.config.getboolean('main', 'portaldisabled')
+        self.broiddisabled = self.config.getboolean('main', 'broiddisabled')
 
         self.runesolver = RuneSolver()
         self.ac=None
@@ -234,8 +235,8 @@ class TkinterBot(customtkinter.CTk):
         xynotfound=0
         self.cc=False
         # ugly code starts here
-        now=0
-        cctimer0=0
+        now=perf_counter()
+        cctimer0=now
         cctimer=0
         cc=False
         # ugly code ends here
@@ -345,7 +346,13 @@ class TkinterBot(customtkinter.CTk):
                     print(f'character died. attempt to press ok .. ')
                     position = win32gui.GetWindowRect(self.maplehwnd)
                     x, y, w, h = position
-                    await self.helper.move_to_and_click_and_move_away(x+390,y+400); time.sleep(.1) # x+440 y+400 for non-broid # all offsets are of 800x600 reso, TODO: write a list of offset for all reso.
+                    if self.broiddisabled:
+                        await self.helper.move_to_and_click_and_move_away(x+440,y+400); time.sleep(.1) ## TODO: write a list of offset for all reso.
+                        self.pause=True
+                        self.scriptpausesignal=True                        
+                        print(f'no broid. stopping bot. TODO: click map and teleport back and continue botting. ')
+                    else:
+                        await self.helper.move_to_and_click_and_move_away(x+390,y+400); time.sleep(.1) ## all offsets are of 800x600 reso
             reddotcheckerlocations = self.g.reddot_checker()
             if reddotcheckerlocations is not None:
                 print(f'{reddotcheckerlocations=}')
@@ -1463,6 +1470,7 @@ class TkinterBot(customtkinter.CTk):
                 time.sleep(sleep)
         position = win32gui.GetWindowRect(self.maplehwnd)
         x, y, w, h = position
+        await self.character.ac.ardentpr()
         await self.helper.move_to(x+539,y+253) # ardentmill offset (800x600) TODO: write a list of offset for all reso. 
         time.sleep(.1)
         print(f'clicking 539,253 (ardentmill)')
@@ -2063,13 +2071,24 @@ class TkinterBot(customtkinter.CTk):
         self.comboboxclasstype.grid(row=7, column=1, padx=1, pady=1)
         self.comboboxclasstype.set(json_file_names[json_file_names.index(self.classtype)])
         self.comboboxclasstype.bind("<<ComboboxSelected>>", on_select)
-        self.labelportal = tk.Label(self.framesettings, anchor='w', justify='left', text="portal: ")
+        self.labelportal = tk.Label(self.framesettings, anchor='w', justify='left', text="portal: (ignore this)")
         self.labelportal.grid(row=8, column=0, padx=1, pady=1, sticky='w')
         def on_checkbox_clicked():
-            self.portaldisabled=False if checkbox_var.get() else True
-        checkbox_var = tk.BooleanVar(value=False) if self.portaldisabled else tk.BooleanVar(value=True)
-        self.checkboxportal = tk.Checkbutton(self.framesettings, text="", variable=checkbox_var, command=on_checkbox_clicked, font=('Arial', 10)) ## not sure bout this
+            self.portaldisabled=False if checkboxvar.get() else True
+        checkboxvar = tk.BooleanVar(value=False) if self.portaldisabled else tk.BooleanVar(value=True)
+        self.checkboxportal = tk.Checkbutton(self.framesettings, text="", variable=checkboxvar, command=on_checkbox_clicked, font=('Arial', 10)) ## not sure bout this
         self.checkboxportal.grid(row=8, column=1, padx=0, pady=0, sticky='w')
+
+        framesettings3 = customtkinter.CTkFrame(self.tab6)
+        framesettings3.pack(padx=2, pady=(2,2))
+        labelbroid = customtkinter.CTkLabel(framesettings3, anchor='w', justify='left', text='battle-roid: ')
+        labelbroid.grid(row=0,column=0,padx=1,pady=1,sticky='w')
+        def cbbroidclicked():
+            self.broiddisabled=False if cbbroidvar.get() else True
+        cbbroidvar=tk.BooleanVar(value=False) if self.broiddisabled else tk.BooleanVar(value=True)
+        checkboxbroid = customtkinter.CTkCheckBox(framesettings3, text='', variable=cbbroidvar, command=cbbroidclicked, font=('Arial', 10))
+        checkboxbroid.grid(row=0, column=1, padx=0, pady=0, sticky='w')
+
 
 
         self.framesettings2 = tk.Frame(self.tab6, bg='#f1f2f3', bd=0)
@@ -2086,6 +2105,8 @@ class TkinterBot(customtkinter.CTk):
         self.config.set('keybind', 'npc', str(self.entrynpc.get()))
         self.config.set('keybind', 'fountainkey', str(self.entryfountainkey.get()))
         self.config.set('keybind', 'classtype', str(self.comboboxclasstype.get()))
+        self.config.set('main', 'portaldisabled', str(self.portaldisabled))
+        self.config.set('main', 'broiddisabled', str(self.broiddisabled))
         with open('settings.ini', 'w') as f:
             self.config.write(f)
         self.character.setup(
