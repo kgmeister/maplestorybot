@@ -329,8 +329,8 @@ class TkinterBot(customtkinter.CTk):
         diedcheckercounter=0
         liedetectorcounter=0
         reddotcounter=0
-        self.cc=False
         whitedotcounter=0
+        self.cc=False
         while True:
             while self.pause:
                 time.sleep(1)
@@ -363,7 +363,16 @@ class TkinterBot(customtkinter.CTk):
                     self.pause=True
                     self.scriptpausesignal=True
                     print(f'lie detector detector. stopping everything. [testing] {self.pause=} {self.scriptpausesignal=}')
-            
+            whitedotcheckerlocations = self.g.white_dot_checker()
+            if whitedotcheckerlocations: # this is when accidentally pressed up and enter bounty portal and dialogue come out. 
+                print(f'{whitedotcheckerlocations}')
+                whitedotcounter+=1
+                if whitedotcounter > 1: # usually check twice
+                    whitedotcounter=0
+                    print(f'accidentally pressed up on bounty portal? clicking end chat. [testing]')
+                    position = win32gui.GetWindowRect(self.maplehwnd)
+                    x, y, w, h = position
+                    await self.helper.move_to_and_click_and_move_away(x+222,y+410); time.sleep(.1)
 
             # if not self.pausepolochecker and not self.portaldisabled: # i disable this because most user don't want to enter bounty portal
             #     polocheckerlocations = self.g.polo_checker() # check for portal on minimap
