@@ -447,14 +447,17 @@ class TkinterBot(customtkinter.CTk):
             print(f'{windows=} {w-x=}')
             if w-x == 410:
                 self.chathwnd=windowhwnd
-            elif w-x == 1936 or w-x == 1382 or w-x == 1296 or w-x == 1040 or w-x == 816:
-                self.maplehwnd=windowhwnd
-                self.runesolver.set_maplehwnd(self.maplehwnd)
-            elif w-x == 1938 or w-x == 1384 or w-x == 1298 or w-x == 1042 or w-x == 818: # some windows 10
-            # elif w-x == 1944 or w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
-                self.maplehwnd=windowhwnd
-                self.runesolver.set_maplehwnd(self.maplehwnd)
-            elif w-x == 2592: # extra testing from users
+            # elif w-x == 1936 or w-x == 1382 or w-x == 1296 or w-x == 1040 or w-x == 816:
+            #     self.maplehwnd=windowhwnd
+            #     self.runesolver.set_maplehwnd(self.maplehwnd)
+            # elif w-x == 1938 or w-x == 1384 or w-x == 1298 or w-x == 1042 or w-x == 818: # some windows 10
+            # # elif w-x == 1944 or w-x == 1390 or w-x == 1298 or w-x == 1042 or w-x == 818: # japanese maplestory JMS
+            #     self.maplehwnd=windowhwnd
+            #     self.runesolver.set_maplehwnd(self.maplehwnd)
+            # elif w-x == 2592: # extra testing from users
+            #     self.maplehwnd=windowhwnd
+            #     self.runesolver.set_maplehwnd(self.maplehwnd)
+            elif w-x == 1382: # vdance_trimmed. 
                 self.maplehwnd=windowhwnd
                 self.runesolver.set_maplehwnd(self.maplehwnd)
 
