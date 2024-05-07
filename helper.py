@@ -75,7 +75,7 @@ class Helper:
 
     ##### CHANGING CHANNEL SECTION: FUNCTIONS FOR BOTH ROTATIONS AND SCRIPTS #####
     # directly copy pasta from my old bot. how to make it prettier you ask? idk .. for me ugly = pretty; pretty = ugly. 
-    def still_in_zakum_map2(g,hwnd):
+    def still_in_zakum_map2(self,g,hwnd):
         stillinzakummap = 0
         notinzakummap = 0
         rdbgr = (0, 0, 255)
@@ -120,7 +120,7 @@ class Helper:
                 time.sleep(.5)
 
     # you want to adjust your character to align the zakum entrance portal so that you can press up. 
-    async def adjustportal2(g, spot=42, distx=75, docorrection=False, tolerance=5, ca=None): # ca stands for character.action
+    async def adjustportal2(self,g, spot=42, distx=75, docorrection=False, tolerance=5, ca=None): # ca stands for character.action
         async def correction(indicesyellow10, distx=30):
             if indicesyellow10 > distx:
                 await ca.leftp(31, 81)
@@ -191,7 +191,7 @@ class Helper:
                     await ca.rightr(10, 100)
 
     # check for red dot after coming out from zakum map. 
-    async def checkreddotaftercomeoutfromzakummap(hwnd, ca=None, position1=None):
+    async def checkreddotaftercomeoutfromzakummap(self,hwnd, ca=None, position1=None):
         rdbgr = (0, 0, 255)
         yellowbgr = (68, 221, 255)
         # 255 0 0 rgb
