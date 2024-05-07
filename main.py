@@ -1495,10 +1495,11 @@ class TkinterBot(customtkinter.CTk):
     async def playback(self):
         print(f'starting script {self.script} in 1 ..')
         time.sleep(1)
-        runetimer0=0
+        now=perf_counter()
+        runetimer0=now
         runetimer=0
         rune=False
-        cctimer0=0
+        cctimer0=now
         cctimer=0
         self.cc=False
         with open(f'script/{self.script}', 'r') as jsonfile:
